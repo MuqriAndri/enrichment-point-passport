@@ -1,1 +1,72 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrichment Point Passport Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0046be 0%, #c90000 100%);
+        }
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        .logo {
+            width: 150px;
+            margin-bottom: 2rem;
+        }
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 0.5rem;
+            border: none;
+            border-radius: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            box-sizing: border-box;
+        }
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .login-btn {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="/api/placeholder/150/150" alt="Institution Logo" class="logo">
+        <form>
+            <div class="input-group">
+                <input type="text" placeholder="Student ID" required>
+            </div>
+            <div class="input-group">
+                <input type="password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+</body>
+</html>
