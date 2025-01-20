@@ -6,33 +6,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POLITEKNIK ENRICHMENT POINT PASSPORT</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #1a365d;
+            --accent-color: #c0a43d;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+        }
+
         body {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: white;
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
         .nav {
-            background-color: #1f4e6e;
-            padding: 1rem 2rem;
+            background-color: var(--primary-color);
+            padding: 1.2rem 2rem;
             text-align: right;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .nav a {
             color: white;
             text-decoration: none;
-            margin-left: 2rem;
+            margin-left: 2.5rem;
             font-size: 0.95rem;
+            font-weight: 500;
             letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: var(--accent-color);
         }
 
         .container {
-            max-width: 1100px;
-            margin: 2rem auto;
+            max-width: 1200px;
+            margin: 3rem auto;
             padding: 2rem;
             display: flex;
             justify-content: space-between;
@@ -42,118 +58,154 @@
 
         .left-content {
             flex: 1;
-            padding-right: 4rem;
+            padding-right: 6rem;
         }
 
         .logo {
-            width: 180px;
-            height: 134px;
-            /* Maintaining 300x223 aspect ratio */
-            margin-bottom: 2.5rem;
+            width: 200px;
+            height: 149px;
+            margin-bottom: -1.5rem;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
 
         .title {
-            font-size: 2.2rem;
-            color: #333;
+            font-size: 2.5rem;
+            color: var(--text-dark);
             margin-bottom: 1.5rem;
             line-height: 1.3;
             letter-spacing: 0.5px;
+            font-weight: 700;
         }
 
         .subtitle {
-            color: #666;
+            color: var(--text-light);
             font-style: italic;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            line-height: 1.6;
         }
 
         .login-box {
-            background-color: #1f4e6e;
-            padding: 2.5rem 2rem;
-            border-radius: 15px;
+            background: linear-gradient(145deg, var(--primary-color), #2d4a7c);
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
             color: white;
-            width: 340px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 380px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .login-box:hover {
+            transform: translateY(-5px);
         }
 
         .login-box label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
             letter-spacing: 0.5px;
-            padding-left: 0.25rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.9);
         }
 
         .login-box input {
-            width: calc(100% - 1.5rem);
-            padding: 0.75rem;
-            margin: 0 auto 1.5rem;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            display: block;
+            width: calc(100% - 2rem);
+            padding: 1rem;
+            margin: 0 auto 1.75rem;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .login-box input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background: rgba(255,255,255,0.1);
         }
 
         .forgot-link {
-            color: white;
+            color: rgba(255,255,255,0.8);
             text-decoration: none;
             font-size: 0.9rem;
-            opacity: 0.9;
+            transition: color 0.3s ease;
         }
 
         .forgot-link:hover {
-            opacity: 1;
-            text-decoration: underline;
+            color: var(--accent-color);
         }
 
         .login-btn {
-            background-color: #dc1f1f;
+            background: #dc2626;
             color: white;
             border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 25px;
+            padding: 1rem 2.5rem;
+            border-radius: 30px;
             cursor: pointer;
             float: right;
             margin-top: 1.5rem;
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
-            transition: background-color 0.2s;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
         }
 
         .login-btn:hover {
-            background-color: #c51818;
+            background: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
         }
 
         .footer {
             margin-top: auto;
-            background-color: #f8f8f8;
-            padding: 2rem 0;
+            background-color: white;
+            padding: 3rem 0;
             border-top: 1px solid #eee;
         }
 
         .footer-content {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
             text-align: center;
-            color: #666;
+            color: var(--text-light);
         }
 
         .footer-icons {
             display: flex;
             justify-content: center;
-            gap: 3rem;
-            margin-bottom: 1.5rem;
+            gap: 4rem;
+            margin-bottom: 2rem;
         }
 
         .icon-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #1f4e6e;
+            color: var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .icon-container:hover {
+            transform: translateY(-5px);
+            color: var(--accent-color);
         }
 
         .icon-container span {
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
+            margin-top: 0.75rem;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .title, .subtitle, .login-box {
+            animation: fadeIn 0.8s ease-out forwards;
         }
     </style>
 </head>
@@ -169,20 +221,20 @@
         <div class="left-content">
             <img src="politeknik-brunei-logo.png" alt="Politeknik Brunei Logo" class="logo">
             <h1 class="title">POLITEKNIK<br>ENRICHMENT POINT<br>PASSPORT</h1>
-            <p class="subtitle">Your EP is our calculations, let us do it for you.</p>
+            <p class="subtitle">Enriching experiences, evaluating your success.</p>
         </div>
 
         <div class="login-box">
             <div>
-                <label>Username :</label>
-                <input type="text">
+                <label>Username</label>
+                <input type="text" placeholder="Enter your username">
             </div>
             <div>
-                <label>Password :</label>
-                <input type="password">
+                <label>Password</label>
+                <input type="password" placeholder="Enter your password">
             </div>
             <a href="#" class="forgot-link">Forgotten your username or password?</a>
-            <button class="login-btn">LOG IN</button>
+            <button class="login-btn">Log In</button>
         </div>
     </div>
 
@@ -203,10 +255,8 @@
                 </div>
                 <div class="icon-container">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path
-                            d="M12 15C8.7 15 6 12.3 6 9V4.5C6 3.1 7.1 2 8.5 2H15.5C16.9 2 18 3.1 18 4.5V9C18 12.3 15.3 15 12 15Z" />
-                        <path
-                            d="M20 20H4C3.4 20 3 19.6 3 19V18C3 14.7 5.7 12 9 12H15C18.3 12 21 14.7 21 18V19C21 19.6 20.6 20 20 20Z" />
+                        <path d="M12 15C8.7 15 6 12.3 6 9V4.5C6 3.1 7.1 2 8.5 2H15.5C16.9 2 18 3.1 18 4.5V9C18 12.3 15.3 15 12 15Z" />
+                        <path d="M20 20H4C3.4 20 3 19.6 3 19V18C3 14.7 5.7 12 9 12H15C18.3 12 21 14.7 21 18V19C21 19.6 20.6 20 20 20Z" />
                     </svg>
                     <span>Achieve Excellence</span>
                 </div>
