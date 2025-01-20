@@ -1,1 +1,1 @@
-# enrichment-passport
+# enrichment-point-passport
