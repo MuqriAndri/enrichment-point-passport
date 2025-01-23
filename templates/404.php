@@ -1,38 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POLITEKNIK ENRICHMENT POINT PASSPORT</title>
-    <link rel="stylesheet" href="../assets/css/login-page.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>404 - Page Not Found | Politeknik Brunei Enrichment Point Passport</title>
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/404.css">
 </head>
-
 <body>
     <nav class="nav">
-        <a href="#">PB Website</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
+        <a href="<?php echo BASE_URL; ?>">PB Website</a>
+        <a href="<?php echo BASE_URL; ?>/about">About</a>
+        <a href="<?php echo BASE_URL; ?>/contact">Contact</a>
     </nav>
 
-    <div class="container">
-        <div class="left-content">
-            <img src="../assets/images/politeknik-brunei-logo.png" alt="Politeknik Brunei Logo" class="logo">
-            <h1 class="title">POLITEKNIK<br>ENRICHMENT POINT<br>PASSPORT</h1>
-            <p class="subtitle">Enriching experiences, evaluating your success.</p>
-        </div>
-
-        <div class="login-box">
-            <div>
-                <label>Username</label>
-                <input type="text" placeholder="Enter your username">
+    <div class="error-container">
+        <img src="<?php echo BASE_URL; ?>/assets/images/politeknik-brunei-logo.png" alt="Politeknik Brunei Logo" class="logo">
+        <div class="error-content">
+            <h1 class="error-code">404</h1>
+            <h2 class="error-title">Page Not Found</h2>
+            <p class="error-message">The page you're looking for doesn't exist or has been moved.</p>
+            <div class="button-container">
+                <a href="<?php echo BASE_URL; ?>" class="back-button">Return to Homepage</a>
             </div>
-            <div>
-                <label>Password</label>
-                <input type="password" placeholder="Enter your password">
-            </div>
-            <a href="#" class="forgot-link">Forgotten your username or password?</a>
-            <button class="login-btn">Log In</button>
         </div>
     </div>
 
@@ -63,5 +52,4 @@
         </div>
     </footer>
 </body>
-
 </html>

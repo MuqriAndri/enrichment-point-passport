@@ -38,117 +38,81 @@ body {
     color: var(--accent-color);
 }
 
-.container {
+.error-container {
     max-width: 1200px;
     margin: 3rem auto;
     padding: 2rem;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     flex: 1;
-}
-
-.left-content {
-    flex: 1;
-    padding-right: 6rem;
 }
 
 .logo {
     width: 200px;
     height: 149px;
-    margin-bottom: -1.5rem;
+    margin-bottom: 2rem;
     filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
 }
 
-.title {
-    font-size: 2.5rem;
-    color: var(--text-dark);
-    margin-bottom: 1.5rem;
-    line-height: 1.3;
-    letter-spacing: 0.5px;
-    font-weight: 700;
+.error-content {
+    text-align: center;
+    background: linear-gradient(145deg, var(--primary-color), #2d4a7c);
+    padding: 3rem;
+    border-radius: 20px;
+    color: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    max-width: 500px;
+    width: 100%;
 }
 
-.subtitle {
-    color: var(--text-light);
-    font-style: italic;
-    font-size: 1.2rem;
+.error-code {
+    font-size: 5rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1;
+    color: var(--accent-color);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.error-title {
+    font-size: 2rem;
+    margin: 1rem 0;
+    font-weight: 600;
+}
+
+.error-message {
+    color: rgba(255,255,255,0.9);
+    font-size: 1.1rem;
+    margin: 1.5rem 0;
     line-height: 1.6;
 }
 
-.login-box {
-    background: linear-gradient(145deg, var(--primary-color), #2d4a7c);
-    padding: 3rem 2.5rem;
-    border-radius: 20px;
-    color: white;
-    width: 380px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    backdrop-filter: blur(10px);
-    transition: transform 0.3s ease;
+.button-container {
+    margin-top: 2rem;
 }
 
-.login-box:hover {
-    transform: translateY(-5px);
-}
-
-.login-box label {
-    display: block;
-    margin-bottom: 0.75rem;
-    font-size: 1rem;
-    letter-spacing: 0.5px;
-    font-weight: 500;
-    color: rgba(255,255,255,0.9);
-}
-
-.login-box input {
-    width: calc(100% - 2rem);
-    padding: 1rem;
-    margin: 0 auto 1.75rem;
-    border: 2px solid rgba(255,255,255,0.1);
-    border-radius: 10px;
-    font-size: 1rem;
-    background: rgba(255,255,255,0.05);
-    color: white;
-    transition: all 0.3s ease;
-}
-
-.login-box input:focus {
-    outline: none;
-    border-color: var(--accent-color);
-    background: rgba(255,255,255,0.1);
-}
-
-.forgot-link {
-    color: rgba(255,255,255,0.8);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.3s ease;
-}
-
-.forgot-link:hover {
-    color: var(--accent-color);
-}
-
-.login-btn {
-    background: #dc2626;
+.back-button {
+    background: #c0a43d;
     color: white;
     border: none;
     padding: 1rem 2.5rem;
     border-radius: 30px;
     cursor: pointer;
-    float: right;
-    margin-top: 1.5rem;
     font-size: 1rem;
     font-weight: 600;
     letter-spacing: 1px;
-    transition: all 0.3s ease;
     text-transform: uppercase;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
 }
 
-.login-btn:hover {
-    background: #b91c1c;
+.back-button:hover {
+    background: #c0a43d;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
+    box-shadow: 0 5px 15px rgba(228, 195, 72, 0.3);
 }
 
 .footer {
@@ -196,39 +160,35 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-.title, .subtitle, .login-box {
+.error-code, .error-title, .error-message, .back-button {
     animation: fadeIn 0.8s ease-out forwards;
 }
 
 @media screen and (max-width: 768px) {
-    .container {
-        flex-direction: column;
+    .error-container {
         padding: 1rem;
         margin: 1rem auto;
     }
 
-    .left-content {
-        padding-right: 0;
-        text-align: center;
-        margin-bottom: 2rem;
+    .error-content {
+        padding: 2rem 1.5rem;
     }
 
-    .logo {
-        margin-bottom: 1rem;
+    .error-code {
+        font-size: 4rem;
     }
 
-    .title {
-        font-size: 2rem;
+    .error-title {
+        font-size: 1.5rem;
     }
 
-    .subtitle {
+    .error-message {
         font-size: 1rem;
     }
 
-    .login-box {
+    .back-button {
         width: 100%;
-        max-width: 100%;
-        padding: 2rem 1.5rem;
+        padding: 0.8rem;
     }
 
     .nav {
@@ -245,21 +205,5 @@ body {
     .footer-icons {
         flex-direction: column;
         gap: 2rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .title {
-        font-size: 1.8rem;
-    }
-
-    .login-box input {
-        width: calc(100% - 1rem);
-        padding: 0.8rem;
-    }
-
-    .login-btn {
-        width: 100%;
-        padding: 0.8rem;
     }
 }
