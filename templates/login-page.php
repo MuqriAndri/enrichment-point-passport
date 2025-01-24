@@ -6,7 +6,7 @@ session_start();
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, height=device-height">
     <title>Politeknik Brunei Enrichment Point Passport</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/login-page.css">
 </head>
@@ -26,16 +26,18 @@ session_start();
         </div>
 
         <div class="login-box">
-            <div>
-                <label>Username</label>
-                <input type="text" placeholder="Enter your username">
-            </div>
-            <div>
-                <label>Password</label>
-                <input type="password" placeholder="Enter your password">
-            </div>
-            <a href="<?php echo BASE_URL; ?>/forgot-password" class="forgot-link">Forgotten your username or password?</a>
-            <button class="login-btn">Log In</button>
+            <form action="<?php echo BASE_URL; ?>/login" method="POST">
+                <div>
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <a href="<?php echo BASE_URL; ?>/forgot-password" class="forgot-link">Forgotten your username or password?</a>
+                <button type="submit" class="login-btn">Log In</button>
+            </form>
         </div>
     </div>
 
