@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-define('BASE_URL', 'http://13.212.254.192/enrichment-point-passport');
+define('BASE_URL', 'http://13.250.111.207/enrichment-point-passport');
 
 $page = isset($_GET['page']) ? $_GET['page'] : 'login';
 
