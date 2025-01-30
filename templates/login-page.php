@@ -26,16 +26,25 @@ session_start();
         </div>
 
         <div class="login-box">
-            <form action="<?php echo BASE_URL; ?>/login" method="POST">
+            <form action="<?php echo BASE_URL; ?>/index.php" method="POST">
+                <?php if (isset($_SESSION['error'])): ?>
+                    <div class="error-message">
+                        <?php 
+                            echo $_SESSION['error'];
+                            unset($_SESSION['error']);
+                        ?>
+                    </div>
+                <?php endif; ?>
+                
                 <div>
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                    <label for="user_ic">IC Number</label>
+                    <input type="text" id="user_ic" name="user_ic" placeholder="Enter your IC Number" required>
                 </div>
                 <div>
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" placeholder="Enter your password" required>
                 </div>
-                <a href="<?php echo BASE_URL; ?>/forgot-password" class="forgot-link">Forgotten your username or password?</a>
+                <a href="<?php echo BASE_URL; ?>/forgot-password" class="forgot-link">Forgotten your password?</a>
                 <button type="submit" class="login-btn">Log In</button>
             </form>
         </div>

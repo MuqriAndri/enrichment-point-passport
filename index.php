@@ -1,16 +1,81 @@
 <?php
 session_start();
 
-define('BASE_URL', 'http://13.250.111.207/enrichment-point-passport');
+define('BASE_URL', 'http://54.255.234.118/enrichment-point-passport');
 
-$page = isset($_GET['page']) ? $_GET['page'] : 'login';
+// Add database configuration
+require_once 'database/config.php';
 
+// Get the path from URL
+$request_uri = str_replace('/enrichment-point-passport', '', $_SERVER['REQUEST_URI']);
+$path = trim(parse_url($request_uri, PHP_URL_PATH), '/');
+
+// Default to login if no path
+$page = $path ?: 'login';
+
+// Redirect to dashboard if already logged in and trying to access login page
+if ($page === 'login' && isset($_SESSION['user_id'])) {
+    header("Location: " . BASE_URL . "/dashboard");
+    exit();
+}
+
+// List of pages that require authentication
+$protected_pages = ['dashboard'];
+
+// Check authentication for protected pages
+if (in_array($page, $protected_pages) && !isset($_SESSION['user_id'])) {
+    header("Location: " . BASE_URL);
+    exit();
+}
+
+// Handle POST login separately
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $user_ic = trim($_POST["user_ic"] ?? '');
+    $password = trim($_POST["password"] ?? '');
+        
+    try {
+        $sql = "SELECT user_id, user_ic, full_name, password_hash FROM profiles.users WHERE user_ic = :user_ic";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":user_ic", $user_ic, PDO::PARAM_STR);
+        $stmt->execute();
+        
+        if ($stmt->rowCount() == 1) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($password === $row["password_hash"]) {
+                session_regenerate_id(true);
+                $_SESSION["user_id"] = $row["user_id"];
+                $_SESSION["user_ic"] = $row["user_ic"];
+                $_SESSION["full_name"] = $row["full_name"];
+                
+                header("Location: " . BASE_URL . "/dashboard");
+                exit();
+            }
+        }
+        
+        $_SESSION["error"] = "Invalid IC number or password.";
+        header("Location: " . BASE_URL);
+        exit();
+        
+    } catch(PDOException $e) {
+        $_SESSION["error"] = "Something went wrong. Please try again later.";
+        header("Location: " . BASE_URL);
+        exit();
+    }
+}
+
+// Handle page routing
 switch ($page) {
     case 'login':
         include 'templates/login-page.php';
         break;
     case 'dashboard':
         include 'templates/dashboard.php';
+        break;
+    case 'logout':
+        session_destroy();
+        header("Location: " . BASE_URL);
+        exit();
         break;
     case 'about':
         include 'templates/about.php';
