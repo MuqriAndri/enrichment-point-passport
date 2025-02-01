@@ -107,7 +107,7 @@ if (!isset($_SESSION['user_id'])) {
                     </div>
                 </div>
 
-                <!-- Activities Card -->
+                <!-- Activities Card
                 <div class="dashboard-card activities-card">
                     <h3>Recent Activities</h3>
                     <div class="activity-list">
@@ -139,7 +139,7 @@ if (!isset($_SESSION['user_id'])) {
                             <span class="points-badge">+75 pts</span>
                         </div>
                     </div>
-                </div>
+                </div>/ -->
 
                 <!-- Statistics Card -->
                 <div class="dashboard-card stats-card">
