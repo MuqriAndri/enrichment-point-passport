@@ -20,7 +20,7 @@ if ($page === 'login' && isset($_SESSION['user_id'])) {
 }
 
 // List of pages that require authentication
-$protected_pages = ['dashboard'];
+$protected_pages = ['dashboard', 'profile']; // Added 'profile' to protected pages
 
 // Check authentication for protected pages
 if (in_array($page, $protected_pages) && !isset($_SESSION['user_id'])) {
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = trim($_POST["password"] ?? '');
         
     try {
-        $sql = "SELECT user_id, user_ic, full_name, password_hash FROM profiles.users WHERE user_ic = :user_ic";
+        $sql = "SELECT user_id, user_ic, full_name, password_hash, user_email FROM profiles.users WHERE user_ic = :user_ic";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(":user_ic", $user_ic, PDO::PARAM_STR);
         $stmt->execute();
@@ -47,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION["user_id"] = $row["user_id"];
                 $_SESSION["user_ic"] = $row["user_ic"];
                 $_SESSION["full_name"] = $row["full_name"];
+                $_SESSION["user_email"] = $row["user_email"];
                 
                 header("Location: " . BASE_URL . "/dashboard");
                 exit();
@@ -71,6 +72,9 @@ switch ($page) {
         break;
     case 'dashboard':
         include 'templates/dashboard.php';
+        break;
+    case 'profile':
+        include 'templates/profile.php';
         break;
     case 'logout':
         session_destroy();
