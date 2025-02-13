@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_ic = trim($_POST["user_ic"]);
     $password = trim($_POST["password"]);
     
-    $sql = "SELECT user_id, user_ic, full_name, password_hash FROM users WHERE user_ic = :user_ic";
+    $sql = "SELECT user_id, user_ic, full_name, password FROM users WHERE user_ic = :user_ic";
     
     try {
         $stmt = $pdo->prepare($sql);
@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $row = $stmt->fetch();
             
             // For testing with temporary password
-            if($password === $row["password_hash"]) {
+            if($password === $row["password"]) {
                 // Login successful
                 session_regenerate_id();
                 $_SESSION["user_id"] = $row["user_id"];

@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = trim($_POST["password"] ?? '');
         
     try {
-        $sql = "SELECT user_id, user_ic, full_name, password_hash, user_email FROM profiles.users WHERE user_ic = :user_ic";
+        $sql = "SELECT user_id, user_ic, full_name, password, user_email FROM profiles.users WHERE user_ic = :user_ic";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(":user_ic", $user_ic, PDO::PARAM_STR);
         $stmt->execute();
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($stmt->rowCount() == 1) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            if ($password === $row["password_hash"]) {
+            if ($password === $row["password"]) {
                 session_regenerate_id(true);
                 $_SESSION["user_id"] = $row["user_id"];
                 $_SESSION["user_ic"] = $row["user_ic"];

@@ -116,7 +116,7 @@ if (!isset($_SESSION['user_id'])) {
                                 <p><?php echo htmlspecialchars($_SESSION['full_name']); ?></p>
                             </div>
                             <div class="info-item">
-                                <label>Student ID</label>
+                                <label>Student IC</label>
                                 <p><?php echo htmlspecialchars($_SESSION['user_ic']); ?></p>
                             </div>
                             <div class="info-item">
