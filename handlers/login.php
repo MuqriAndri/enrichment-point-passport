@@ -16,7 +16,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if($stmt->rowCount() == 1) {
             $row = $stmt->fetch();
             
-            // For testing with temporary password
             if($password === $row["password"]) {
                 // Login successful
                 session_regenerate_id();
@@ -27,18 +26,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: ../dashboard.php");
                 exit;
             }
-            
-            /* Use this for production with proper password hashing:
-            if(password_verify($password, $row["password_hash"])) {
-                session_regenerate_id();
-                $_SESSION["user_id"] = $row["user_id"];
-                $_SESSION["user_ic"] = $row["user_ic"];
-                $_SESSION["full_name"] = $row["full_name"];
-                
-                header("Location: ../dashboard.php");
-                exit;
-            }
-            */
         }
         
         $_SESSION["error"] = "Invalid IC number or password.";
