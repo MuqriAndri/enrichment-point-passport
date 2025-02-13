@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-define('BASE_URL', 'http://54.255.234.118/enrichment-point-passport');
+define('BASE_URL', 'http://13.213.31.195/enrichment-point-passport');
 
 // Add database configuration
 require_once 'database/config.php';
