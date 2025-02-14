@@ -85,10 +85,10 @@ if (!isset($_SESSION['user_id'])) {
             <!-- Tab Navigation -->
             <div class="tab-navigation" role="navigation" aria-label="Main navigation">
                 <a href="/dashboard" class="tab-item">Dashboard</a>
-                <a href="/activities" class="tab-item">Activities</a>
+                <a href="/activities" class="tab-item">Enrichment Point</a>
                 <a href="/events" class="tab-item">Events</a>
-                <a href="/achievements" class="tab-item">Achievements</a>
-                <a href="/reports" class="tab-item">Reports</a>
+                <a href="/achievements" class="tab-item">CCAs</a>
+                <a href="/reports" class="tab-item">History</a>
             </div>
 
             <div class="main-wrapper">
@@ -97,13 +97,15 @@ if (!isset($_SESSION['user_id'])) {
                     <div class="profile-cover">
                         <div class="profile-avatar-wrapper">
                             <div class="profile-avatar">
-                                <?php if (isset($_SESSION['profile_picture'])): ?>
-                                    <img src="<?php echo $_SESSION['profile_picture']; ?>" alt="Profile Picture">
-                                <?php else: ?>
-                                    <span class="avatar-placeholder">
-                                        <?php echo strtoupper(substr($_SESSION['full_name'], 0, 1)); ?>
-                                    </span>
-                                <?php endif; ?>
+                                <div class="avatar-image-container">
+                                    <?php if (isset($_SESSION['profile_picture'])): ?>
+                                        <img src="<?php echo $_SESSION['profile_picture']; ?>" alt="Profile Picture">
+                                    <?php else: ?>
+                                        <span class="avatar-placeholder">
+                                            <?php echo strtoupper(substr($_SESSION['full_name'], 0, 1)); ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
                                 <button class="avatar-upload-btn" aria-label="Upload profile picture">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>

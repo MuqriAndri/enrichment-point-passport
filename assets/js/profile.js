@@ -161,32 +161,25 @@ async function handleAvatarUpload(file) {
     try {
         showLoadingState();
         
-        // Get the base URL from your page
-        const baseUrl = '/enrichment-point-passport'; // Your project base URL
-        
+        const baseUrl = '/enrichment-point-passport';
         const response = await fetch(`${baseUrl}/handlers/upload-profile-picture.php`, {
             method: 'POST',
             body: formData
         });
         
-        if (!response.ok) {
-            const result = await response.json();
-            throw new Error(result.error || 'Failed to upload profile picture');
-        }
-        
         const result = await response.json();
         
         if (result.success) {
-            updateAvatarPreview(result.avatarUrl);
-            showNotification('Profile picture updated successfully');
+            updateAvatarPreview(result.data.avatarUrl);
+            showNotification(result.data.message || 'Profile picture updated successfully');
             
             // Update navigation avatar if it exists
             const navAvatar = document.querySelector('.nav-right .user-avatar img');
             if (navAvatar) {
-                navAvatar.src = result.avatarUrl;
+                navAvatar.src = result.data.avatarUrl;
             }
         } else {
-            throw new Error(result.error || 'Failed to upload profile picture');
+            throw new Error(result.data.error || 'Failed to upload profile picture');
         }
     } catch (error) {
         console.error('Upload error:', error);
@@ -211,7 +204,6 @@ function updateAvatarPreview(url) {
         avatar.appendChild(img);
     }
     
-    // Add timestamp to prevent caching
     img.src = `${url}?t=${new Date().getTime()}`;
     img.alt = 'Profile Picture';
 }
