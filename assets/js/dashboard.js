@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeCalendar();
     initializeDropdowns();
     initializeNotifications();
+    initializeProgressCircle();
     handleEventRegistration();
 });
 
@@ -237,6 +238,36 @@ async function handleNotificationClick() {
         }
     } catch (error) {
         console.error('Error handling notifications:', error);
+    }
+}
+
+function initializeProgressCircle() {
+    const progressCircle = document.querySelector('.progress-circle');
+    const pointsDisplay = document.querySelector('.points');
+    const percentageText = document.querySelector('.percentage-text');
+    const progressbar = document.querySelector('.circular-progress');
+    
+    if (!progressCircle || !pointsDisplay) return; // Guard clause if elements don't exist
+
+    // Get the current points from the points span
+    const currentPoints = parseInt(pointsDisplay.textContent);
+    const totalPoints = 64;
+
+    // Calculate percentage
+    const percentage = (currentPoints / totalPoints) * 100;
+    const roundedPercentage = percentage.toFixed(0);
+
+    // Update progress circle
+    progressCircle.style.strokeDasharray = `${roundedPercentage}, 100`;
+
+    // Update percentage text
+    if (percentageText) {
+        percentageText.textContent = roundedPercentage;
+    }
+
+    // Update aria value
+    if (progressbar) {
+        progressbar.setAttribute('aria-valuenow', roundedPercentage);
     }
 }
 

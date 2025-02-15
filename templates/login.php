@@ -8,7 +8,7 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, height=device-height">
     <title>Politeknik Brunei Enrichment Point Passport</title>
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/login-page.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/login.css">
 </head>
 
 <body>

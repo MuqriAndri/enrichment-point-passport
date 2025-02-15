@@ -1,0 +1,287 @@
+.clubs-header {
+    margin-bottom: var(--spacing-lg);
+}
+
+.clubs-header h1 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-xs);
+}
+
+.clubs-header p {
+    color: var(--text-light);
+    font-size: 1.1rem;
+}
+
+.club-category {
+    margin-bottom: var(--spacing-xl);
+}
+
+.club-category h2 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin: var(--spacing-lg) 0 var(--spacing-md);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 2px solid var(--border-color);
+}
+
+/* Club Grid Layout */
+.club-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-md);
+}
+
+/* Club Card */
+.club-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-fast);
+}
+
+.club-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Club Icon */
+.club-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--background-light);
+    color: var(--primary-color);
+    flex-shrink: 0;
+}
+
+/* Club Information */
+.club-info {
+    flex: 1;
+    min-width: 0;
+    /* Prevent text overflow */
+}
+
+.club-info h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: var(--spacing-xs);
+}
+
+.club-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.club-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.club-stats {
+    display: flex;
+    gap: 1rem;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    align-items: center;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.club-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.5);
+    /* Changed to white with slight transparency */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.club-card:hover .club-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.club-meta {
+    display: flex;
+    gap: var(--spacing-sm);
+    color: var(--text-light);
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+}
+
+.club-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.view-details-btn {
+    background: var(--primary-color);
+    /* Your blue color */
+    color: white;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: all var(--transition-fast);
+}
+
+.view-details-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    background: #2d4a7c;
+    /* Slightly darker blue on hover */
+    text-decoration: none;
+    /* Explicitly remove underline on hover */
+}
+
+.alert {
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+}
+
+.alert-success {
+    background: rgba(72, 187, 120, 0.1);
+    color: var(--success-color);
+    border: 1px solid var(--success-color);
+}
+
+.alert-error {
+    background: rgba(245, 101, 101, 0.1);
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
+    .club-list {
+        grid-template-columns: 1fr;
+    }
+
+    .club-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .club-meta {
+        justify-content: center;
+    }
+
+    .join-btn {
+        width: 100%;
+    }
+}
+
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-md);
+    background: white;
+    box-shadow: var(--shadow-lg);
+    animation: slideIn 0.3s ease-out;
+    z-index: 1000;
+}
+
+.notification.success {
+    background: var(--success-color);
+    color: white;
+}
+
+.notification.error {
+    background: var(--danger-color);
+    color: white;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.empty-category-message {
+    text-align: center;
+    color: var(--text-light);
+    padding: var(--spacing-md);
+    font-style: italic;
+}
+
+.club-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-md);
+    background: var(--background-light);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Category-specific placeholder backgrounds */
+.club-logo.sports {
+    background: rgba(237, 137, 54, 0.1);
+    color: #ED8936;
+}
+
+.club-logo.arts {
+    background: rgba(76, 81, 191, 0.1);
+    color: #4C51BF;
+}
+
+.club-logo.culture {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667EEA;
+}
+
+.club-logo.academic {
+    background: rgba(72, 187, 120, 0.1);
+    color: #48BB78;
+}
+
+.club-logo.martial-arts {
+    background: rgba(245, 101, 101, 0.1);
+    color: #F56565;
+}
+
+.club-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* When using icon placeholder */
+.club-logo svg {
+    width: 30px;
+    height: 30px;
+}

@@ -103,30 +103,31 @@ if (!isset($_SESSION['user_id'])) {
                             </a>
                         </div>
                         <div class="points-overview">
-                            <div class="circular-progress" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                            <div class="circular-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                                 <svg viewBox="0 0 36 36" class="circular-chart">
                                     <path d="M18 2.0845
-                                        a 15.9155 15.9155 0 0 1 0 31.831
-                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
                                         fill="none"
                                         stroke="#eee"
                                         stroke-width="2.5" />
-                                    <path d="M18 2.0845
-                                        a 15.9155 15.9155 0 0 1 0 31.831
-                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    <path class="progress-circle"
+                                        d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
                                         fill="none"
                                         stroke="#c0a43d"
                                         stroke-width="2.5"
-                                        stroke-dasharray="75, 100" />
+                                        stroke-dasharray="0, 100" />
                                 </svg>
                                 <div class="percentage">
-                                    <span class="points">44</span>
+                                    <span class="points"><?php echo intval($_SESSION['enrichment_point']); ?></span>
                                     <span class="total">/64</span>
                                 </div>
                             </div>
                             <div class="points-info">
                                 <h3>Total Points</h3>
-                                <p>75% of target achieved</p>
+                                <p><span class="percentage-text">0</span>% of target achieved</p>
                             </div>
                         </div>
                     </div>

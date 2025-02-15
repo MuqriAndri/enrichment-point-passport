@@ -8,9 +8,6 @@ ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 header('Content-Type: application/json');
 
-/**
- * Helper function to send JSON response
- */
 function sendResponse($success, $data, $statusCode = 200) {
     http_response_code($statusCode);
     echo json_encode([
@@ -20,11 +17,26 @@ function sendResponse($success, $data, $statusCode = 200) {
     exit();
 }
 
-/**
- * Helper function to log errors with context
- */
 function logError($message, $context = []) {
     error_log("Upload Error - " . $message . " Context: " . json_encode($context));
+}
+
+function generateUniqueFilename($userId, $extension) {
+    // Format: userID_YYYYMMDD_HHmmss_random
+    $timestamp = date('Ymd_His');
+    $random = substr(md5(uniqid()), 0, 8);
+    return sprintf('profile_%s_%s_%s.%s', $userId, $timestamp, $random, $extension);
+}
+
+function cleanOldProfilePictures($userId, $uploadDir) {
+    $pattern = $uploadDir . '/profile_' . $userId . '_*';
+    $existingFiles = glob($pattern);
+    
+    foreach ($existingFiles as $file) {
+        if (is_file($file)) {
+            unlink($file);
+        }
+    }
 }
 
 // Validate session
@@ -57,7 +69,6 @@ try {
             logError('Failed to create directory', ['path' => $uploadDir]);
             sendResponse(false, ['error' => 'Server configuration error'], 500);
         }
-        // Ensure proper permissions
         chmod($uploadDir, 0775);
     }
 
@@ -76,9 +87,12 @@ try {
         sendResponse(false, ['error' => 'File too large. Maximum size is 5MB.'], 400);
     }
 
+    // Clean up old profile pictures before uploading new one
+    cleanOldProfilePictures($_SESSION['user_id'], $uploadDir);
+
     // Generate unique filename
     $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    $filename = $_SESSION['user_id'] . '_' . time() . '.' . $extension;
+    $filename = generateUniqueFilename($_SESSION['user_id'], $extension);
     $filepath = $uploadDir . '/' . $filename;
 
     // Attempt to move the file
@@ -89,19 +103,11 @@ try {
             'to' => $filepath,
             'error' => $error
         ]);
-        sendResponse(false, ['error' => 'Failed to save file: ' . $error['message']], 500);
+        sendResponse(false, ['error' => 'Failed to save file'], 500);
     }
 
     // Set file permissions
     chmod($filepath, 0664);
-
-    // Clean up old profile picture
-    if (isset($_SESSION['profile_picture']) && !empty($_SESSION['profile_picture'])) {
-        $oldFile = $baseDir . $_SESSION['profile_picture'];
-        if (file_exists($oldFile) && is_file($oldFile)) {
-            unlink($oldFile);
-        }
-    }
 
     // Update relative path for database and frontend
     $relativePath = '/enrichment-point-passport/assets/images/uploads/profile/' . $filename;
@@ -114,7 +120,6 @@ try {
         ':profile_picture' => $relativePath,
         ':user_id' => $_SESSION['user_id']
     ])) {
-        // If database update fails, clean up the uploaded file
         unlink($filepath);
         logError('Database update failed', ['user_id' => $_SESSION['user_id']]);
         sendResponse(false, ['error' => 'Failed to update profile picture in database'], 500);
