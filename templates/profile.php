@@ -84,11 +84,11 @@ if (!isset($_SESSION['user_id'])) {
         <div class="main-content">
             <!-- Tab Navigation -->
             <div class="tab-navigation" role="navigation" aria-label="Main navigation">
-                <a href="/dashboard" class="tab-item">Dashboard</a>
-                <a href="/activities" class="tab-item">Enrichment Point</a>
-                <a href="/events" class="tab-item">Events</a>
-                <a href="/achievements" class="tab-item">CCAs</a>
-                <a href="/reports" class="tab-item">History</a>
+            <a href="<?php echo BASE_URL; ?>/dashboard" class="tab-item">Dashboard</a>
+                <a href="<?php echo BASE_URL; ?>/ep" class="tab-item">Enrichment Point</a>
+                <a href="<?php echo BASE_URL; ?>/events" class="tab-item">Events</a>
+                <a href="<?php echo BASE_URL; ?>/cca" class="tab-item">CCAs</a>
+                <a href="<?php echo BASE_URL; ?>/history" class="tab-item">History</a>
             </div>
 
             <div class="main-wrapper">
