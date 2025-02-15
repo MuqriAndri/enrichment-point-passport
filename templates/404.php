@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, height=device-height">
     <title>404 - Page Not Found | Politeknik Brunei Enrichment Point Passport</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/404.css">
 </head>
+
 <body>
     <nav class="nav">
         <a href="<?php echo BASE_URL; ?>">PB Website</a>
         <a href="<?php echo BASE_URL; ?>/about">About</a>
         <a href="<?php echo BASE_URL; ?>/contact">Contact</a>
     </nav>
-
     <div class="error-container">
         <img src="<?php echo BASE_URL; ?>/assets/images/politeknik-brunei-logo.png" alt="Politeknik Brunei Logo" class="logo">
         <div class="error-content">
@@ -52,4 +53,5 @@
         </div>
     </footer>
 </body>
+
 </html>

@@ -2,7 +2,7 @@
 
 :root {
     --primary-color: #1a365d;
-    --accent-color: #c0a43d;
+    --accent-color: #efbf04;
     --text-dark: #2d3748;
     --text-light: #718096;
 }
@@ -19,25 +19,71 @@ html, body {
 }
 
 .nav {
-    background-color: var(--primary-color);
+    background-color: #1a365d;
+    background-image: 
+        radial-gradient(circle at 20% 150%, #2d4a7c 9%, transparent 50%),
+        radial-gradient(circle at 70% -20%, #2d4a7c 15%, transparent 50%),
+        linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.03) 50%, transparent 52%),
+        linear-gradient(-45deg, transparent 48%, rgba(255, 255, 255, 0.03) 50%, transparent 52%);
+    background-size: 
+        100% 100%,
+        100% 100%,
+        30px 30px,
+        30px 30px;
     padding: 1.2rem 2rem;
     text-align: right;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+    position: relative;
+ }
 
-.nav a {
-    color: white;
+ .nav a {
+    color: rgba(255, 255, 255, 0.9); /* Bright white with slight transparency */
     text-decoration: none;
     margin-left: 2.5rem;
     font-size: 0.95rem;
     font-weight: 500;
     letter-spacing: 0.5px;
     transition: color 0.3s ease;
+    position: relative; /* Added for hover effect */
 }
 
 .nav a:hover {
-    color: var(--accent-color);
+    color: var(--accent-color); /* Gold accent color on hover */
 }
+
+/* Optional: Add subtle underline effect on hover */
+.nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease;
+}
+
+.nav a:hover::after {
+    width: 100%;
+}
+ 
+ /* Add subtle animated dots overlay */
+ .nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+ }
+ 
+ /* Ensure nav content stays above overlays */
+ .nav > * {
+    position: relative;
+    z-index: 1;
+ }
 
 .container {
     max-width: 1200px;

@@ -247,14 +247,14 @@ function initializeProgressCircle() {
     const percentageText = document.querySelector('.percentage-text');
     const progressbar = document.querySelector('.circular-progress');
     
-    if (!progressCircle || !pointsDisplay) return; // Guard clause if elements don't exist
+    if (!progressCircle || !pointsDisplay) return;
 
     // Get the current points from the points span
     const currentPoints = parseInt(pointsDisplay.textContent);
     const totalPoints = 64;
 
-    // Calculate percentage
-    const percentage = (currentPoints / totalPoints) * 100;
+    // Calculate percentage and cap it at 100%
+    const percentage = Math.min((currentPoints / totalPoints) * 100, 100);
     const roundedPercentage = percentage.toFixed(0);
 
     // Update progress circle

@@ -51,14 +51,14 @@ if (!isset($_SESSION['user_id'])) {
                             <span class="user-name"><?php echo explode(' ', $_SESSION['full_name'])[0]; ?></span>
                         </div>
                         <div class="dropdown-menu" role="menu">
-                            <a href="/profile" class="dropdown-item" role="menuitem">
+                            <a href="<?php echo BASE_URL; ?>/profile" class="dropdown-item" role="menuitem">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
                                 My Profile
                             </a>
-                            <a href="/settings" class="dropdown-item" role="menuitem">
+                            <a href="<?php echo BASE_URL; ?>/settings" class="dropdown-item" role="menuitem">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <circle cx="12" cy="12" r="3"></circle>
                                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -82,7 +82,7 @@ if (!isset($_SESSION['user_id'])) {
 
         <div class="main-content">
             <div class="tab-navigation" role="navigation" aria-label="Main navigation">
-            <a href="<?php echo BASE_URL; ?>/dashboard" class="tab-item active">Dashboard</a>
+                <a href="<?php echo BASE_URL; ?>/dashboard" class="tab-item active">Dashboard</a>
                 <a href="<?php echo BASE_URL; ?>/ep" class="tab-item">Enrichment Point</a>
                 <a href="<?php echo BASE_URL; ?>/events" class="tab-item">Events</a>
                 <a href="<?php echo BASE_URL; ?>/cca" class="tab-item">CCAs</a>
@@ -95,7 +95,7 @@ if (!isset($_SESSION['user_id'])) {
                         <div class="welcome-content">
                             <h1>Welcome back, <?php echo explode(' ', $_SESSION['full_name'])[0]; ?>!</h1>
                             <p>Track your enrichment journey and discover new opportunities.</p>
-                            <a href="/activities" class="primary-btn">
+                            <a href="<?php echo BASE_URL; ?>/events" class="primary-btn">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M12 5l7 7-7 7M5 12h14"></path>
                                 </svg>

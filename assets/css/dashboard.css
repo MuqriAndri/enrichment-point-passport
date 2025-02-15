@@ -4,7 +4,7 @@
 :root {
     /* Color Variables */
     --primary-color: #1a365d;
-    --accent-color: #c0a43d;
+    --accent-color: #efbf04;
     --text-dark: #2d3748;
     --text-light: #718096;
     --success-color: #48BB78;
@@ -32,9 +32,9 @@
     --transition-normal: 0.3s ease;
 
     /* Shadows */
-    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* Reset and Base Styles */
@@ -67,7 +67,8 @@ body {
 .main-content {
     flex: 1;
     padding: var(--spacing-lg);
-    margin-top: 4rem; /* Account for fixed header */
+    margin-top: 4rem;
+    /* Account for fixed header */
 }
 
 .main-wrapper {
@@ -257,7 +258,17 @@ body {
 
 /* Top Navigation Bar */
 .top-nav {
-    background: var(--primary-color);
+    background-color: #1a365d;
+    background-image:
+        radial-gradient(circle at 20% 150%, #2d4a7c 9%, transparent 50%),
+        radial-gradient(circle at 70% -20%, #2d4a7c 15%, transparent 50%),
+        linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.03) 50%, transparent 52%),
+        linear-gradient(-45deg, transparent 48%, rgba(255, 255, 255, 0.03) 50%, transparent 52%);
+    background-size:
+        100% 100%,
+        100% 100%,
+        30px 30px,
+        30px 30px;
     padding: var(--spacing-sm) var(--spacing-lg);
     position: fixed;
     top: 0;
@@ -269,6 +280,35 @@ body {
     align-items: center;
     color: white;
     box-shadow: var(--shadow-md);
+}
+
+/* Add subtle animated dots overlay */
+.top-nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* Add a subtle gradient overlay */
+.top-nav::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, rgba(26, 54, 93, 0.4) 0%, rgba(26, 54, 93, 0) 50%, rgba(26, 54, 93, 0.4) 100%);
+}
+
+/* Ensure content stays above overlays */
+.top-nav>* {
+    position: relative;
+    z-index: 1;
 }
 
 .nav-left {
@@ -370,7 +410,8 @@ body {
     display: flex;
     background: white;
     position: sticky;
-    top: 64px; /* Height of top nav */
+    top: 64px;
+    /* Height of top nav */
     z-index: 900;
     padding: var(--spacing-xs);
     border-radius: var(--radius-lg);
@@ -383,7 +424,8 @@ body {
     padding: 0.75rem var(--spacing-md);
     color: var(--text-dark);
     text-decoration: none;
-    border-radius: var(--radius-md); /* Consistent border radius */
+    border-radius: var(--radius-md);
+    /* Consistent border radius */
     transition: var(--transition-fast);
     font-weight: 500;
     text-align: center;
@@ -393,7 +435,8 @@ body {
 .tab-item.active {
     background: var(--primary-color);
     color: white;
-    border-radius: var(--radius-md); /* Explicitly set border radius for active state */
+    border-radius: var(--radius-md);
+    /* Explicitly set border radius for active state */
 }
 
 .tab-item:hover:not(.active) {
@@ -566,7 +609,17 @@ body {
 
 /* Welcome Card */
 .welcome-card {
-    background: white;
+    background-color: #1a365d;
+    background-image:
+        radial-gradient(circle at 20% 150%, #2d4a7c 9%, transparent 50%),
+        radial-gradient(circle at 70% -20%, #2d4a7c 15%, transparent 50%),
+        linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.03) 50%, transparent 52%),
+        linear-gradient(-45deg, transparent 48%, rgba(255, 255, 255, 0.03) 50%, transparent 52%);
+    background-size:
+        100% 100%,
+        100% 100%,
+        30px 30px,
+        30px 30px;
     padding: var(--spacing-lg);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
@@ -575,24 +628,62 @@ body {
     align-items: center;
     margin-bottom: var(--spacing-lg);
     border: 1px solid var(--border-color);
+    position: relative;
+    color: white;
+    /* Since background is now dark */
 }
 
+/* Add subtle animated dots overlay */
+.welcome-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    border-radius: var(--radius-md);
+}
+
+/* Add a subtle gradient overlay */
+.welcome-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(26, 54, 93, 0) 0%, rgba(26, 54, 93, 0.4) 100%);
+    border-radius: var(--radius-md);
+}
+
+/* Ensure content stays above overlays */
+.welcome-card>* {
+    position: relative;
+    z-index: 1;
+}
+
+/* Adjust text colors for dark background */
 .welcome-content {
-    flex: 1;
+    padding: var(--spacing-xs) var(--spacing-xs);
+    /* More padding on top/bottom */
 }
 
 .welcome-content h1 {
-    font-size: 2rem;
-    color: var(--primary-color);
-    margin-bottom: var(--spacing-xs);
+    font-size: 2.5rem;
+    /* Larger title */
+    color: white;
+    margin-bottom: var(--spacing-md);
     line-height: 1.2;
     font-weight: 700;
 }
 
 .welcome-content p {
-    color: var(--text-light);
-    margin-bottom: var(--spacing-md);
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: var(--spacing-lg);
     font-size: 1.1rem;
+    line-height: 1.5;
 }
 
 .points-overview {
@@ -621,6 +712,21 @@ body {
     transition: stroke-dasharray var(--transition-normal);
 }
 
+/* Track (background) path */
+.circular-chart path:first-child {
+    stroke: rgba(255, 255, 255, 0.2);
+    /* Lighter stroke for better contrast */
+}
+
+/* Progress path */
+.circular-chart path:last-child {
+    stroke: var(--accent-color);
+    /* Use accent color (gold) */
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 2px rgba(239, 191, 4, 0.2));
+    /* Subtle glow */
+}
+
 .percentage {
     position: absolute;
     top: 50%;
@@ -633,34 +739,37 @@ body {
 }
 
 .percentage .points {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
+    /* Slightly larger */
     font-weight: 700;
-    color: var(--primary-color);
+    color: white;
+    /* Changed to white for better contrast */
 }
 
 .percentage .total {
     font-size: 1rem;
-    color: var(--text-light);
+    color: rgba(255, 255, 255, 0.7);
+    /* Semi-transparent white */
+    margin-top: 0.25rem;
 }
 
 /* Action Buttons */
 .primary-btn {
     display: inline-flex;
     align-items: center;
-    gap: var(--spacing-xs);
-    background: var(--primary-color);
+    gap: var(--spacing-sm);
+    background: rgba(255, 255, 255, 0.1);
     color: white;
-    padding: 0.75rem var(--spacing-md);
+    padding: 0.875rem var(--spacing-lg);
     border-radius: var(--radius-md);
     text-decoration: none;
     font-weight: 500;
     transition: all var(--transition-fast);
-    border: none;
-    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .primary-btn:hover {
-    background: #2d4a7c;
+    background: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
@@ -929,13 +1038,13 @@ body {
     .dashboard-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .welcome-card {
         flex-direction: column;
         text-align: center;
         gap: var(--spacing-lg);
     }
-    
+
     .points-overview {
         padding-left: 0;
         border-left: none;
@@ -972,15 +1081,15 @@ body {
     .top-nav {
         padding: var(--spacing-sm);
     }
-    
+
     .search-bar {
         display: none;
     }
-    
+
     .main-wrapper {
         padding: calc(64px + var(--spacing-sm)) var(--spacing-sm) var(--spacing-sm);
     }
-    
+
     .welcome-content h1 {
         font-size: 1.5rem;
     }
@@ -1046,6 +1155,7 @@ body {
 
 /* Print Styles */
 @media print {
+
     .top-nav,
     .tab-navigation,
     .search-bar,
