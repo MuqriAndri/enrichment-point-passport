@@ -95,7 +95,7 @@ async function saveProfileChanges() {
             formDataObject[key] = value;
         });
 
-        const response = await fetch(`${window.location.origin}/enrichment-point-passport/handlers/update-profile.php`, {
+        const response = await fetch(`${window.location.origin}/enrichment-point-passport/handlers/edit-profile.php`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
