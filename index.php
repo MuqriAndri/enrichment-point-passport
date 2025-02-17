@@ -1,9 +1,8 @@
 <?php
 session_start();
 
-define('BASE_URL', 'http://18.139.223.80/enrichment-point-passport');
+define('BASE_URL', 'http://18.136.198.46/enrichment-point-passport');
 
-// Add database configuration
 require_once 'database/config.php';
 
 // Get the path from URL
@@ -20,7 +19,7 @@ if ($page === 'login' && isset($_SESSION['user_id'])) {
 }
 
 // List of pages that require authentication
-$protected_pages = ['dashboard', 'profile', 'cca']; // Added 'profile' to protected pages
+$protected_pages = ['dashboard', 'profile', 'cca'];
 
 // Check authentication for protected pages
 if (in_array($page, $protected_pages) && !isset($_SESSION['user_id'])) {
@@ -99,7 +98,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Handle CCA registration/leaving POST requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'cca') {
     $operation = $_POST['operation'] ?? '';
     $club_id = $_POST['club_id'] ?? '';
@@ -184,15 +182,15 @@ if ($page === 'cca') {
         // Fetch all active CCAs and their member counts
         $sql = "SELECT 
         c.club_id,
-        c.name,
+        c.club_name,
         c.category,
         COUNT(DISTINCT cm.student_id) as member_count
     FROM cca.clubs c
     LEFT JOIN cca.club_members cm ON c.club_id = cm.club_id 
         AND cm.status = 'Active'
     WHERE c.status = 'Active'
-    GROUP BY c.club_id, c.name, c.category
-    ORDER BY c.category, c.name";
+    GROUP BY c.club_id, c.club_name, c.category
+    ORDER BY c.category, c.club_name";
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
@@ -233,7 +231,6 @@ if ($page === 'cca') {
     }
 }
 
-// Handle page routing
 switch ($page) {
     case 'login':
         include 'templates/login.php';
@@ -256,7 +253,74 @@ switch ($page) {
         include 'templates/contact.php';
         break;
     case 'cca':
-        include 'templates/cca.php';
+        if (isset($params[0])) {
+            $requestedClub = $params[0];
+
+            $clubMapping = [
+                'academic' => [
+                    'COPS Club' => 'cops',
+                    'Geosoc Club' => 'geosoc',
+                    'KNI' => 'kni',
+                    'SPE Club' => 'spe',
+                    'Chess Club' => 'chess',
+                    'Kadet Tentera' => 'kadet-tentera'
+                ],
+                'arts' => [
+                    'Art Club' => 'art',
+                    'Movie Club' => 'movie',
+                    'Music Club' => 'music',
+                    'Dance Club' => 'dance'
+                ],
+                'culture' => [
+                    'Gulingtangan' => 'gulingtangan',
+                    'Hadrah' => 'hadrah',
+                    'KAWAN Club' => 'kawan',
+                    'Korean Culture Club' => 'korean-culture',
+                    'Let\'s Japan Club' => 'lets-japan',
+                    'Healing Club' => 'healing'
+                ],
+                'martial-arts' => [
+                    'Boxing Club' => 'boxing',
+                    'Hapkido Club' => 'hapkido',
+                    'Judo Club' => 'judo',
+                    'Karate Club' => 'karate'
+                ],
+                'sports' => [
+                    'Badminton Club' => 'badminton',
+                    'Basketball' => 'basketball',
+                    'Dodgeball' => 'dodgeball',
+                    'Esports Club' => 'esports',
+                    'Frisbee Club' => 'frisbee',
+                    'Futsal Club' => 'futsal',
+                    'Hiking Club' => 'hiking',
+                    'Netball' => 'netball',
+                    'Pool Club' => 'pool',
+                    'Squash Club' => 'squash',
+                    'Touch Rugby' => 'touch-rugby',
+                    'Volleyball' => 'volleyball',
+                    'Zumba Club' => 'zumba'
+                ]
+            ];
+
+            foreach ($clubMapping as $category => $clubs) {
+                foreach ($clubs as $clubName => $clubSlug) {
+                    if ($requestedClub === $clubSlug) {
+                        $templatePath = "templates/clubs/{$category}/{$clubSlug}.php";
+                        if (file_exists($templatePath)) {
+                            include $templatePath;
+                            break 2;
+                        }
+                    }
+                }
+            }
+
+            if (!isset($templatePath) || !file_exists($templatePath)) {
+                header("HTTP/1.0 404 Not Found");
+                include 'templates/404.php';
+            }
+        } else {
+            include 'templates/cca.php';
+        }
         break;
     default:
         header("HTTP/1.0 404 Not Found");

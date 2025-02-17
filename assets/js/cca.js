@@ -1,11 +1,9 @@
-// Initialize all components when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     initializeClubSearch();
     initializeClubRegistration();
     checkUserClubStatus();
 });
 
-// Handle club search functionality
 function initializeClubSearch() {
     const searchInput = document.querySelector('.search-bar input');
     if (!searchInput) return;
@@ -20,7 +18,6 @@ function initializeClubSearch() {
             card.style.display = isVisible ? 'flex' : 'none';
         });
 
-        // Show/hide empty category messages
         document.querySelectorAll('.club-category').forEach(category => {
             const visibleClubs = category.querySelectorAll('.club-card[style="display: flex"]').length;
             const emptyMessage = category.querySelector('.empty-category-message');
@@ -41,7 +38,6 @@ function initializeClubSearch() {
     }, 300));
 }
 
-// Handle club registration
 function initializeClubRegistration() {
     const clubList = document.querySelector('.clubs-grid');
     if (!clubList) return;
@@ -67,7 +63,6 @@ function initializeClubRegistration() {
     });
 }
 
-// Check user's existing club memberships
 async function checkUserClubStatus() {
     try {
         const response = await fetch('/api/clubs/user-memberships');
@@ -126,11 +121,6 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-function viewClubDetails(clubId) {
-    window.location.href = `${BASE_URL}/cca/details/${clubId}`;
-}
-
-// Debounce function for search input
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
