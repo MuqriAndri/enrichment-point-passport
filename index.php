@@ -304,19 +304,88 @@ switch ($page) {
                 ]
             ];
 
+            // Find club data in the mapping
+            $clubFound = false;
+            $clubCategory = '';
+            $clubName = '';
+
             foreach ($clubMapping as $category => $clubs) {
-                foreach ($clubs as $clubName => $clubSlug) {
-                    if ($requestedClub === $clubSlug) {
-                        $templatePath = "templates/clubs/{$category}/{$clubSlug}.php";
-                        if (file_exists($templatePath)) {
-                            include $templatePath;
-                            break 2;
-                        }
+                foreach ($clubs as $name => $slug) {
+                    if ($requestedClub === $slug) {
+                        $clubFound = true;
+                        $clubCategory = $category;
+                        $clubName = $name;
+                        break 2;
                     }
                 }
             }
 
-            if (!isset($templatePath) || !file_exists($templatePath)) {
+            if ($clubFound) {
+                // Fetch detailed club information from database
+                try {
+                    $sql = "SELECT 
+                            c.club_id,
+                            c.club_name,
+                            c.category,
+                            c.description,
+                            c.meeting_schedule,
+                            c.location,
+                            c.advisor,
+                            c.president,
+                            c.contact_email,
+                            c.membership_fee,
+                            COUNT(DISTINCT cm.student_id) as member_count
+                        FROM cca.clubs c
+                        LEFT JOIN cca.club_members cm ON c.club_id = cm.club_id 
+                            AND cm.status = 'Active'
+                        WHERE c.club_name = :club_name
+                        GROUP BY c.club_id, c.club_name, c.category";
+
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->bindParam(':club_name', $clubName, PDO::PARAM_STR);
+                    $stmt->execute();
+
+                    if ($stmt->rowCount() > 0) {
+                        $clubDetails = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                        // Check if user is a member of this club
+                        $isMember = false;
+                        if (isset($_SESSION['student_id'])) {
+                            $membershipSql = "SELECT club_id 
+                                        FROM cca.club_members 
+                                        WHERE student_id = :student_id 
+                                        AND club_id = :club_id
+                                        AND status = 'Active'";
+                            $membershipStmt = $pdo->prepare($membershipSql);
+                            $membershipStmt->bindParam(':student_id', $_SESSION['student_id']);
+                            $membershipStmt->bindParam(':club_id', $clubDetails['club_id']);
+                            $membershipStmt->execute();
+                            $isMember = ($membershipStmt->rowCount() > 0);
+                        }
+
+                        // TODO: Fetch upcoming events, activities, achievements, and gallery for this club
+
+                        // Create club data for the template
+                        $clubData = [
+                            'details' => $clubDetails,
+                            'isMember' => $isMember,
+                            'upcoming_events' => [], // Placeholder for events data
+                            'activities' => [],      // Placeholder for activities data
+                            'gallery' => []          // Placeholder for gallery data
+                        ];
+
+                        // Pass club data to the template
+                        include 'templates/cca-detail.php';
+                    } else {
+                        header("HTTP/1.0 404 Not Found");
+                        include 'templates/404.php';
+                    }
+                } catch (PDOException $e) {
+                    error_log("Error fetching club details: " . $e->getMessage());
+                    $_SESSION['error'] = "Failed to load club details";
+                    include 'templates/cca-detail.php';
+                }
+            } else {
                 header("HTTP/1.0 404 Not Found");
                 include 'templates/404.php';
             }

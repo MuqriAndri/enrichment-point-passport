@@ -1,0 +1,626 @@
+/* Sports category button style */
+.sports .join-btn {
+    background: rgba(237, 137, 54, 0.2);
+    border-color: rgba(237, 137, 54, 0.3);
+}
+
+.sports .join-btn:hover {
+    background: rgba(237, 137, 54, 0.3);
+}
+
+/* Academic category button style */
+.academic .join-btn {
+    background: rgba(76, 81, 191, 0.2);
+    border-color: rgba(76, 81, 191, 0.3);
+}
+
+.academic .join-btn:hover {
+    background: rgba(76, 81, 191, 0.3);
+}
+
+/* Arts category button style */
+.arts .join-btn {
+    background: rgba(159, 122, 234, 0.2);
+    border-color: rgba(159, 122, 234, 0.3);
+}
+
+.arts .join-btn:hover {
+    background: rgba(159, 122, 234, 0.3);
+}
+
+/* Culture category button style */
+.culture .join-btn {
+    background: rgba(102, 126, 234, 0.2);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.culture .join-btn:hover {
+    background: rgba(102, 126, 234, 0.3);
+}
+
+/* Martial Arts category button style */
+.martial-arts .join-btn {
+    background: rgba(245, 101, 101, 0.2);
+    border-color: rgba(245, 101, 101, 0.3);
+}
+
+.martial-arts .join-btn:hover {
+    background: rgba(245, 101, 101, 0.3);
+}/* CCA Detail Page Styles */
+
+/* Alert Styles */
+.alert {
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-md);
+    border: 1px solid transparent;
+}
+
+.alert-success {
+    background-color: rgba(72, 187, 120, 0.1);
+    color: var(--success-color);
+    border-color: rgba(72, 187, 120, 0.3);
+}
+
+.alert-error {
+    background-color: rgba(245, 101, 101, 0.1);
+    color: var(--danger-color);
+    border-color: rgba(245, 101, 101, 0.3);
+}
+
+/* Back Link */
+.back-link {
+    margin-bottom: var(--spacing-md);
+}
+
+.back-link a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color var(--transition-fast);
+}
+
+.back-link a:hover {
+    color: white;
+}
+
+.back-link svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Club Detail Header Section */
+.club-detail-header {
+    background-color: #1a365d;
+    background-image:
+        radial-gradient(circle at 20% 150%, #2d4a7c 9%, transparent 50%),
+        radial-gradient(circle at 70% -20%, #2d4a7c 15%, transparent 50%),
+        linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.03) 50%, transparent 52%),
+        linear-gradient(-45deg, transparent 48%, rgba(255, 255, 255, 0.03) 50%, transparent 52%);
+    background-size:
+        100% 100%,
+        100% 100%,
+        30px 30px,
+        30px 30px;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+    color: white;
+}
+
+/* Add subtle animated dots overlay */
+.club-detail-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    border-radius: var(--radius-lg);
+}
+
+/* Add a subtle gradient overlay */
+.club-detail-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, rgba(26, 54, 93, 0.4) 0%, rgba(26, 54, 93, 0) 50%, rgba(26, 54, 93, 0.4) 100%);
+    border-radius: var(--radius-lg);
+}
+
+/* Ensure content stays above overlays */
+.club-detail-header > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Category-based header styles - using accent colors */
+.club-detail-header.sports {
+    border-bottom: 4px solid #ED8936;
+}
+
+.club-detail-header.academic {
+    border-bottom: 4px solid #4C51BF;
+}
+
+.club-detail-header.arts {
+    border-bottom: 4px solid #9F7AEA;
+}
+
+.club-detail-header.culture {
+    border-bottom: 4px solid #667EEA;
+}
+
+.club-detail-header.martial-arts {
+    border-bottom: 4px solid #F56565;
+}
+
+/* Header content layout */
+.club-header-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    position: relative;
+    z-index: 1;
+    padding: var(--spacing-sm) 0;
+}
+
+/* Club logo styling */
+.club-logo-large {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+}
+
+/* Different accent colors for different categories */
+.sports .club-logo-large {
+    border-color: rgba(237, 137, 54, 0.4);
+    box-shadow: 0 0 15px rgba(237, 137, 54, 0.2);
+}
+
+.academic .club-logo-large {
+    border-color: rgba(76, 81, 191, 0.4);
+    box-shadow: 0 0 15px rgba(76, 81, 191, 0.2);
+}
+
+.arts .club-logo-large {
+    border-color: rgba(159, 122, 234, 0.4);
+    box-shadow: 0 0 15px rgba(159, 122, 234, 0.2);
+}
+
+.culture .club-logo-large {
+    border-color: rgba(102, 126, 234, 0.4);
+    box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+}
+
+.martial-arts .club-logo-large {
+    border-color: rgba(245, 101, 101, 0.4);
+    box-shadow: 0 0 15px rgba(245, 101, 101, 0.2);
+}
+
+/* Club main info styling */
+.club-info-main {
+    flex: 1;
+}
+
+.club-info-main h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.club-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.category-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sports .category-badge {
+    background: rgba(237, 137, 54, 0.2);
+    border-color: rgba(237, 137, 54, 0.4);
+}
+
+.academic .category-badge {
+    background: rgba(76, 81, 191, 0.2);
+    border-color: rgba(76, 81, 191, 0.4);
+}
+
+.arts .category-badge {
+    background: rgba(159, 122, 234, 0.2);
+    border-color: rgba(159, 122, 234, 0.4);
+}
+
+.culture .category-badge {
+    background: rgba(102, 126, 234, 0.2);
+    border-color: rgba(102, 126, 234, 0.4);
+}
+
+.martial-arts .category-badge {
+    background: rgba(245, 101, 101, 0.2);
+    border-color: rgba(245, 101, 101, 0.4);
+}
+
+.member-count, .points-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.member-count svg, .points-info svg {
+    color: inherit;
+}
+
+/* Club action buttons */
+.club-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.join-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.join-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.leave-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: none;
+    background: rgba(245, 101, 101, 0.2);
+    color: white;
+    border: 1px solid rgba(245, 101, 101, 0.3);
+}
+
+.leave-btn:hover {
+    background: rgba(245, 101, 101, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Club Detail Grid Layout */
+.club-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+}
+
+/* Common Section Styling */
+.club-about,
+.club-events,
+.club-activities,
+.club-achievements,
+.club-gallery {
+    background: white;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.section-header {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.section-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+/* About Section Specific */
+.about-content p {
+    margin-bottom: var(--spacing-md);
+    line-height: 1.6;
+}
+
+.club-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+}
+
+.detail-item svg {
+    flex-shrink: 0;
+    color: var(--text-light);
+    margin-top: 0.25rem;
+}
+
+.detail-item strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+}
+
+.detail-item p {
+    margin: 0;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+/* Events Section Specific */
+.club-events {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+}
+
+.club-event-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.club-event-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm);
+    background: var(--background-light);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.club-event-item:hover {
+    transform: translateX(5px);
+    background: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.event-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 50px;
+    background: white;
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-xs);
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.event-date .day {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.event-date .month {
+    font-size: 0.7rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+}
+
+.event-details {
+    flex: 1;
+}
+
+.event-details h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.event-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+/* Activities and Achievements Sections */
+.activities-list,
+.achievements-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.activities-list li,
+.achievements-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    transition: background-color var(--transition-fast);
+}
+
+.activities-list li:hover,
+.achievements-list li:hover {
+    background-color: var(--background-light);
+}
+
+.activities-list li svg,
+.achievements-list li svg {
+    color: var(--primary-color);
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+}
+
+/* Gallery Section */
+.club-gallery {
+    grid-column: span 2;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.gallery-item {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--border-color);
+    transition: transform var(--transition-fast);
+}
+
+.gallery-item:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-md);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Empty state messages */
+.no-events,
+.no-activities,
+.no-achievements,
+.no-images {
+    color: var(--text-light);
+    font-style: italic;
+    text-align: center;
+    padding: var(--spacing-md);
+    background: var(--background-light);
+    border-radius: var(--radius-md);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1200px) {
+    .club-detail-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .club-events {
+        grid-column: 1;
+        grid-row: auto;
+    }
+    
+    .club-gallery {
+        grid-column: 1;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .club-header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+    
+    .club-info-main {
+        width: 100%;
+    }
+    
+    .club-actions {
+        width: 100%;
+    }
+    
+    .join-btn, .leave-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .club-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .club-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+    
+    .event-meta {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+    
+    .event-date {
+        min-width: 40px;
+    }
+}

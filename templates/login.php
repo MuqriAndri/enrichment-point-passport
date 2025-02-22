@@ -20,7 +20,7 @@ session_start();
 
     <div class="container">
         <div class="left-content">
-            <img src="<?php echo BASE_URL; ?>/assets/images/politeknik-brunei-logo.png" alt="Politeknik Brunei Logo" class="logo">
+            <img src="<?php echo BASE_URL; ?>/assets/images/logo/politeknik-brunei-logo.png" alt="Politeknik Brunei Logo" class="logo">
             <h1 class="title">POLITEKNIK<br>ENRICHMENT POINT<br>PASSPORT</h1>
             <p class="subtitle">Enriching experiences, evaluating your success.</p>
         </div>
