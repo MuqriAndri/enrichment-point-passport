@@ -169,14 +169,23 @@ if (!isset($_SESSION['user_id'])) {
                                             </div>
                                             <div class="club-overlay">
                                                 <a href="<?php
-                                                            global $clubMapping;
-                                                            $clubSlug = '';
-                                                            foreach ($clubMapping as $cat => $clubs) {
-                                                                if (isset($clubs[$club['club_name']])) {
-                                                                    $clubSlug = $clubs[$club['club_name']];
-                                                                    break;
-                                                                }
+                                                            $clubName = $club['club_name'];
+                                                            $nameParts = explode(' ', $clubName);
+
+                                                            if (end($nameParts) === 'Club') {
+                                                                array_pop($nameParts);
                                                             }
+
+                                                            $nameBase = implode(' ', $nameParts);
+
+                                                            $clubSlug = strtolower(
+                                                                str_replace(
+                                                                    ' ',
+                                                                    '-',
+                                                                    preg_replace('/[^\p{L}\p{N}\s-]/u', '', $nameBase)
+                                                                )
+                                                            );
+
                                                             echo BASE_URL . '/cca/' . $clubSlug;
                                                             ?>" class="view-details-btn">
                                                     View Details

@@ -1,16 +1,17 @@
 <?php
 session_start();
 
-define('BASE_URL', 'http://18.136.198.46/enrichment-point-passport');
+define('BASE_URL', 'http://13.229.232.151/enrichment-point-passport');
 
 require_once 'database/config.php';
 
 // Get the path from URL
 $request_uri = str_replace('/enrichment-point-passport', '', $_SERVER['REQUEST_URI']);
 $path = trim(parse_url($request_uri, PHP_URL_PATH), '/');
+$params = explode('/', $path);
 
 // Default to login if no path
-$page = $path ?: 'login';
+$page = $params[0] ?: 'login';
 
 // Redirect to dashboard if already logged in and trying to access login page
 if ($page === 'login' && isset($_SESSION['user_id'])) {
@@ -219,7 +220,8 @@ if ($page === 'cca') {
         // Make data available to template
         $pageData = [
             'clubsByCategory' => $clubsByCategory,
-            'userMemberships' => $userMemberships
+            'userMemberships' => $userMemberships,
+            'clubMapping' => $clubMapping
         ];
     } catch (PDOException $e) {
         error_log("Error fetching CCAs: " . $e->getMessage());
@@ -253,8 +255,8 @@ switch ($page) {
         include 'templates/contact.php';
         break;
     case 'cca':
-        if (isset($params[0])) {
-            $requestedClub = $params[0];
+        if (isset($params[1])) {
+            $requestedClub = $params[1];
 
             $clubMapping = [
                 'academic' => [
