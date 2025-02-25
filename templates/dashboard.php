@@ -192,7 +192,7 @@ if (!isset($_SESSION['user_id'])) {
                     <section class="recent-activities" aria-labelledby="recent-activities-heading">
                         <div class="section-header">
                             <h3 id="recent-activities-heading">Recent Activities</h3>
-                            <a href="/activities" class="view-all">View All</a>
+                            <a href="<?php echo BASE_URL; ?>/ep" class="view-all">View All</a>
                         </div>
                         <div class="activity-list">
                             <div class="activity-item">

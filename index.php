@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-define('BASE_URL', 'http://13.229.232.151/enrichment-point-passport');
+define('BASE_URL', 'http://54.254.173.114/enrichment-point-passport');
 
 require_once 'database/config.php';
 
@@ -12,6 +12,7 @@ $params = explode('/', $path);
 
 // Default to login if no path
 $page = $params[0] ?: 'login';
+// $page = $path ?: 'login';
 
 // Redirect to dashboard if already logged in and trying to access login page
 if ($page === 'login' && isset($_SESSION['user_id'])) {
