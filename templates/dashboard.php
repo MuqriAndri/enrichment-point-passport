@@ -135,11 +135,11 @@ if (!isset($_SESSION['user_id'])) {
 
                 <!-- Dashboard Grid -->
                 <div class="dashboard-grid">
-                    <section class="activity-categories" aria-labelledby="categories-heading">
+                    <!-- <section class="activity-categories" aria-labelledby="categories-heading">
                         <div class="section-header">
                             <h3 id="categories-heading">Categories</h3>
-                        </div>
-                        <div class="category-grid">
+                        </div> -->
+                        <!-- <div class="category-grid">
                             <a href="/activities/academic" class="category-card academic">
                                 <div class="category-icon">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -185,8 +185,8 @@ if (!isset($_SESSION['user_id'])) {
                                 <h4>Community Service</h4>
                                 <p>7 points</p>
                             </a>
-                        </div>
-                    </section>
+                        </div> -->
+                    <!-- </section> -->
 
                     <!-- Recent Activities -->
                     <section class="recent-activities" aria-labelledby="recent-activities-heading">
