@@ -244,6 +244,13 @@ switch ($page) {
     case 'profile':
         include 'templates/profile.php';
         break;
+    case 'ep':
+        include 'templates/profile.php';
+        break;
+    case 'settings':
+        include 'templates/profile.php';
+        break;
+
     case 'logout':
         session_destroy();
         header("Location: " . BASE_URL);
