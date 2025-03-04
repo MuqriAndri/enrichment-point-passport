@@ -5,12 +5,12 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Extract club information from the $clubData array
-$clubDetails = $clubData['details'] ?? [];
-$isMember = $clubData['isMember'] ?? false;
-$upcomingEvents = $clubData['upcoming_events'] ?? [];
-$activities = $clubData['activities'] ?? [];
-$gallery = $clubData['gallery'] ?? [];
+// Extract club information from the $pageData array
+$clubDetails = $pageData['details'] ?? [];
+$isMember = $pageData['isMember'] ?? false;
+$upcomingEvents = $pageData['upcoming_events'] ?? [];
+$activities = $pageData['activities'] ?? [];
+$gallery = $pageData['gallery'] ?? [];
 ?>
 <!DOCTYPE html>
 <html lang="en">
