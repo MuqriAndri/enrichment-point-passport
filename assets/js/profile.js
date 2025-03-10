@@ -66,7 +66,7 @@ async function saveProfileChanges() {
         });
 
         console.log('Profile: Sending profile data to server');
-        const response = await fetch(`${window.location.origin}/enrichment-point-passport/handlers/edit-profile.php`, {
+        const response = await fetch(`${window.location.origin}/enrichment-point-passport/controllers/edit-profile.php`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
