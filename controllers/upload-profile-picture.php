@@ -60,7 +60,8 @@ try {
     $file = $_FILES['avatar'];
     
     // Basic path setup
-    $baseDir = '/var/www/html/enrichment-point-passport';
+    // $baseDir = '/var/www/html/enrichment-point-passport';
+    $baseDir = __DIR__ . '/..';
     $uploadDir = $baseDir . '/assets/images/uploads/profile';
     
     // Create directory if it doesn't exist

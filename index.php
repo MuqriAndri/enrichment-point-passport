@@ -49,10 +49,10 @@ $pageData = [];
 
 if ($page === 'cca') {
     $clubMapping = require_once 'config/club-mapping.php';
-    
+
     try {
         $clubRepo = new clubRepository($pdo);
-        
+
         // If specific club page is requested
         if (isset($params[1])) {
             $requestedClub = $params[1];
@@ -74,14 +74,14 @@ if ($page === 'cca') {
 
             if ($clubFound) {
                 $clubDetails = $clubRepo->getClubDetails($clubName);
-                
+
                 if ($clubDetails) {
                     // Check if user is a member of this club
                     $isMember = false;
                     if (isset($_SESSION['student_id'])) {
                         $isMember = $clubRepo->isUserMemberOfClub($_SESSION['student_id'], $clubDetails['club_id']);
                     }
-                    
+
                     $pageData = [
                         'details' => $clubDetails,
                         'isMember' => $isMember,
@@ -89,8 +89,8 @@ if ($page === 'cca') {
                         'activities' => [],      // Placeholder for activities data
                         'gallery' => []          // Placeholder for gallery data
                     ];
-                    
-                    include 'templates/cca-detail.php';
+
+                    include 'templates/cca-details.php';
                 } else {
                     header("HTTP/1.0 404 Not Found");
                     include 'templates/404.php';
@@ -104,19 +104,19 @@ if ($page === 'cca') {
         } else {
             // Main CCA page
             $clubs = $clubRepo->getAllActiveClubs();
-            
+
             // Group clubs by category
             $clubsByCategory = [];
             foreach ($clubs as $club) {
                 $clubsByCategory[$club['category']][] = $club;
             }
-            
+
             // Get user's current memberships
             $userMemberships = [];
             if (isset($_SESSION['student_id'])) {
                 $userMemberships = $clubRepo->getUserMemberships($_SESSION['student_id']);
             }
-            
+
             $pageData = [
                 'clubsByCategory' => $clubsByCategory,
                 'userMemberships' => $userMemberships,
@@ -135,34 +135,37 @@ if ($page === 'cca') {
 
 // Route to appropriate template
 switch ($page) {
-    case 'login':
-        include 'templates/login.php';
+    case 'about':
+        include 'templates/about.php';
+        break;
+    case 'cca':
+        include 'templates/cca.php';
+        break;
+    case 'contact':
+        include 'templates/contact.php';
         break;
     case 'dashboard':
         include 'templates/dashboard.php';
         break;
-    case 'profile':
-        include 'templates/profile.php';
-        break;
     case 'ep':
-        include 'templates/profile.php';
+        include 'templates/ep.php';
         break;
-    case 'settings':
-        include 'templates/profile.php';
+    case 'history':
+        include 'templates/history.php';
+        break;
+    case 'login':
+        include 'templates/login.php';
         break;
     case 'logout':
         session_destroy();
         header("Location: " . BASE_URL);
         exit();
         break;
-    case 'about':
-        include 'templates/about.php';
+    case 'profile':
+        include 'templates/profile.php';
         break;
-    case 'contact':
-        include 'templates/contact.php';
-        break;
-    case 'cca':
-        include 'templates/cca.php';
+    case 'settings':
+        include 'templates/settings.php';
         break;
     default:
         header("HTTP/1.0 404 Not Found");

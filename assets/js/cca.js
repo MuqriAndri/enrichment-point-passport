@@ -1,15 +1,23 @@
+// cca.js - Self-initializing CCA functionality
+
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('CCA: DOM loaded, initializing');
     initializeClubSearch();
     initializeClubRegistration();
     checkUserClubStatus();
 });
 
 function initializeClubSearch() {
+    console.log('CCA: Initializing club search');
     const searchInput = document.querySelector('.search-bar input');
-    if (!searchInput) return;
+    if (!searchInput) {
+        console.log('CCA: Search input not found');
+        return;
+    }
 
     searchInput.addEventListener('input', debounce(function(e) {
         const searchTerm = e.target.value.toLowerCase();
+        console.log(`CCA: Searching for "${searchTerm}"`);
         const clubCards = document.querySelectorAll('.club-card');
 
         clubCards.forEach(card => {
@@ -36,17 +44,23 @@ function initializeClubSearch() {
             }
         });
     }, 300));
+    console.log('CCA: Club search initialized');
 }
 
 function initializeClubRegistration() {
+    console.log('CCA: Initializing club registration');
     const clubList = document.querySelector('.clubs-grid');
-    if (!clubList) return;
+    if (!clubList) {
+        console.log('CCA: Club list not found');
+        return;
+    }
 
     clubList.addEventListener('click', async (e) => {
         const joinButton = e.target.closest('.join-btn');
         if (!joinButton) return;
 
         const clubId = joinButton.dataset.clubId;
+        console.log(`CCA: Join button clicked for club ${clubId}`);
         
         try {
             const response = await registerForClub(clubId);
@@ -58,16 +72,19 @@ function initializeClubRegistration() {
             }
         } catch (error) {
             showNotification('An error occurred. Please try again.', 'error');
-            console.error('Error joining club:', error);
+            console.error('CCA: Error joining club:', error);
         }
     });
+    console.log('CCA: Club registration initialized');
 }
 
 async function checkUserClubStatus() {
+    console.log('CCA: Checking user club status');
     try {
         const response = await fetch('/api/clubs/user-memberships');
         if (response.ok) {
             const memberships = await response.json();
+            console.log(`CCA: User is member of ${memberships.length} clubs`);
             
             // Update buttons for clubs user is already a member of
             memberships.forEach(membership => {
@@ -76,14 +93,17 @@ async function checkUserClubStatus() {
                     updateJoinButton(button, true);
                 }
             });
+        } else {
+            console.log('CCA: Failed to fetch user memberships', response.status);
         }
     } catch (error) {
-        console.error('Error fetching user memberships:', error);
+        console.error('CCA: Error fetching user memberships:', error);
     }
 }
 
 // API call to register for a club
 async function registerForClub(clubId) {
+    console.log(`CCA: Making API call to register for club ${clubId}`);
     const response = await fetch('/api/clubs/register', {
         method: 'POST',
         headers: {
@@ -101,10 +121,12 @@ function updateJoinButton(button, joined) {
     button.textContent = joined ? 'Joined' : 'Join Club';
     button.classList.toggle('joined', joined);
     button.disabled = joined;
+    console.log(`CCA: Button updated to ${joined ? 'joined' : 'not joined'} state`);
 }
 
 // Show notification
 function showNotification(message, type = 'success') {
+    console.log(`CCA: Showing ${type} notification: ${message}`);
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.textContent = message;

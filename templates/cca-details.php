@@ -20,7 +20,7 @@ $gallery = $pageData['gallery'] ?? [];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enrichment Point Passport - <?php echo htmlspecialchars($clubDetails['club_name'] ?? 'Club Details'); ?></title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/cca-detail.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/cca-details.css">
 </head>
 
 <body>
@@ -365,6 +365,8 @@ $gallery = $pageData['gallery'] ?? [];
         </div>
     </div>
 
+    
+    <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>
 </body>
 

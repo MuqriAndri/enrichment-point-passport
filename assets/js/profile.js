@@ -1,59 +1,27 @@
-document.addEventListener('DOMContentLoaded', function() {
+// profile.js - Self-initializing profile functionality
+
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('Profile: DOM loaded, initializing');
     initializeProfileEdit();
     initializeAvatarUpload();
-    setupFormValidation();
-    initializeNotifications();
 });
 
-function initializeNotifications() {
-    const notificationContainer = document.createElement('div');
-    notificationContainer.className = 'notification-container';
-    document.body.appendChild(notificationContainer);
-}
-
-function showNotification(message, type = 'success') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    
-    const icon = document.createElement('span');
-    icon.className = 'notification-icon';
-    icon.innerHTML = type === 'success' 
-        ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>'
-        : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
-    
-    const text = document.createElement('span');
-    text.textContent = message;
-    
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'notification-close';
-    closeBtn.innerHTML = '×';
-    closeBtn.onclick = () => notification.remove();
-    
-    notification.appendChild(icon);
-    notification.appendChild(text);
-    notification.appendChild(closeBtn);
-    
-    document.querySelector('.notification-container').appendChild(notification);
-    
-    setTimeout(() => {
-        if (notification.parentElement) {
-            notification.classList.add('fade-out');
-            setTimeout(() => notification.remove(), 300);
-        }
-    }, 5000);
-}
-
 function initializeProfileEdit() {
+    console.log('Profile: Initializing profile edit');
     const editButton = document.getElementById('editProfileBtn');
     const form = document.getElementById('profileInfoForm');
-    
-    if (!form || !editButton) return;
-    
+
+    if (!form || !editButton) {
+        console.log('Profile: Edit button or form not found');
+        return;
+    }
+
     const formInputs = form.querySelectorAll('input, textarea');
-    
-    editButton.addEventListener('click', function() {
+
+    editButton.addEventListener('click', function () {
         const isEditing = editButton.classList.contains('editing');
-        
+        console.log(`Profile: Edit button clicked, current state: ${isEditing ? 'editing' : 'not editing'}`);
+
         if (!isEditing) {
             // Enable editing with animation
             formInputs.forEach((input, index) => {
@@ -64,7 +32,7 @@ function initializeProfileEdit() {
                     }, index * 50);
                 }
             });
-            
+
             editButton.innerHTML = `
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
@@ -80,21 +48,24 @@ function initializeProfileEdit() {
             }
         }
     });
+    console.log('Profile: Profile edit initialized');
 }
 
 async function saveProfileChanges() {
+    console.log('Profile: Saving profile changes');
     const form = document.getElementById('profileInfoForm');
     if (!form) return;
 
     try {
         showLoadingState();
-        
+
         const formData = new FormData(form);
         const formDataObject = {};
         formData.forEach((value, key) => {
             formDataObject[key] = value;
         });
 
+        console.log('Profile: Sending profile data to server');
         const response = await fetch(`${window.location.origin}/enrichment-point-passport/handlers/edit-profile.php`, {
             method: 'POST',
             headers: {
@@ -102,94 +73,133 @@ async function saveProfileChanges() {
             },
             body: JSON.stringify(formDataObject)
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
+            console.log('Profile: Profile updated successfully');
             handleSaveSuccess();
-            showNotification(result.message || 'Profile updated successfully');
+            // Use showNotification function from either this file or from notification.js
+            // First check if it's defined globally
+            if (typeof showNotification === 'function') {
+                showNotification(result.message || 'Profile updated successfully');
+            } else {
+                // Otherwise, use the notification function defined here
+                showProfileNotification(result.message || 'Profile updated successfully');
+            }
         } else {
+            console.log('Profile: Failed to save changes:', result.error);
             throw new Error(result.error || 'Failed to save changes');
         }
     } catch (error) {
-        showNotification(error.message, 'error');
+        console.error('Profile: Error saving changes:', error);
+        // Use showNotification function from either this file or from notification.js
+        if (typeof showNotification === 'function') {
+            showNotification(error.message, 'error');
+        } else {
+            showProfileNotification(error.message, 'error');
+        }
     } finally {
         hideLoadingState();
     }
 }
 
 function initializeAvatarUpload() {
+    console.log('Profile: Initializing avatar upload');
     const uploadButton = document.querySelector('.avatar-upload-btn');
     const avatar = document.querySelector('.profile-avatar');
-    if (!uploadButton || !avatar) return;
+    if (!uploadButton || !avatar) {
+        console.log('Profile: Avatar elements not found');
+        return;
+    }
 
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
     fileInput.style.display = 'none';
-    
+
     uploadButton.parentNode.appendChild(fileInput);
-    
+
     uploadButton.addEventListener('mouseenter', () => {
         avatar.classList.add('avatar-hover');
     });
-    
+
     uploadButton.addEventListener('mouseleave', () => {
         avatar.classList.remove('avatar-hover');
     });
-    
+
     uploadButton.addEventListener('click', () => {
+        console.log('Profile: Upload button clicked');
         fileInput.click();
     });
-    
+
     fileInput.addEventListener('change', async (e) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
+            console.log(`Profile: File selected: ${file.name} (${file.size} bytes)`);
             if (file.size > 5 * 1024 * 1024) {
-                showNotification('Image size should be less than 5MB', 'error');
+                if (typeof showNotification === 'function') {
+                    showNotification('Image size should be less than 5MB', 'error');
+                } else {
+                    showProfileNotification('Image size should be less than 5MB', 'error');
+                }
                 return;
             }
             await handleAvatarUpload(file);
         }
     });
+    console.log('Profile: Avatar upload initialized');
 }
 
 async function handleAvatarUpload(file) {
+    console.log('Profile: Handling avatar upload');
     const formData = new FormData();
     formData.append('avatar', file);
-    
+
     try {
         showLoadingState();
-        
+
         const baseUrl = '/enrichment-point-passport';
-        const response = await fetch(`${baseUrl}/handlers/upload-profile-picture.php`, {
+        console.log('Profile: Sending avatar to server');
+        const response = await fetch(`${baseUrl}/controllers/upload-profile-picture.php`, {
             method: 'POST',
             body: formData
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
+            console.log('Profile: Avatar updated successfully');
             updateAvatarPreview(result.data.avatarUrl);
-            showNotification(result.data.message || 'Profile picture updated successfully');
-            
+            if (typeof showNotification === 'function') {
+                showNotification(result.data.message || 'Profile picture updated successfully');
+            } else {
+                showProfileNotification(result.data.message || 'Profile picture updated successfully');
+            }
+
             // Update navigation avatar if it exists
             const navAvatar = document.querySelector('.nav-right .user-avatar img');
             if (navAvatar) {
                 navAvatar.src = result.data.avatarUrl;
             }
         } else {
+            console.log('Profile: Failed to upload avatar:', result.data.error);
             throw new Error(result.data.error || 'Failed to upload profile picture');
         }
     } catch (error) {
-        console.error('Upload error:', error);
-        showNotification(error.message, 'error');
+        console.error('Profile: Upload error:', error);
+        if (typeof showNotification === 'function') {
+            showNotification(error.message, 'error');
+        } else {
+            showProfileNotification(error.message, 'error');
+        }
     } finally {
         hideLoadingState();
     }
 }
 
 function updateAvatarPreview(url) {
+    console.log('Profile: Updating avatar preview');
     const avatar = document.querySelector('.profile-avatar');
     if (!avatar) return;
 
@@ -203,34 +213,36 @@ function updateAvatarPreview(url) {
         img = document.createElement('img');
         avatar.appendChild(img);
     }
-    
+
     img.src = `${url}?t=${new Date().getTime()}`;
     img.alt = 'Profile Picture';
 }
 
 function validateAllFields() {
+    console.log('Profile: Validating all fields');
     const form = document.getElementById('profileInfoForm');
     if (!form) return true;
 
     const inputs = form.querySelectorAll('input:not([disabled]), textarea:not([disabled])');
     let isValid = true;
-    
+
     inputs.forEach(input => {
         if (!validateField(input)) {
             isValid = false;
         }
     });
-    
+
+    console.log(`Profile: Validation result: ${isValid ? 'valid' : 'invalid'}`);
     return isValid;
 }
 
 function validateField(field) {
     if (field.disabled) return true;
-    
+
     const value = field.value.trim();
     let isValid = true;
     let errorMessage = '';
-    
+
     switch (field.id) {
         case 'user_email':
             isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -252,69 +264,7 @@ function validateField(field) {
             isValid = value.length >= 2;
             errorMessage = 'This field is required';
     }
-    
+
     updateFieldStatus(field, isValid, errorMessage);
     return isValid;
-}
-
-function updateFieldStatus(field, isValid, errorMessage) {
-    const errorElement = field.parentNode.querySelector('.error-message');
-    
-    if (isValid) {
-        field.classList.remove('error');
-        field.classList.add('success');
-        if (errorElement) errorElement.remove();
-    } else {
-        field.classList.remove('success');
-        field.classList.add('error');
-        
-        if (!errorElement) {
-            const error = document.createElement('div');
-            error.className = 'error-message';
-            error.textContent = errorMessage;
-            field.parentNode.appendChild(error);
-        }
-    }
-}
-
-function showLoadingState() {
-    const sections = document.querySelectorAll('.profile-section');
-    sections.forEach(section => {
-        section.classList.add('loading');
-        const spinner = document.createElement('div');
-        spinner.className = 'loading-spinner';
-        section.appendChild(spinner);
-    });
-}
-
-function hideLoadingState() {
-    const sections = document.querySelectorAll('.profile-section');
-    sections.forEach(section => {
-        section.classList.remove('loading');
-        const spinner = section.querySelector('.loading-spinner');
-        if (spinner) spinner.remove();
-    });
-}
-
-function handleSaveSuccess() {
-    const editButton = document.getElementById('editProfileBtn');
-    const formInputs = document.querySelectorAll('#profileInfoForm input, #profileInfoForm textarea');
-    
-    // Disable inputs with animation
-    formInputs.forEach((input, index) => {
-        setTimeout(() => {
-            input.disabled = true;
-            input.classList.remove('editable');
-        }, index * 50);
-    });
-    
-    // Reset button state
-    editButton.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-        </svg>
-        Edit Profile
-    `;
-    editButton.classList.remove('editing');
 }

@@ -25,7 +25,7 @@ if (!isset($_SESSION['user_id'])) {
             </div>
             <div class="nav-right">
                 <div class="search-bar">
-                    <input type="text" placeholder="Search Clubs..." aria-label="Search activities">
+                    <input type="text" placeholder="Search clubs..." aria-label="Search activities">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -204,7 +204,7 @@ if (!isset($_SESSION['user_id'])) {
         </div>
     </div>
 
-    <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/cca.js"></script>
 </body>
 

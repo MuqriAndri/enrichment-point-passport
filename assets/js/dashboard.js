@@ -4,16 +4,19 @@ const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 
 // Initialize all components when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Dashboard: DOM loaded, initializing');
     initializeCalendar();
-    initializeDropdowns();
-    initializeNotifications();
     initializeProgressCircle();
     handleEventRegistration();
 });
 
 function initializeCalendar() {
+    console.log('Dashboard: Initializing calendar');
     const calendarGrid = document.querySelector('.calendar-grid');
-    if (!calendarGrid) return;
+    if (!calendarGrid) {
+        console.log('Dashboard: Calendar grid not found');
+        return;
+    }
 
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
@@ -34,6 +37,7 @@ function initializeCalendar() {
 
     // Add keyboard navigation
     addCalendarKeyboardNavigation(calendarGrid);
+    console.log('Dashboard: Calendar initialized');
 }
 
 function getCalendarEvents() {
@@ -145,109 +149,17 @@ function addCalendarKeyboardNavigation(grid) {
     });
 }
 
-function initializeDropdowns() {
-    const profileTrigger = document.querySelector('.profile-trigger');
-    const dropdownMenu = document.querySelector('.dropdown-menu');
-
-    if (profileTrigger && dropdownMenu) {
-        setupDropdownEvents(profileTrigger, dropdownMenu);
-    }
-}
-
-function setupDropdownEvents(trigger, menu) {
-    trigger.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleDropdown(menu);
-    });
-
-    trigger.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            toggleDropdown(menu);
-        }
-    });
-
-    document.addEventListener('click', (e) => {
-        if (!menu.contains(e.target)) {
-            closeDropdown(menu);
-        }
-    });
-
-    // Close dropdown when escape key is pressed
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && menu.classList.contains('show')) {
-            closeDropdown(menu);
-        }
-    });
-}
-
-function toggleDropdown(menu) {
-    const isExpanded = menu.classList.contains('show');
-    menu.classList.toggle('show');
-    menu.setAttribute('aria-hidden', isExpanded);
-    menu.previousElementSibling.setAttribute('aria-expanded', !isExpanded);
-}
-
-function closeDropdown(menu) {
-    menu.classList.remove('show');
-    menu.setAttribute('aria-hidden', 'true');
-    menu.previousElementSibling.setAttribute('aria-expanded', 'false');
-}
-
-async function initializeNotifications() {
-    const notificationBtn = document.querySelector('.notification-btn');
-    if (!notificationBtn) return;
-
-    try {
-        const response = await fetchNotifications();
-        if (response.ok) {
-            const notifications = await response.json();
-            updateNotificationBadge(notifications.length);
-        }
-    } catch (error) {
-        console.error('Error initializing notifications:', error);
-    }
-
-    notificationBtn.addEventListener('click', handleNotificationClick);
-}
-
-async function fetchNotifications() {
-    return await fetch('/api/notifications', {
-        headers: {
-            'Accept': 'application/json'
-        }
-    });
-}
-
-function updateNotificationBadge(count) {
-    const badge = document.querySelector('.notification-badge');
-    if (badge) {
-        badge.textContent = count;
-        badge.style.display = count > 0 ? 'block' : 'none';
-        badge.setAttribute('aria-label', `${count} unread notifications`);
-    }
-}
-
-async function handleNotificationClick() {
-    try {
-        const response = await fetchNotifications();
-        if (response.ok) {
-            const notifications = await response.json();
-            updateNotificationBadge(notifications.length);
-            // Additional notification handling logic here
-        }
-    } catch (error) {
-        console.error('Error handling notifications:', error);
-    }
-}
-
 function initializeProgressCircle() {
+    console.log('Dashboard: Initializing progress circle');
     const progressCircle = document.querySelector('.progress-circle');
     const pointsDisplay = document.querySelector('.points');
     const percentageText = document.querySelector('.percentage-text');
     const progressbar = document.querySelector('.circular-progress');
     
-    if (!progressCircle || !pointsDisplay) return;
+    if (!progressCircle || !pointsDisplay) {
+        console.log('Dashboard: Progress circle elements not found');
+        return;
+    }
 
     // Get the current points from the points span
     const currentPoints = parseInt(pointsDisplay.textContent);
@@ -269,27 +181,37 @@ function initializeProgressCircle() {
     if (progressbar) {
         progressbar.setAttribute('aria-valuenow', roundedPercentage);
     }
+    console.log(`Dashboard: Progress circle set to ${roundedPercentage}%`);
 }
 
 function handleEventRegistration() {
+    console.log('Dashboard: Setting up event registration');
     const eventList = document.querySelector('.event-list');
-    if (!eventList) return;
+    if (!eventList) {
+        console.log('Dashboard: Event list not found');
+        return;
+    }
 
     eventList.addEventListener('click', async (e) => {
         const button = e.target.closest('.register-btn');
         if (!button || button.disabled) return;
 
+        console.log('Dashboard: Register button clicked', button.dataset.eventId);
         try {
             await registerForEvent(button);
         } catch (error) {
-            console.error('Error registering for event:', error);
-            // Show error message to user
+            console.error('Dashboard: Error registering for event:', error);
+            // Show error message to user if showNotification is available
+            if (typeof showNotification === 'function') {
+                showNotification('Error registering for event. Please try again.', 'error');
+            }
         }
     });
 }
 
 async function registerForEvent(button) {
     const eventId = button.dataset.eventId;
+    console.log(`Dashboard: Registering for event ${eventId}`);
     const response = await fetch('/api/events/register', {
         method: 'POST',
         headers: {
@@ -301,6 +223,10 @@ async function registerForEvent(button) {
 
     if (response.ok) {
         updateRegistrationButton(button);
+        // Show success message if showNotification is available
+        if (typeof showNotification === 'function') {
+            showNotification('Successfully registered for event!', 'success');
+        }
     } else {
         throw new Error('Registration failed');
     }
@@ -311,4 +237,5 @@ function updateRegistrationButton(button) {
     button.disabled = true;
     button.classList.add('registered');
     button.setAttribute('aria-label', 'Already registered for this event');
+    console.log('Dashboard: Updated registration button');
 }

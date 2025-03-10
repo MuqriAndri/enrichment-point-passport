@@ -295,6 +295,7 @@ if (!isset($_SESSION['user_id'])) {
     </div>
 
     <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
 </body>
 
 </html>
