@@ -6,7 +6,7 @@ $appConfig = require_once 'config/app.php';
 define('BASE_URL', $appConfig['base_url']);
 $protected_pages = $appConfig['protected_pages'];
 
-// Load database configuration
+// Load database configuration - now provides $profilesDB and $ccaDB
 require_once 'config/database.php';
 
 // Load repositories
@@ -37,10 +37,10 @@ if (in_array($page, $protected_pages) && !isset($_SESSION['user_id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST["user_ic"]) && isset($_POST["password"])) {
         require_once 'controllers/auth.php';
-        handleLogin($pdo);
+        handleLogin($profilesDB); // User info is in profiles database
     } elseif (isset($_POST['action']) && $_POST['action'] === 'cca') {
         require_once 'controllers/cca.php';
-        handleClubAction($pdo);
+        handleClubAction($ccaDB, $profilesDB); // Pass both database connections
     }
 }
 
@@ -51,7 +51,8 @@ if ($page === 'cca') {
     $clubMapping = require_once 'config/club-mapping.php';
 
     try {
-        $clubRepo = new clubRepository($pdo);
+        // Use ccaDB for club repository
+        $clubRepo = new clubRepository($ccaDB, $profilesDB);
 
         // If specific club page is requested
         if (isset($params[1])) {

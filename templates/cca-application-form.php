@@ -1,4 +1,3 @@
-<!-- club-application-modal.php - Include this file in your main templates -->
 <div id="clubApplicationModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -10,7 +9,7 @@
             <form id="clubApplicationForm" method="POST" action="<?php echo BASE_URL; ?>/cca">
                 <input type="hidden" name="action" value="cca">
                 <input type="hidden" name="operation" value="join">
-                <input type="hidden" name="club_id" id="applicationClubId" value="">
+                <input type="hidden" name="club_id" id="applicationClubId" value="<?php echo htmlspecialchars($clubId); ?>">
                 
                 <div class="form-group">
                     <label for="full_name">Full Name</label>

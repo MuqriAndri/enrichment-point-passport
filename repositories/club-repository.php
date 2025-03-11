@@ -2,10 +2,12 @@
 class clubRepository
 {
     private $pdo;
+    private $profilesDB;
 
-    public function __construct($pdo)
+    public function __construct($ccaDB, $profilesDB = null)
     {
-        $this->pdo = $pdo;
+        $this->pdo = $ccaDB; // Main connection for CCA operations
+        $this->profilesDB = $profilesDB; // For any operations that need profiles data
     }
 
     public function getAllActiveClubs()
@@ -15,8 +17,8 @@ class clubRepository
             c.club_name,
             c.category,
             COUNT(DISTINCT cm.student_id) as member_count
-        FROM cca.clubs c
-        LEFT JOIN cca.club_members cm ON c.club_id = cm.club_id 
+        FROM clubs c
+        LEFT JOIN club_members cm ON c.club_id = cm.club_id 
             AND cm.status = 'Active'
         WHERE c.status = 'Active'
         GROUP BY c.club_id, c.club_name, c.category
@@ -30,7 +32,7 @@ class clubRepository
     public function getUserMemberships($studentId)
     {
         $sql = "SELECT club_id 
-                FROM cca.club_members 
+                FROM club_members 
                 WHERE student_id = :student_id 
                 AND status = 'Active'";
         $stmt = $this->pdo->prepare($sql);
@@ -185,13 +187,13 @@ class clubRepository
             // Check if already a member
             if ($this->isUserMemberOfClub($studentId, $clubId)) {
                 $this->pdo->rollBack();
+                error_log("User {$studentId} is already a member of club {$clubId}");
                 return false;
             }
 
             // Get current date
             $currentDate = date('Y-m-d');
 
-            // Insert into club_members with 'Pending' status instead of 'Active'
             $query = "INSERT INTO club_members (
                     club_id, 
                     user_id, 
@@ -241,12 +243,17 @@ class clubRepository
 
             // Commit transaction
             $this->pdo->commit();
-
+            error_log("Successfully submitted club application for user {$studentId} to club {$clubId}");
             return true;
         } catch (PDOException $e) {
             // Rollback transaction on error
-            $this->pdo->rollBack();
-            error_log("Error submitting club application: " . $e->getMessage());
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            error_log("Error submitting club application: " . $e->getMessage() . " - Query: " . $query);
+            // Log the full stack trace for debugging
+            error_log("Stack trace: " . $e->getTraceAsString());
             return false;
         }
     }

@@ -1,7 +1,4 @@
 <?php
-session_start();
-require_once '../config/database.php';
-
 // Set error handling
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
