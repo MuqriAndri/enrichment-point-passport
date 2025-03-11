@@ -150,6 +150,9 @@ switch ($page) {
     case 'ep':
         include 'templates/ep.php';
         break;
+    case 'events':
+        include 'templates/events.php';
+        break;
     case 'history':
         include 'templates/history.php';
         break;

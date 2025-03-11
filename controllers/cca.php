@@ -1,87 +1,97 @@
 <?php
 function handleClubAction($pdo) {
-    $operation = $_POST['operation'] ?? '';
-    $clubId = $_POST['club_id'] ?? '';
+    // Check if user is logged in
+    if (!isset($_SESSION['user_id'])) {
+        $_SESSION['error'] = 'You must be logged in to perform this action.';
+        header("Location: " . BASE_URL . "/cca");
+        exit();
+    }
+
+    // Check if required parameters are set
+    if (!isset($_POST['operation']) || !isset($_POST['club_id'])) {
+        $_SESSION['error'] = 'Invalid request parameters.';
+        header("Location: " . BASE_URL . "/cca");
+        exit();
+    }
+
+    $operation = $_POST['operation'];
+    $clubId = $_POST['club_id'];
+    $userId = $_SESSION['user_id'];
     $studentId = $_SESSION['student_id'] ?? '';
 
-    try {
-        if (empty($studentId)) {
-            throw new Exception("Student ID is required");
-        }
-
-        if (empty($clubId)) {
-            throw new Exception("CLUB ID is required");
-        }
-
-        switch ($operation) {
-            case 'join':
-                joinClub($pdo, $clubId, $studentId);
-                break;
-
-            case 'leave':
-                leaveClub($pdo, $clubId, $studentId);
-                break;
-
-            default:
-                throw new Exception("Invalid operation");
-        }
-
-        // Redirect back to CCA page with success message
-        header("Location: " . BASE_URL . "/cca");
-        exit();
-    } catch (Exception $e) {
-        $_SESSION["error"] = $e->getMessage();
+    // Validate club_id
+    if (!is_numeric($clubId)) {
+        $_SESSION['error'] = 'Invalid club ID.';
         header("Location: " . BASE_URL . "/cca");
         exit();
     }
-}
 
-function joinClub($pdo, $clubId, $studentId) {
-    // Check if already a member
-    $checkSql = "SELECT club_id FROM cca.club_members 
-                WHERE student_id = :student_id 
-                AND club_id = :club_id 
-                AND status = 'Active'";
-
-    $checkStmt = $pdo->prepare($checkSql);
-    $checkStmt->bindParam(":student_id", $studentId, PDO::PARAM_STR);
-    $checkStmt->bindParam(":club_id", $clubId, PDO::PARAM_INT);
-    $checkStmt->execute();
-
-    if ($checkStmt->rowCount() > 0) {
-        throw new Exception("Already a member of this CCA");
+    // Load club repository
+    $clubRepo = new clubRepository($pdo);
+    
+    // Get club details for confirmation message
+    $clubDetails = $clubRepo->getClubDetailsById($clubId);
+    
+    if (!$clubDetails) {
+        $_SESSION['error'] = 'Club not found.';
+        header("Location: " . BASE_URL . "/cca");
+        exit();
     }
 
-    // Join CCA
-    $joinSql = "INSERT INTO cca.club_members 
-               (club_id, student_id, join_date, status, created_at) 
-               VALUES (:club_id, :student_id, CURRENT_DATE, 'Active', CURRENT_TIMESTAMP)";
+    // Process based on operation
+    switch ($operation) {
+        case 'join':
+            // Check if user is already a member
+            if ($clubRepo->isUserMemberOfClub($studentId, $clubId)) {
+                $_SESSION['error'] = 'You are already a member of this club.';
+            } else {
+                // Get student information from the form
+                $studentInfo = [
+                    'full_name' => $_POST['full_name'] ?? '',
+                    'student_id' => $_POST['student_id'] ?? '',
+                    'student_email' => $_POST['student_email'] ?? '',
+                    'school' => $_POST['school'] ?? '',
+                    'course' => $_POST['course'] ?? '',
+                    'group_code' => $_POST['group_code'] ?? '',
+                    'intake' => $_POST['intake'] ?? '',
+                    'phone_number' => $_POST['phone_number'] ?? ''
+                ];
+                
+                // Log the received data for debugging
+                error_log('Join club request received: ' . json_encode([
+                    'clubId' => $clubId,
+                    'userId' => $userId,
+                    'studentId' => $studentId,
+                    'studentInfo' => $studentInfo
+                ]));
+                
+                // Try to submit the club application
+                $joined = $clubRepo->submitClubApplication($clubId, $userId, $studentId, $studentInfo);
+                
+                if ($joined) {
+                    $_SESSION['success'] = 'Your application for ' . $clubDetails['club_name'] . ' has been submitted for approval.';
+                } else {
+                    $_SESSION['error'] = 'Failed to submit your application. Please try again.';
+                }
+            }
+            break;
+        
+        default:
+            $_SESSION['error'] = 'Invalid operation.';
+            break;
+    }
 
-    $joinStmt = $pdo->prepare($joinSql);
-    $joinStmt->bindParam(":student_id", $studentId, PDO::PARAM_STR);
-    $joinStmt->bindParam(":club_id", $clubId, PDO::PARAM_INT);
-
-    if ($joinStmt->execute()) {
-        $_SESSION['success'] = "Successfully joined the CCA";
+    // Generate the redirect URL
+    $clubMapping = require_once 'config/club-mapping.php';
+    
+    // Redirect to club details page if available
+    if (isset($clubDetails['category']) && isset($clubDetails['club_name']) && 
+        isset($clubMapping[$clubDetails['category']][$clubDetails['club_name']])) {
+        $clubSlug = $clubMapping[$clubDetails['category']][$clubDetails['club_name']];
+        header("Location: " . BASE_URL . "/cca/" . $clubSlug);
     } else {
-        throw new Exception("Failed to join CCA");
+        // Fallback to main CCA page
+        header("Location: " . BASE_URL . "/cca");
     }
-}
-
-function leaveClub($pdo, $clubId, $studentId) {
-    // Update status to Inactive instead of deleting
-    $leaveSql = "UPDATE cca.club_members 
-                SET status = 'Inactive' 
-                WHERE student_id = :student_id 
-                AND club_id = :club_id";
-
-    $leaveStmt = $pdo->prepare($leaveSql);
-    $leaveStmt->bindParam(":student_id", $studentId, PDO::PARAM_STR);
-    $leaveStmt->bindParam(":club_id", $clubId, PDO::PARAM_INT);
-
-    if ($leaveStmt->execute()) {
-        $_SESSION['success'] = "Successfully left the CLUB";
-    } else {
-        throw new Exception("Failed to leave CLUB");
-    }
+    exit();
 }

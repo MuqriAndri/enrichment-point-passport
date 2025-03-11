@@ -3,8 +3,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('CCA: DOM loaded, initializing');
     initializeClubSearch();
-    initializeClubRegistration();
-    checkUserClubStatus();
+    initializeClubJoinButtons();
 });
 
 function initializeClubSearch() {
@@ -47,101 +46,170 @@ function initializeClubSearch() {
     console.log('CCA: Club search initialized');
 }
 
-function initializeClubRegistration() {
-    console.log('CCA: Initializing club registration');
-    const clubList = document.querySelector('.clubs-grid');
-    if (!clubList) {
-        console.log('CCA: Club list not found');
+function initializeClubJoinButtons() {
+    console.log('CCA: Initializing club join buttons');
+    
+    // Find all join buttons (both in main CCA page and CCA details page)
+    const joinButtons = document.querySelectorAll('.join-btn');
+    if (joinButtons.length === 0) {
+        console.log('CCA: No join buttons found');
         return;
     }
-
-    clubList.addEventListener('click', async (e) => {
-        const joinButton = e.target.closest('.join-btn');
-        if (!joinButton) return;
-
-        const clubId = joinButton.dataset.clubId;
-        console.log(`CCA: Join button clicked for club ${clubId}`);
-        
-        try {
-            const response = await registerForClub(clubId);
-            if (response.success) {
-                updateJoinButton(joinButton, true);
-                showNotification('Successfully joined the club!', 'success');
-            } else {
-                showNotification(response.message || 'Failed to join club', 'error');
+    
+    console.log(`CCA: Found ${joinButtons.length} join buttons`);
+    
+    // Add click handler to all join buttons
+    joinButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            // Get club information
+            const clubId = this.closest('form') 
+                ? this.closest('form').querySelector('input[name="club_id"]').value 
+                : this.dataset.clubId;
+                
+            const clubName = this.dataset.clubName || 
+                             (this.closest('.club-header-content') 
+                              ? this.closest('.club-header-content').querySelector('h1').textContent 
+                              : 'this club');
+            
+            if (!clubId) {
+                console.error('CCA: No club ID found for join button');
+                return;
             }
-        } catch (error) {
-            showNotification('An error occurred. Please try again.', 'error');
-            console.error('CCA: Error joining club:', error);
-        }
+            
+            console.log(`CCA: Join button clicked for club ${clubId} (${clubName})`);
+            
+            // Show application modal
+            showApplicationModal(clubId, clubName);
+        });
     });
-    console.log('CCA: Club registration initialized');
+    
+    console.log('CCA: Club join buttons initialized');
 }
 
-async function checkUserClubStatus() {
-    console.log('CCA: Checking user club status');
-    try {
-        const response = await fetch('/api/clubs/user-memberships');
-        if (response.ok) {
-            const memberships = await response.json();
-            console.log(`CCA: User is member of ${memberships.length} clubs`);
-            
-            // Update buttons for clubs user is already a member of
-            memberships.forEach(membership => {
-                const button = document.querySelector(`.join-btn[data-club-id="${membership.club_id}"]`);
-                if (button) {
-                    updateJoinButton(button, true);
-                }
-            });
-        } else {
-            console.log('CCA: Failed to fetch user memberships', response.status);
+function showApplicationModal(clubId, clubName) {
+    // Find the modal element (should be included in the HTML)
+    const modal = document.getElementById('clubApplicationModal');
+    if (!modal) {
+        console.error('CCA: Application modal not found in the DOM');
+        return;
+    }
+    
+    // Set club ID in the form
+    const clubIdInput = modal.querySelector('#applicationClubId');
+    if (clubIdInput) {
+        clubIdInput.value = clubId;
+    }
+    
+    // Update modal title to include club name
+    const modalTitle = modal.querySelector('.modal-header h2');
+    if (modalTitle) {
+        modalTitle.textContent = `Application for ${clubName}`;
+    }
+    
+    // Reset form fields
+    const form = modal.querySelector('#clubApplicationForm');
+    if (form) {
+        form.reset();
+    }
+    
+    // Show modal
+    modal.style.display = 'block';
+    
+    // Set focus on first field
+    setTimeout(() => {
+        const firstField = modal.querySelector('#application_reason');
+        if (firstField) {
+            firstField.focus();
         }
-    } catch (error) {
-        console.error('CCA: Error fetching user memberships:', error);
+    }, 100);
+}
+
+// Function to hide the application modal - this should be called by close/cancel buttons
+function hideApplicationModal() {
+    const modal = document.getElementById('clubApplicationModal');
+    if (modal) {
+        modal.style.display = 'none';
     }
 }
 
-// API call to register for a club
-async function registerForClub(clubId) {
-    console.log(`CCA: Making API call to register for club ${clubId}`);
-    const response = await fetch('/api/clubs/register', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({ club_id: clubId })
+// Add this function to your JavaScript to initialize the modal events
+function initializeApplicationModal() {
+    const modal = document.getElementById('clubApplicationModal');
+    if (!modal) return;
+    
+    // Add click handlers for close and cancel buttons
+    const closeButton = modal.querySelector('.close-modal');
+    if (closeButton) {
+        closeButton.addEventListener('click', hideApplicationModal);
+    }
+    
+    const cancelButton = modal.querySelector('.cancel-application-btn');
+    if (cancelButton) {
+        cancelButton.addEventListener('click', hideApplicationModal);
+    }
+    
+    // Close when clicking outside modal
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            hideApplicationModal();
+        }
     });
-
-    return await response.json();
+    
+    // Handle form submission
+    const form = modal.querySelector('#clubApplicationForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            const submitButton = this.querySelector('.submit-application-btn');
+            if (submitButton) {
+                // Show loading state
+                submitButton.innerHTML = '<span class="spinner"></span> Sending Request...';
+                submitButton.disabled = true;
+            }
+            
+            // Collect form data
+            const formData = new FormData(this);
+            
+            // Send via fetch
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (response.redirected) {
+                    // If the server responded with a redirect, follow it
+                    window.location.href = response.url;
+                } else {
+                    // Otherwise, reload the current page
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting form:', error);
+                if (submitButton) {
+                    submitButton.innerHTML = 'Submit Application';
+                    submitButton.disabled = false;
+                }
+                alert('Failed to submit application. Please try again.');
+            });
+        });
+    }
 }
 
-// Update join button state
-function updateJoinButton(button, joined) {
-    button.textContent = joined ? 'Joined' : 'Join Club';
-    button.classList.toggle('joined', joined);
-    button.disabled = joined;
-    console.log(`CCA: Button updated to ${joined ? 'joined' : 'not joined'} state`);
-}
-
-// Show notification
-function showNotification(message, type = 'success') {
-    console.log(`CCA: Showing ${type} notification: ${message}`);
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-
-    // Remove existing notifications
-    document.querySelectorAll('.notification').forEach(n => n.remove());
-
-    // Add new notification
-    document.body.appendChild(notification);
-
-    // Remove notification after 3 seconds
-    setTimeout(() => {
-        notification.remove();
-    }, 3000);
-}
+// Ensure the modal is initially hidden
+document.addEventListener('DOMContentLoaded', function() {
+    // Hide modal in case it's shown by default
+    const modal = document.getElementById('clubApplicationModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+    
+    initializeApplicationModal();
+});
 
 function debounce(func, wait) {
     let timeout;

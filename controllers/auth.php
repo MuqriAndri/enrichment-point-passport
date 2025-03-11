@@ -24,7 +24,7 @@ function handleLogin($pdo) {
             }
 
             // Store student-specific information only if user is a student
-            if ($user["role"] === "student") {
+            if ($user["role"] === "student" || "committee") {
                 $_SESSION["student_id"] = $user["student_id"];
                 $_SESSION["programme"] = $user["programme"];
                 $_SESSION["intake"] = $user["intake"];

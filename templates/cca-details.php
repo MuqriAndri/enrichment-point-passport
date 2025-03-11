@@ -21,6 +21,7 @@ $gallery = $pageData['gallery'] ?? [];
     <title>Enrichment Point Passport - <?php echo htmlspecialchars($clubDetails['club_name'] ?? 'Club Details'); ?></title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/cca-details.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/cca-application-form.css">
 </head>
 
 <body>
@@ -365,9 +366,11 @@ $gallery = $pageData['gallery'] ?? [];
         </div>
     </div>
 
-    
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/cca.js"></script>
+
+    <?php include 'templates/cca-application-form.php'; ?>
 </body>
 
 </html>
