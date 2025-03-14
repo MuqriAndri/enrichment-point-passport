@@ -1,5 +1,11 @@
 <?php
 function handleClubAction($ccaDB, $profilesDB) {
+    // Enable error logging
+    error_reporting(E_ALL);
+    ini_set('display_errors', 0);
+    ini_set('log_errors', 1);
+    error_log("Club action handler started");
+    
     // For debugging - create a response array
     $debugResponse = [
         'status' => 'processing',
@@ -47,7 +53,7 @@ function handleClubAction($ccaDB, $profilesDB) {
     $operation = $_POST['operation'];
     $clubId = $_POST['club_id'];
     $userId = $_SESSION['user_id'];
-    $studentId = $_SESSION['student_id'] ?? '';
+    $studentId = $_POST['student_id'] ?? $_SESSION['student_id'] ?? '';
     
     $debugResponse['operation'] = $operation;
     $debugResponse['club_id'] = $clubId;
@@ -141,6 +147,9 @@ function handleClubAction($ccaDB, $profilesDB) {
                         $debugResponse['message'] = 'Failed to submit';
                     }
                 } catch (Exception $e) {
+                    error_log("Exception in handleClubAction: " . $e->getMessage());
+                    error_log("Stack trace: " . $e->getTraceAsString());
+                    
                     $debugResponse['status'] = 'error';
                     $debugResponse['message'] = 'Exception: ' . $e->getMessage();
                     $debugResponse['error_trace'] = $e->getTraceAsString();
@@ -163,8 +172,8 @@ function handleClubAction($ccaDB, $profilesDB) {
         exit;
     }
 
-    // Generate the redirect URL
-    $clubMapping = require_once 'config/club-mapping.php';
+    // Get club mapping for redirects
+    $clubMapping = require_once __DIR__ . '/../config/club-mapping.php';
     
     // Redirect to club details page if available
     if (isset($clubDetails['category']) && isset($clubDetails['club_name']) && 

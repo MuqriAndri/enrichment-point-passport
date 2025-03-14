@@ -368,7 +368,7 @@ $gallery = $pageData['gallery'] ?? [];
 
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>
-    <script src="<?php echo BASE_URL; ?>/assets/js/cca.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/join-club.js"></script>
 
     <?php include 'templates/cca-application-form.php'; ?>
 </body>

@@ -41,6 +41,45 @@ class clubRepository
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
+    public function getUserDetails($userId)
+    {
+        // Make sure we have a connection to the profiles database
+        if (!$this->profilesDB) {
+            error_log("No profiles database connection available");
+            return null;
+        }
+
+        try {
+            // Use the profiles database connection with the fully qualified table name
+            $sql = "SELECT 
+                user_id, 
+                user_ic, 
+                user_email, 
+                full_name, 
+                role, 
+                school, 
+                student_id, 
+                programme, 
+                intake, 
+                group_code
+            FROM profile.users 
+            WHERE user_id = :user_id";
+
+            $stmt = $this->profilesDB->prepare($sql);
+            $stmt->bindParam(':user_id', $userId);
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0) {
+                return $stmt->fetch(PDO::FETCH_ASSOC);
+            }
+
+            return null;
+        } catch (PDOException $e) {
+            error_log("Error getting user details: " . $e->getMessage());
+            return null;
+        }
+    }
+
     public function getClubDetails($clubName)
     {
         $sql = "SELECT 
@@ -55,8 +94,8 @@ class clubRepository
                 c.contact_email,
                 c.membership_fee,
                 COUNT(DISTINCT cm.student_id) as member_count
-            FROM cca.clubs c
-            LEFT JOIN cca.club_members cm ON c.club_id = cm.club_id 
+            FROM clubs c
+            LEFT JOIN club_members cm ON c.club_id = cm.club_id 
                 AND cm.status = 'Active'
             WHERE c.club_name = :club_name
             GROUP BY c.club_id, c.club_name, c.category";
@@ -75,10 +114,10 @@ class clubRepository
     public function isUserMemberOfClub($studentId, $clubId)
     {
         $sql = "SELECT club_id 
-                FROM cca.club_members 
+                FROM club_members 
                 WHERE student_id = :student_id 
                 AND club_id = :club_id
-                AND status = 'Active'";
+                AND status IN ('Active', 'Pending')";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':student_id', $studentId);
         $stmt->bindParam(':club_id', $clubId);
@@ -86,12 +125,6 @@ class clubRepository
         return ($stmt->rowCount() > 0);
     }
 
-    /**
-     * Get club details by club ID
-     * 
-     * @param int $clubId The club ID
-     * @return array|null Club details or null if not found
-     */
     public function getClubDetailsById($clubId)
     {
         $sql = "SELECT 
@@ -106,8 +139,8 @@ class clubRepository
             c.contact_email,
             c.membership_fee,
             COUNT(DISTINCT cm.student_id) as member_count
-        FROM cca.clubs c
-        LEFT JOIN cca.club_members cm ON c.club_id = cm.club_id 
+        FROM clubs c
+        LEFT JOIN club_members cm ON c.club_id = cm.club_id 
             AND cm.status = 'Active'
         WHERE c.club_id = :club_id
         GROUP BY c.club_id, c.club_name, c.category";
@@ -123,78 +156,26 @@ class clubRepository
         return null;
     }
 
-    /**
-     * Add a student to a club
-     * 
-     * @param int $clubId The club ID
-     * @param int $userId The user ID
-     * @param string $studentId The student ID
-     * @return bool True if successful, false otherwise
-     */
-    public function joinClub($clubId, $userId, $studentId)
-    {
-        try {
-            // Begin transaction
-            $this->pdo->beginTransaction();
-
-            // Check if already a member
-            if ($this->isUserMemberOfClub($studentId, $clubId)) {
-                $this->pdo->rollBack();
-                return false;
-            }
-
-            // Get current date
-            $currentDate = date('Y-m-d');
-
-            // Insert into club_members
-            $sql = "INSERT INTO cca.club_members (club_id, user_id, student_id, join_date, status, role_id) 
-                VALUES (:club_id, :user_id, :student_id, :join_date, 'Active', 5)";
-
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':club_id', $clubId);
-            $stmt->bindParam(':user_id', $userId);
-            $stmt->bindParam(':student_id', $studentId);
-            $stmt->bindParam(':join_date', $currentDate);
-            $stmt->execute();
-
-            // Commit transaction
-            $this->pdo->commit();
-
-            return true;
-        } catch (PDOException $e) {
-            // Rollback transaction on error
-            $this->pdo->rollBack();
-            error_log("Error joining club: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Submit a club membership application
-     * 
-     * @param int $clubId The club ID
-     * @param int $userId The user ID
-     * @param string $studentId The student ID from session
-     * @param array $studentInfo Student information from form
-     * @return bool True if successful, false otherwise
-     */
     public function submitClubApplication($clubId, $userId, $studentId, $studentInfo)
     {
         try {
+            error_log("Starting club application: clubId=$clubId, userId=$userId, studentId=$studentId");
+            
             // Begin transaction
             $this->pdo->beginTransaction();
-
-            // Check if already a member
+            
+            // Check if already a member using the WORKING version of isUserMemberOfClub
             if ($this->isUserMemberOfClub($studentId, $clubId)) {
+                error_log("User $studentId is already a member of club $clubId");
                 $this->pdo->rollBack();
-                error_log("User {$studentId} is already a member of club {$clubId}");
                 return false;
             }
-
-            // Get current date
+            
+            // Current date
             $currentDate = date('Y-m-d');
-
-            $query = "INSERT INTO club_members (
+            
+            // VERY SIMPLE INSERT - absolutely no joins or subqueries
+            $sql = "INSERT INTO club_members (
                     club_id, 
                     user_id, 
                     student_id, 
@@ -210,11 +191,11 @@ class clubRepository
                     intake,
                     phone_number
                 ) VALUES (
-                    :club_id, 
-                    :user_id, 
-                    :student_id, 
-                    :join_date, 
-                    'Pending', 
+                    :club_id,
+                    :user_id,
+                    :student_id,
+                    :join_date,
+                    'Pending',
                     5,
                     :full_name,
                     :application_student_id,
@@ -225,8 +206,10 @@ class clubRepository
                     :intake,
                     :phone_number
                 )";
-
-            $stmt = $this->pdo->prepare($query);
+            
+            $stmt = $this->pdo->prepare($sql);
+            
+            // Bind parameters one by one for maximum clarity
             $stmt->bindParam(':club_id', $clubId);
             $stmt->bindParam(':user_id', $userId);
             $stmt->bindParam(':student_id', $studentId);
@@ -239,21 +222,29 @@ class clubRepository
             $stmt->bindParam(':group_code', $studentInfo['group_code']);
             $stmt->bindParam(':intake', $studentInfo['intake']);
             $stmt->bindParam(':phone_number', $studentInfo['phone_number']);
-            $stmt->execute();
-
+            
+            // Execute and check result
+            $result = $stmt->execute();
+            
+            if (!$result) {
+                $error = $stmt->errorInfo();
+                error_log("Error in club application: " . json_encode($error));
+                $this->pdo->rollBack();
+                return false;
+            }
+            
             // Commit transaction
             $this->pdo->commit();
-            error_log("Successfully submitted club application for user {$studentId} to club {$clubId}");
+            error_log("Club application successful!");
             return true;
         } catch (PDOException $e) {
-            // Rollback transaction on error
+            // Rollback on error
             if ($this->pdo->inTransaction()) {
                 $this->pdo->rollBack();
             }
-
-            error_log("Error submitting club application: " . $e->getMessage() . " - Query: " . $query);
-            // Log the full stack trace for debugging
-            error_log("Stack trace: " . $e->getTraceAsString());
+            
+            error_log("PDO Exception in club application: " . $e->getMessage());
+            error_log("SQL State: " . $e->getCode());
             return false;
         }
     }

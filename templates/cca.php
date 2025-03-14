@@ -205,7 +205,7 @@ if (!isset($_SESSION['user_id'])) {
     </div>
 
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
-    <script src="<?php echo BASE_URL; ?>/assets/js/cca.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/join-club.js"></script>
 </body>
 
 </html>

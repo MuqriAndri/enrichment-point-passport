@@ -38,7 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST["user_ic"]) && isset($_POST["password"])) {
         require_once 'controllers/auth.php';
         handleLogin($profilesDB); // User info is in profiles database
-    } elseif (isset($_POST['action']) && $_POST['action'] === 'cca') {
+    } 
+    elseif (isset($_POST['action']) && $_POST['action'] === 'cca') {
         require_once 'controllers/cca.php';
         handleClubAction($ccaDB, $profilesDB); // Pass both database connections
     }

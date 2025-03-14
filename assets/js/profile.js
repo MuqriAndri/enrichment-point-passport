@@ -1,5 +1,3 @@
-// profile.js - Self-initializing profile functionality
-
 document.addEventListener('DOMContentLoaded', function () {
     console.log('Profile: DOM loaded, initializing');
     initializeProfileEdit();
@@ -71,8 +69,17 @@ async function saveProfileChanges() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(formDataObject)
+            body: JSON.stringify(formDataObject),
+            credentials: 'same-origin' // This ensures cookies (including session) are sent
         });
+
+        if (!response.ok) {
+            // Check if it's an authentication error
+            if (response.status === 401) {
+                throw new Error('Your session has expired. Please refresh the page and try again.');
+            }
+            throw new Error(`Server responded with status: ${response.status}`);
+        }
 
         const result = await response.json();
 
@@ -267,4 +274,123 @@ function validateField(field) {
 
     updateFieldStatus(field, isValid, errorMessage);
     return isValid;
+}
+
+function updateFieldStatus(field, isValid, errorMessage) {
+    console.log(`Profile: Updating field status for ${field.id}, valid: ${isValid}`);
+    
+    // Remove any existing error messages
+    const existingError = field.parentNode.querySelector('.field-error');
+    if (existingError) {
+        existingError.remove();
+    }
+    
+    // Remove any existing styling
+    field.classList.remove('field-invalid', 'field-valid');
+    
+    if (!isValid) {
+        // Add error styling
+        field.classList.add('field-invalid');
+        
+        // Create and append error message
+        const errorElement = document.createElement('div');
+        errorElement.className = 'field-error';
+        errorElement.textContent = errorMessage;
+        field.parentNode.appendChild(errorElement);
+    } else {
+        // Add valid styling
+        field.classList.add('field-valid');
+    }
+    
+    return isValid;
+}
+
+// Also add the missing showProfileNotification function
+function showProfileNotification(message, type = 'success') {
+    console.log(`Profile: Showing notification: ${message} (${type})`);
+    
+    // Create notification element
+    const notificationElement = document.createElement('div');
+    notificationElement.className = `profile-notification ${type}`;
+    notificationElement.textContent = message;
+    
+    // Add to document
+    document.body.appendChild(notificationElement);
+    
+    // Show with animation
+    setTimeout(() => {
+        notificationElement.classList.add('show');
+    }, 10);
+    
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+        notificationElement.classList.remove('show');
+        setTimeout(() => {
+            notificationElement.remove();
+        }, 300);
+    }, 3000);
+}
+
+// Add the missing loading state functions
+function showLoadingState() {
+    console.log('Profile: Showing loading state');
+    
+    // Disable edit button
+    const editButton = document.getElementById('editProfileBtn');
+    if (editButton) {
+        editButton.disabled = true;
+        editButton.classList.add('loading');
+    }
+    
+    // Add loading overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'profile-loading-overlay';
+    overlay.innerHTML = '<div class="spinner"></div>';
+    document.body.appendChild(overlay);
+}
+
+function hideLoadingState() {
+    console.log('Profile: Hiding loading state');
+    
+    // Enable edit button
+    const editButton = document.getElementById('editProfileBtn');
+    if (editButton) {
+        editButton.disabled = false;
+        editButton.classList.remove('loading');
+    }
+    
+    // Remove loading overlay
+    const overlay = document.querySelector('.profile-loading-overlay');
+    if (overlay) {
+        overlay.remove();
+    }
+}
+
+// Add the missing handleSaveSuccess function
+function handleSaveSuccess() {
+    console.log('Profile: Handling save success');
+    
+    const editButton = document.getElementById('editProfileBtn');
+    const form = document.getElementById('profileInfoForm');
+    
+    if (!form || !editButton) return;
+    
+    const formInputs = form.querySelectorAll('input, textarea');
+    
+    // Disable form fields with animation
+    formInputs.forEach((input, index) => {
+        setTimeout(() => {
+            input.disabled = true;
+            input.classList.remove('editable');
+        }, index * 50);
+    });
+    
+    // Update button state
+    editButton.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>
+        Edit Profile
+    `;
+    editButton.classList.remove('editing');
 }

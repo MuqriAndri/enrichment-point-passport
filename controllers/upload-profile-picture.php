@@ -1,4 +1,9 @@
 <?php
+// Start the session if not already started
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Set error handling
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -47,6 +52,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
+    // Include database connection
+    require_once __DIR__ . '/../config/database.php';
+    
+    // Make sure we have $pdo defined from database.php
+    if (!isset($pdo)) {
+        throw new Exception('Database connection not available');
+    }
+    
     // Validate file upload
     if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
         $errorCode = $_FILES['avatar']['error'] ?? 'No file uploaded';
@@ -56,13 +69,24 @@ try {
 
     $file = $_FILES['avatar'];
     
+    // Get app config
+    $appConfig = require_once __DIR__ . '/../config/app.php';
+    $basePath = $appConfig['path_prefix'] ?? '/enrichment-point-passport';
+    
     // Basic path setup
-    // $baseDir = '/var/www/html/enrichment-point-passport';
     $baseDir = __DIR__ . '/..';
     $uploadDir = $baseDir . '/assets/images/uploads/profile';
+    $uploadDirExists = is_dir($uploadDir);
+    
+    // Log path information
+    logError('Path info', [
+        'baseDir' => $baseDir,
+        'uploadDir' => $uploadDir,
+        'dirExists' => $uploadDirExists ? 'yes' : 'no'
+    ]);
     
     // Create directory if it doesn't exist
-    if (!is_dir($uploadDir)) {
+    if (!$uploadDirExists) {
         if (!mkdir($uploadDir, 0775, true)) {
             logError('Failed to create directory', ['path' => $uploadDir]);
             sendResponse(false, ['error' => 'Server configuration error'], 500);
@@ -108,10 +132,10 @@ try {
     chmod($filepath, 0664);
 
     // Update relative path for database and frontend
-    $relativePath = '/enrichment-point-passport/assets/images/uploads/profile/' . $filename;
+    $relativePath = $basePath . '/assets/images/uploads/profile/' . $filename;
 
     // Update database
-    $sql = "UPDATE profiles.users SET profile_picture = :profile_picture WHERE user_id = :user_id";
+    $sql = "UPDATE users SET profile_picture = :profile_picture WHERE user_id = :user_id";
     $stmt = $pdo->prepare($sql);
     
     if (!$stmt->execute([
@@ -137,5 +161,5 @@ try {
         'message' => $e->getMessage(),
         'trace' => $e->getTraceAsString()
     ]);
-    sendResponse(false, ['error' => 'An unexpected error occurred'], 500);
+    sendResponse(false, ['error' => 'An unexpected error occurred: ' . $e->getMessage()], 500);
 }
