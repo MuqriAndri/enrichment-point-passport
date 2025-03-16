@@ -1,52 +1,3 @@
-/* Remove category-specific button styles */
-/*
-.sports .join-btn {
-    background: rgba(237, 137, 54, 0.2);
-    border-color: rgba(237, 137, 54, 0.3);
-}
-
-.sports .join-btn:hover {
-    background: rgba(237, 137, 54, 0.3);
-}
-
-.academic .join-btn {
-    background: rgba(76, 81, 191, 0.2);
-    border-color: rgba(76, 81, 191, 0.3);
-}
-
-.academic .join-btn:hover {
-    background: rgba(76, 81, 191, 0.3);
-}
-
-.arts .join-btn {
-    background: rgba(159, 122, 234, 0.2);
-    border-color: rgba(159, 122, 234, 0.3);
-}
-
-.arts .join-btn:hover {
-    background: rgba(159, 122, 234, 0.3);
-}
-
-.culture .join-btn {
-    background: rgba(102, 126, 234, 0.2);
-    border-color: rgba(102, 126, 234, 0.3);
-}
-
-.culture .join-btn:hover {
-    background: rgba(102, 126, 234, 0.3);
-}
-
-.martial-arts .join-btn {
-    background: rgba(245, 101, 101, 0.2);
-    border-color: rgba(245, 101, 101, 0.3);
-}
-
-.martial-arts .join-btn:hover {
-    background: rgba(245, 101, 101, 0.3);
-}
-*//* CCA Detail Page Styles */
-
-/* Alert Styles */
 .alert {
     padding: var(--spacing-md);
     border-radius: var(--radius-md);
@@ -143,29 +94,6 @@
     position: relative;
     z-index: 1;
 }
-
-/* Remove category-based header styles */
-/* 
-.club-detail-header.sports {
-    border-bottom: 4px solid #ED8936;
-}
-
-.club-detail-header.academic {
-    border-bottom: 4px solid #4C51BF;
-}
-
-.club-detail-header.arts {
-    border-bottom: 4px solid #9F7AEA;
-}
-
-.club-detail-header.culture {
-    border-bottom: 4px solid #667EEA;
-}
-
-.club-detail-header.martial-arts {
-    border-bottom: 4px solid #F56565;
-}
-*/
 
 /* Header content layout */
 .club-header-content {

@@ -1,0 +1,67 @@
+/* General container styling */
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+/* Title section */
+.history-title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* History grid layout */
+.history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Makes a responsive grid */
+    gap: 20px;
+}
+
+/* Card styling */
+.history-card {
+    background-color: #f8f8f8;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.history-card:hover {
+    transform: translateY(-5px); /* Adds a little lift on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Activity name styling */
+.activity-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+/* Enrichment points styling */
+.ep-points {
+    font-size: 16px;
+    color: #27ae60;
+    margin-bottom: 10px;
+}
+
+/* Date range styling */
+.date-range {
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+/* "No history" message styling */
+.no-history {
+    text-align: center;
+    font-size: 18px;
+    color: #e74c3c;
+    font-weight: bold;
+    margin-top: 20px;
+}

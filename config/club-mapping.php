@@ -2,6 +2,7 @@
 return [
     'academic' => [
         'COPS Club' => 'cops',
+        'First Aid' => 'first-aid',
         'Geosoc Club' => 'geosoc',
         'KNI' => 'kni',
         'SPE Club' => 'spe',

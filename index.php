@@ -12,6 +12,7 @@ require_once 'config/database.php';
 // Load repositories
 require_once 'repositories/user-repository.php';
 require_once 'repositories/club-repository.php';
+require_once 'repositories/enrichment-point-repository.php';
 
 // Get the path from URL
 $request_uri = str_replace($appConfig['path_prefix'], '', $_SERVER['REQUEST_URI']);
