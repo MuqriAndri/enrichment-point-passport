@@ -109,6 +109,7 @@
         ];
 
         foreach ($events as $event) {
+            echo "<div class='event-item-box'>"; // Added container
             echo "<div class='event-item'>";
             echo "<h2>" . $event['name'] . "</h2>";
             echo "<p>" . $event['description'] . "</p>";
@@ -118,6 +119,7 @@
             echo "<p>Enrichment Points: " . $event['enrichment_points'] . "</p>";
             echo "<button class='btn btn-primary'>Register</button>";
             echo "</div>";
+            echo "</div>"; // Close container
         }
         ?>
          <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
