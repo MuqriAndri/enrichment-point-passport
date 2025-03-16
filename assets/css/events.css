@@ -1,3 +1,6 @@
+/* Base Styles and Variables */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
 :root {
     /* Color Variables */
     --primary-color: #1a365d;
@@ -34,41 +37,76 @@
     --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
-body {
-    font-family: 'Montserrat', sans-serif;
-    background-color: var(--background-light);
-    color: var(--text-dark);
+/* Reset and Base Styles */
+* {
     margin: 0;
-    padding: var(--spacing-lg);
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.container {
-    max-width: 800px;
+body {
+    font-family: 'Montserrat', Arial, sans-serif;
+    background: var(--background-light);
+    color: var(--text-dark);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout Components */
+.dashboard-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    max-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.main-content {
+    flex: 1;
+    padding: var(--spacing-lg);
+    margin-top: 4rem;
+    /* Account for fixed header */
+}
+
+.main-wrapper {
+    max-width: 1400px;
     margin: 0 auto;
-    background: white;
+    width: 100%;
     padding: var(--spacing-lg);
+}
+
+/* Grid Layout */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+    height: auto;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.btn {
+    display: inline-block;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
     border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
+    transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
-h1 {
+.btn-primary {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: 1px solid var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--background-light);
+    border-color: var(--primary-color);
     color: var(--primary-color);
-    margin-bottom: var(--spacing-md);
-}
-
-p {
-    margin-bottom: var(--spacing-sm);
-}
-
-.event-item {
-    margin-bottom: var(--spacing-lg);
-}
-
-.event-item h2 {
-    color: var(--accent-color);
-    margin-bottom: var(--spacing-xs);
-}
-
-.event-item p {
-    color: var(--text-light);
 }
