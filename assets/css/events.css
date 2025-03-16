@@ -110,3 +110,12 @@ body {
     border-color: var(--primary-color);
     color: var(--primary-color);
 }
+
+.event-item-box {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
