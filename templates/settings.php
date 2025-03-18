@@ -9,7 +9,7 @@ ob_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings - Enrichment Point Passport</title>
-    <link rel="stylesheet" href="settings.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/settings.css">
 </head>
 <body>
     <div class="settings-container">
