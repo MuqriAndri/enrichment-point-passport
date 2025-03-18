@@ -14,31 +14,6 @@ ob_start();
 <body>
     <div class="settings-container">
         <h2>Settings</h2>
-<div class="container">
-    <div class="history-title">Enrichment Points History</div>
-    <!-- Example static data for testing -->
-    <div class="history-grid">
-        <div class="history-card">
-            <div class="activity-name">Workshop on AI</div>
-            <div class="ep-points">10 EP</div>
-            <div class="date-range">2024-03-10</div>
-        </div>
-        <div class="history-card">
-            <div class="activity-name">Coding Bootcamp</div>
-            <div class="ep-points">15 EP</div>
-            <div class="date-range">2024-02-15</div>
-        </div>
-        <div class="history-card">
-            <div class="activity-name">Research Presentation</div>
-            <div class="ep-points">20 EP</div>
-            <div class="date-range">2024-01-22</div>
-        </div>
-    </div>
-    <!-- If no data, show this message -->
-    <div class="no-history">No history available for this user.</div>
-    </div>
-</body>
-</html>
 
         <form method="POST" class="settings-form">
             <h3>Profile Information</h3>
