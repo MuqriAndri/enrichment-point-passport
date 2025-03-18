@@ -14,16 +14,6 @@ ob_start();
 <body>
     <div class="settings-container">
         <h2>Settings</h2>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enrichment Points History</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/history.css">
-</head>
-<body>
 <div class="container">
     <div class="history-title">Enrichment Points History</div>
     <!-- Example static data for testing -->
