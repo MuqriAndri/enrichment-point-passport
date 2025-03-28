@@ -38,6 +38,7 @@ label {
 input[type="text"],
 input[type="email"],
 input[type="password"],
+input[type="file"],
 select {
     width: 100%;
     padding: 10px;
@@ -65,28 +66,6 @@ button {
 
 button:hover {
     background: #0056b3;
-}
-
-/* Danger Zone */
-.danger-zone {
-    margin-top: 20px;
-    padding: 15px;
-    background: #ffe5e5;
-    border: 1px solid #ff4d4d;
-    border-radius: 5px;
-}
-
-.danger-zone h3 {
-    color: #ff4d4d;
-}
-
-.deactivate-btn {
-    background: #ff4d4d;
-    margin-top: 10px;
-}
-
-.deactivate-btn:hover {
-    background: #cc0000;
 }
 
 /* Dark Mode */
