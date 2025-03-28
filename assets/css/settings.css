@@ -35,18 +35,6 @@ label {
     margin-bottom: 5px;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="file"],
-select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
 input[type="checkbox"] {
     margin-right: 5px;
 }
@@ -68,6 +56,28 @@ button:hover {
     background: #0056b3;
 }
 
+/* Danger Zone */
+.danger-zone {
+    margin-top: 20px;
+    padding: 15px;
+    background: #ffe5e5;
+    border: 1px solid #ff4d4d;
+    border-radius: 5px;
+}
+
+.danger-zone h3 {
+    color: #ff4d4d;
+}
+
+.deactivate-btn {
+    background: #ff4d4d;
+    margin-top: 10px;
+}
+
+.deactivate-btn:hover {
+    background: #cc0000;
+}
+
 /* Dark Mode */
 .dark-mode {
     background-color: #222;
@@ -79,8 +89,7 @@ button:hover {
     color: white;
 }
 
-.dark-mode input,
-.dark-mode select {
+.dark-mode input[type="checkbox"] {
     background: #444;
     color: white;
     border: 1px solid #666;
