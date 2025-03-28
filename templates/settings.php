@@ -3,33 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enrichment Points History</title>
+    <title>Settings</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/settings.css">
 </head>
 <body>
-<div class="container">
-    <div class="history-title">Enrichment Points History</div>
-    <!-- Example static data for testing -->
-    <div class="history-grid">
-        <div class="history-card">
-            <div class="activity-name">Workshop on AI</div>
-            <div class="ep-points">10 EP</div>
-            <div class="date-range">2024-03-10</div>
-        </div>
-        <div class="history-card">
-            <div class="activity-name">Coding Bootcamp</div>
-            <div class="ep-points">15 EP</div>
-            <div class="date-range">2024-02-15</div>
-        </div>
-        <div class="history-card">
-            <div class="activity-name">Research Presentation</div>
-            <div class="ep-points">20 EP</div>
-            <div class="date-range">2024-01-22</div>
-        </div>
-    </div>
-    <!-- If no data, show this message -->
-    <div class="no-history">No history available for this user.</div>
+    <div class="container">
+        <h2>Account Settings</h2>
+        
+        <form action="settings_update.php" method="POST">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">New Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter a new password">
+            </div>
+
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm_password" placeholder="Confirm new password">
+            </div>
+
+            <button type="submit">Save Changes</button>
+        </form>
     </div>
 </body>
 </html>
