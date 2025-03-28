@@ -1,20 +1,10 @@
-/* Settings Page Styling */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
-
-:root {
-    --primary-color: #1a365d;
-    --accent-color: #efbf04;
-    --text-dark: #2d3748;
-    --text-light: #718096;
-    --background-light: #f8f9fa;
-    --background-dark: #e9ecef;
-}
-
+/* General Styles */
 body {
-    font-family: 'Montserrat', Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, var(--background-light) 0%, var(--background-dark) 100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,69 +12,106 @@ body {
 }
 
 .container {
-    max-width: 500px;
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    padding: 20px;
+    width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
-    color: var(--primary-color);
     text-align: center;
-    margin-bottom: 1.5rem;
+    font-weight: 600;
 }
 
+/* Form Styles */
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 15px;
 }
 
 label {
     display: block;
-    font-weight: 600;
-    color: var(--text-dark);
-    margin-bottom: 0.5rem;
+    font-weight: 500;
+    margin-bottom: 5px;
 }
 
 input[type="text"],
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="file"],
+select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 1rem;
-    transition: border 0.3s ease;
+    font-size: 14px;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus {
-    border-color: var(--primary-color);
-    outline: none;
+input[type="checkbox"] {
+    margin-right: 5px;
 }
 
+/* Button Styles */
 button {
     width: 100%;
-    padding: 12px;
-    background: var(--primary-color);
+    background: #007bff;
     color: white;
+    padding: 10px;
     border: none;
     border-radius: 5px;
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 16px;
     cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
+    transition: background 0.3s;
 }
 
 button:hover {
-    background: var(--accent-color);
-    transform: translateY(-2px);
+    background: #0056b3;
 }
 
-@media screen and (max-width: 600px) {
-    .container {
-        width: 90%;
-        padding: 1.5rem;
-    }
+/* Danger Zone */
+.danger-zone {
+    margin-top: 20px;
+    padding: 15px;
+    background: #ffe5e5;
+    border: 1px solid #ff4d4d;
+    border-radius: 5px;
+}
+
+.danger-zone h3 {
+    color: #ff4d4d;
+}
+
+.deactivate-btn {
+    background: #ff4d4d;
+    margin-top: 10px;
+}
+
+.deactivate-btn:hover {
+    background: #cc0000;
+}
+
+/* Dark Mode */
+.dark-mode {
+    background-color: #222;
+    color: #ddd;
+}
+
+.dark-mode .container {
+    background: #333;
+    color: white;
+}
+
+.dark-mode input,
+.dark-mode select {
+    background: #444;
+    color: white;
+    border: 1px solid #666;
+}
+
+.dark-mode button {
+    background: #009688;
+}
+
+.dark-mode button:hover {
+    background: #00796b;
 }
