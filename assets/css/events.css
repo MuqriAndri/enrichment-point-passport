@@ -78,6 +78,199 @@ body {
     padding: var(--spacing-lg);
 }
 
+/* Tab Navigation - Fixed */
+.tab-navigation {
+    display: flex;
+    background: white;
+    position: sticky;
+    top: 64px; /* Height of top nav */
+    z-index: 900;
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-lg);
+    gap: var(--spacing-xs);
+    border: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-lg); /* Added consistent margin */
+}
+
+.tab-item {
+    flex: 1;
+    padding: 0.75rem var(--spacing-md);
+    color: var(--text-dark);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: var(--transition-fast);
+    font-weight: 500;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.tab-item.active {
+    background: var(--primary-color);
+    color: white;
+    border-radius: var(--radius-md);
+}
+
+/* Remove any underline effects */
+.tab-item::after,
+.tab-item.active::after {
+    display: none;
+}
+
+.tab-item:hover:not(.active) {
+    background: var(--background-light);
+    color: var(--primary-color);
+}
+
+/* Welcome Card - Fixed */
+.welcome-card {
+    background-color: #1a365d;
+    background-image:
+        radial-gradient(circle at 20% 150%, #2d4a7c 9%, transparent 50%),
+        radial-gradient(circle at 70% -20%, #2d4a7c 15%, transparent 50%),
+        linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.03) 50%, transparent 52%),
+        linear-gradient(-45deg, transparent 48%, rgba(255, 255, 255, 0.03) 50%, transparent 52%);
+    background-size:
+        100% 100%,
+        100% 100%,
+        30px 30px,
+        30px 30px;
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    border: 1px solid var(--border-color);
+    position: relative;
+    color: white;
+}
+
+.welcome-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    border-radius: var(--radius-md);
+}
+
+.welcome-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(26, 54, 93, 0) 0%, rgba(26, 54, 93, 0.4) 100%);
+    border-radius: var(--radius-md);
+}
+
+.welcome-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.welcome-content {
+    padding: var(--spacing-xs) var(--spacing-xs);
+}
+
+.welcome-content h1 {
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: var(--spacing-md);
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.welcome-content p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.points-overview {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding-left: var(--spacing-lg);
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    min-width: 300px;
+}
+
+.circular-progress {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.circular-chart {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.circular-chart path {
+    transition: stroke-dasharray var(--transition-normal);
+}
+
+.circular-chart path:first-child {
+    stroke: rgba(255, 255, 255, 0.2);
+}
+
+.circular-chart path:last-child {
+    stroke: var(--accent-color);
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 2px rgba(239, 191, 4, 0.2));
+}
+
+.percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.percentage .points {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: white;
+}
+
+.percentage .total {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 0.25rem;
+}
+
+.points-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.points-info h3 {
+    font-size: 1.2rem;
+    color: white;
+}
+
+.points-info p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.percentage-text {
+    font-weight: 600;
+}
+
 /* Grid Layout */
 .dashboard-grid {
     display: grid;
@@ -86,6 +279,44 @@ body {
     height: auto;
     max-height: calc(100vh - 200px);
     overflow-y: auto;
+}
+
+/* Quick Stats - Fixed */
+.quick-stats,
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.stat-card {
+    background: white;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.stat-title,
+.stat-card .stat-title {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-xs);
+}
+
+.stat-value,
+.stat-card .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: var(--spacing-xs);
+}
+
+.stat-description,
+.stat-card .stat-description {
+    font-size: 0.9rem;
+    color: var(--text-light);
 }
 
 .btn {
@@ -118,4 +349,48 @@ body {
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .welcome-card {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-lg);
+    }
+
+    .points-overview {
+        padding-left: 0;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding-top: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    .tab-navigation {
+        overflow-x: auto;
+        padding-bottom: var(--spacing-xs);
+        gap: var(--spacing-xs);
+    }
+
+    .tab-item {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        white-space: nowrap;
+    }
+    
+    .welcome-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .welcome-content p {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .stats-container,
+    .quick-stats {
+        grid-template-columns: 1fr;
+    }
 }

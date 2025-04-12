@@ -405,7 +405,7 @@ body {
     justify-content: center;
 }
 
-/* Tab Navigation */
+/* Tab Navigation - Fixed */
 .tab-navigation {
     display: flex;
     background: white;
@@ -417,6 +417,7 @@ body {
     border-radius: var(--radius-lg);
     gap: var(--spacing-xs);
     border: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-lg); /* Added consistent margin */
 }
 
 .tab-item {
@@ -439,11 +440,8 @@ body {
     /* Explicitly set border radius for active state */
 }
 
-.tab-item:hover:not(.active) {
-    background: var(--background-light);
-    color: var(--primary-color);
-}
-
+/* Remove any underline effects */
+.tab-item::after,
 .tab-item.active::after {
     display: none;
 }
@@ -607,7 +605,7 @@ body {
 
 /* Main Content Components */
 
-/* Welcome Card */
+/* Welcome Card - Fixed */
 .welcome-card {
     background-color: #1a365d;
     background-image:
@@ -691,7 +689,7 @@ body {
     align-items: center;
     gap: var(--spacing-lg);
     padding-left: var(--spacing-lg);
-    border-left: 1px solid var(--border-color);
+    border-left: 1px solid rgba(255, 255, 255, 0.2); /* Fixed border color */
     min-width: 300px;
 }
 
@@ -753,6 +751,26 @@ body {
     margin-top: 0.25rem;
 }
 
+.points-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.points-info h3 {
+    font-size: 1.2rem;
+    color: white;
+}
+
+.points-info p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.percentage-text {
+    font-weight: 600;
+}
+
 /* Action Buttons */
 .primary-btn {
     display: inline-flex;
@@ -783,8 +801,9 @@ body {
     height: 20px;
 }
 
-/* Stats and Metrics */
-.stats-container {
+/* Stats and Metrics - Fixed */
+.stats-container,
+.quick-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--spacing-md);
@@ -799,17 +818,25 @@ body {
     border: 1px solid var(--border-color);
 }
 
-.stat-card .stat-title {
+.stat-card .stat-title,
+.stat-title {
     color: var(--text-light);
     font-size: 0.9rem;
     margin-bottom: var(--spacing-xs);
 }
 
-.stat-card .stat-value {
+.stat-card .stat-value,
+.stat-value {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-dark);
     margin-bottom: var(--spacing-xs);
+}
+
+.stat-card .stat-description,
+.stat-description {
+    font-size: 0.9rem;
+    color: var(--text-light);
 }
 
 .stat-card .stat-change {
@@ -1048,7 +1075,7 @@ body {
     .points-overview {
         padding-left: 0;
         border-left: none;
-        border-top: 1px solid var(--border-color);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
         padding-top: var(--spacing-lg);
     }
 
@@ -1124,7 +1151,8 @@ body {
 
 /* Mobile (576px and below) */
 @media screen and (max-width: 576px) {
-    .stats-container {
+    .stats-container,
+    .quick-stats {
         grid-template-columns: 1fr;
     }
 
@@ -1155,7 +1183,6 @@ body {
 
 /* Print Styles */
 @media print {
-
     .top-nav,
     .tab-navigation,
     .search-bar,
