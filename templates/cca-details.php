@@ -90,15 +90,14 @@ $gallery = $pageData['gallery'] ?? [];
         </nav>
 
         <div class="main-content">
-            <div class="tab-navigation">
-                <a href="<?php echo BASE_URL; ?>/dashboard" class="tab-item">Dashboard</a>
-                <a href="<?php echo BASE_URL; ?>/ep" class="tab-item">Enrichment Point</a>
-                <a href="<?php echo BASE_URL; ?>/events" class="tab-item">Events</a>
-                <a href="<?php echo BASE_URL; ?>/cca" class="tab-item active">CCAs</a>
-                <a href="<?php echo BASE_URL; ?>/history" class="tab-item">History</a>
-            </div>
-
             <div class="main-wrapper">
+                <div class="tab-navigation">
+                    <a href="<?php echo BASE_URL; ?>/dashboard" class="tab-item">Dashboard</a>
+                    <a href="<?php echo BASE_URL; ?>/ep" class="tab-item">Enrichment Point</a>
+                    <a href="<?php echo BASE_URL; ?>/events" class="tab-item">Events</a>
+                    <a href="<?php echo BASE_URL; ?>/cca" class="tab-item active">CCAs</a>
+                    <a href="<?php echo BASE_URL; ?>/history" class="tab-item">History</a>
+                </div>
                 <?php if (isset($_SESSION['success'])): ?>
                     <div class="alert alert-success">
                         <?php
@@ -231,7 +230,19 @@ $gallery = $pageData['gallery'] ?? [];
                                     </svg>
                                     <div>
                                         <strong>Location</strong>
-                                        <p><?php echo htmlspecialchars($clubDetails['location'] ?? 'Not specified'); ?></p>
+                                        <p>
+                                            <?php 
+                                            $location = htmlspecialchars($clubDetails['location'] ?? 'Not specified');
+                                            $lat = $clubDetails['latitude'] ?? 4.8856000;
+                                            $lng = $clubDetails['longitude'] ?? 114.9370000;
+                                            
+                                            if ($location != 'Not specified') {
+                                                echo '<a href="https://www.google.com/maps/search/?api=1&query=' . $lat . ',' . $lng . '" target="_blank" class="location-link">' . $location . '</a>';
+                                            } else {
+                                                echo $location;
+                                            }
+                                            ?>
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="detail-item">

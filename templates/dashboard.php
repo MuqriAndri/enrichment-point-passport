@@ -81,56 +81,60 @@ if (!isset($_SESSION['user_id'])) {
         </nav>
 
         <div class="main-content">
-            <div class="tab-navigation" role="navigation" aria-label="Main navigation">
-                <a href="<?php echo BASE_URL; ?>/dashboard" class="tab-item active">Dashboard</a>
-                <a href="<?php echo BASE_URL; ?>/ep" class="tab-item">Enrichment Point</a>
-                <a href="<?php echo BASE_URL; ?>/events" class="tab-item">Events</a>
-                <a href="<?php echo BASE_URL; ?>/cca" class="tab-item">CCAs</a>
-                <a href="<?php echo BASE_URL; ?>/history" class="tab-item">History</a>
-            </div>
             <div class="main-wrapper">
-                <!-- Quick Stats Section -->
-                <section class="quick-stats" aria-label="Overview">
-                    <div class="welcome-card">
-                        <div class="welcome-content">
-                            <h1>Welcome back, <?php echo explode(' ', $_SESSION['full_name'])[0]; ?>!</h1>
-                            <p>Track your enrichment journey and discover new opportunities.</p>
-                            <a href="<?php echo BASE_URL; ?>/events" class="primary-btn">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 5l7 7-7 7M5 12h14"></path>
-                                </svg>
-                                Explore Activities
-                            </a>
+                <div class="tab-navigation" role="navigation" aria-label="Main navigation">
+                    <a href="<?php echo BASE_URL; ?>/dashboard" class="tab-item active">Dashboard</a>
+                    <a href="<?php echo BASE_URL; ?>/ep" class="tab-item">Enrichment Point</a>
+                    <a href="<?php echo BASE_URL; ?>/events" class="tab-item">Events</a>
+                    <a href="<?php echo BASE_URL; ?>/cca" class="tab-item">CCAs</a>
+                    <a href="<?php echo BASE_URL; ?>/history" class="tab-item">History</a>
+                </div>
+
+                <!-- Welcome Card Section - Make it consistent with EP page -->
+                <section class="welcome-card">
+                    <div class="welcome-content">
+                        <h1>Welcome, <?php echo explode(' ', $_SESSION['full_name'])[0]; ?>!</h1>
+                        <p>Track your enrichment journey and discover new opportunities.</p>
+                        <a href="<?php echo BASE_URL; ?>/events" class="primary-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5l7 7-7 7M5 12h14"></path>
+                            </svg>
+                            Explore Activities
+                        </a>
+                    </div>
+                    <div class="points-overview">
+                        <div class="circular-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                <path d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none"
+                                    stroke="#eee"
+                                    stroke-width="2.5" />
+                                <path class="progress-circle"
+                                    d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none"
+                                    stroke="#c0a43d"
+                                    stroke-width="2.5"
+                                    stroke-dasharray="0, 100" />
+                            </svg>
+                            <div class="percentage">
+                                <span class="points"><?php echo intval($_SESSION['enrichment_point']); ?></span>
+                                <span class="total">/64</span>
+                            </div>
                         </div>
-                        <div class="points-overview">
-                            <div class="circular-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                <svg viewBox="0 0 36 36" class="circular-chart">
-                                    <path d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                                        fill="none"
-                                        stroke="#eee"
-                                        stroke-width="2.5" />
-                                    <path class="progress-circle"
-                                        d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                                        fill="none"
-                                        stroke="#c0a43d"
-                                        stroke-width="2.5"
-                                        stroke-dasharray="0, 100" />
-                                </svg>
-                                <div class="percentage">
-                                    <span class="points"><?php echo intval($_SESSION['enrichment_point']); ?></span>
-                                    <span class="total">/64</span>
-                                </div>
-                            </div>
-                            <div class="points-info">
-                                <h3>Total Points</h3>
-                                <p><span class="percentage-text">0</span>% of target achieved</p>
-                            </div>
+                        <div class="points-info">
+                            <h3>Total Points</h3>
+                            <p><span class="percentage-text">0</span>% of target achieved</p>
                         </div>
                     </div>
+                </section>
+                
+                <!-- Quick Stats Section -->
+                <section class="quick-stats" aria-label="Overview">
+                    <!-- ... rest of the content ... -->
                 </section>
 
                 <!-- Dashboard Grid -->

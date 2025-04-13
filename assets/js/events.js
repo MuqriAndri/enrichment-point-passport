@@ -89,4 +89,8 @@ document.querySelectorAll('.image-slider').forEach(slider => {
 
     // Initialize the first image
     showImage(currentIndex);
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 60c853e (Update)

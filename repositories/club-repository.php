@@ -93,6 +93,8 @@ class clubRepository
                 c.president,
                 c.contact_email,
                 c.membership_fee,
+                c.latitude,
+                c.longitude,
                 COUNT(DISTINCT cm.student_id) as member_count
             FROM clubs c
             LEFT JOIN club_members cm ON c.club_id = cm.club_id 
@@ -138,6 +140,8 @@ class clubRepository
             c.president,
             c.contact_email,
             c.membership_fee,
+            c.latitude,
+            c.longitude,
             COUNT(DISTINCT cm.student_id) as member_count
         FROM clubs c
         LEFT JOIN club_members cm ON c.club_id = cm.club_id 

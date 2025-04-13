@@ -66,9 +66,8 @@ body {
 
 .main-content {
     flex: 1;
-    padding: var(--spacing-lg);
+    padding: 0;
     margin-top: 4rem;
-    /* Account for fixed header */
 }
 
 .main-wrapper {
@@ -411,13 +410,15 @@ body {
     background: white;
     position: sticky;
     top: 64px;
-    /* Height of top nav */
     z-index: 900;
     padding: var(--spacing-xs);
     border-radius: var(--radius-lg);
     gap: var(--spacing-xs);
     border: 1px solid var(--border-color);
-    margin-bottom: var(--spacing-lg); /* Added consistent margin */
+    margin-bottom: var(--spacing-lg);
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .tab-item {
@@ -1231,4 +1232,49 @@ body {
         animation: none !important;
         transition: none !important;
     }
+}
+
+/* Structure alignment fix */
+.main-content .tab-navigation {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Quick Stats Section and Welcome Card consistency */
+.quick-stats {
+    display: block; /* Override grid display for the welcome card section */
+    margin-bottom: var(--spacing-lg);
+}
+
+.quick-stats .welcome-card {
+    margin-bottom: 0; /* Remove bottom margin since it's handled by quick-stats */
+}
+
+.welcome-card {
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+}
+
+.welcome-content h1 {
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: var(--spacing-md);
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.welcome-content p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+/* Fix inconsistent button styling */
+.primary-btn {
+    padding: 0.875rem var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-weight: 500;
 }
