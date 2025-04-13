@@ -78,199 +78,6 @@ body {
     padding: var(--spacing-lg);
 }
 
-/* Tab Navigation - Fixed */
-.tab-navigation {
-    display: flex;
-    background: white;
-    position: sticky;
-    top: 64px; /* Height of top nav */
-    z-index: 900;
-    padding: var(--spacing-xs);
-    border-radius: var(--radius-lg);
-    gap: var(--spacing-xs);
-    border: 1px solid var(--border-color);
-    margin-bottom: var(--spacing-lg); /* Added consistent margin */
-}
-
-.tab-item {
-    flex: 1;
-    padding: 0.75rem var(--spacing-md);
-    color: var(--text-dark);
-    text-decoration: none;
-    border-radius: var(--radius-md);
-    transition: var(--transition-fast);
-    font-weight: 500;
-    text-align: center;
-    white-space: nowrap;
-}
-
-.tab-item.active {
-    background: var(--primary-color);
-    color: white;
-    border-radius: var(--radius-md);
-}
-
-/* Remove any underline effects */
-.tab-item::after,
-.tab-item.active::after {
-    display: none;
-}
-
-.tab-item:hover:not(.active) {
-    background: var(--background-light);
-    color: var(--primary-color);
-}
-
-/* Welcome Card - Fixed */
-.welcome-card {
-    background-color: #1a365d;
-    background-image:
-        radial-gradient(circle at 20% 150%, #2d4a7c 9%, transparent 50%),
-        radial-gradient(circle at 70% -20%, #2d4a7c 15%, transparent 50%),
-        linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.03) 50%, transparent 52%),
-        linear-gradient(-45deg, transparent 48%, rgba(255, 255, 255, 0.03) 50%, transparent 52%);
-    background-size:
-        100% 100%,
-        100% 100%,
-        30px 30px,
-        30px 30px;
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-lg);
-    border: 1px solid var(--border-color);
-    position: relative;
-    color: white;
-}
-
-.welcome-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-    border-radius: var(--radius-md);
-}
-
-.welcome-card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(180deg, rgba(26, 54, 93, 0) 0%, rgba(26, 54, 93, 0.4) 100%);
-    border-radius: var(--radius-md);
-}
-
-.welcome-card > * {
-    position: relative;
-    z-index: 1;
-}
-
-.welcome-content {
-    padding: var(--spacing-xs) var(--spacing-xs);
-}
-
-.welcome-content h1 {
-    font-size: 2.5rem;
-    color: white;
-    margin-bottom: var(--spacing-md);
-    line-height: 1.2;
-    font-weight: 700;
-}
-
-.welcome-content p {
-    color: rgba(255, 255, 255, 0.8);
-    margin-bottom: var(--spacing-lg);
-    font-size: 1.1rem;
-    line-height: 1.5;
-}
-
-.points-overview {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-lg);
-    padding-left: var(--spacing-lg);
-    border-left: 1px solid rgba(255, 255, 255, 0.2);
-    min-width: 300px;
-}
-
-.circular-progress {
-    position: relative;
-    width: 120px;
-    height: 120px;
-}
-
-.circular-chart {
-    width: 100%;
-    height: 100%;
-    transform: rotate(-90deg);
-}
-
-.circular-chart path {
-    transition: stroke-dasharray var(--transition-normal);
-}
-
-.circular-chart path:first-child {
-    stroke: rgba(255, 255, 255, 0.2);
-}
-
-.circular-chart path:last-child {
-    stroke: var(--accent-color);
-    stroke-linecap: round;
-    filter: drop-shadow(0 0 2px rgba(239, 191, 4, 0.2));
-}
-
-.percentage {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.percentage .points {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: white;
-}
-
-.percentage .total {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.7);
-    margin-top: 0.25rem;
-}
-
-.points-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.points-info h3 {
-    font-size: 1.2rem;
-    color: white;
-}
-
-.points-info p {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.percentage-text {
-    font-weight: 600;
-}
-
 /* Grid Layout */
 .dashboard-grid {
     display: grid;
@@ -281,116 +88,255 @@ body {
     overflow-y: auto;
 }
 
-/* Quick Stats - Fixed */
-.quick-stats,
-.stats-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
-}
-
-.stat-card {
-    background: white;
+/* Event Slider Styles */
+.event-slider {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping for better layout */
+    gap: var(--spacing-md); /* Add spacing between event boxes */
     padding: var(--spacing-md);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border-color);
+    justify-content: center; /* Center the event boxes */
 }
 
-.stat-title,
-.stat-card .stat-title {
+.event-slide {
+    flex: 0 0 300px;
+    background: white;
+    border: 1px solid var(--border-color); /* Keep a subtle border */
+    border-radius: var(--radius-md); /* Rounded corners for a modern look */
+    box-shadow: var(--shadow-md); /* Add a soft shadow for better visibility */
+    padding: var(--spacing-md);
+    transition: none; /* Remove hover scaling effect */
+    margin-bottom: var(--spacing-md); /* Add spacing between event boxes */
+}
+
+.event-slide:hover {
+    transform: none; /* Disable hover scaling effect */
+}
+
+.short-description {
     color: var(--text-light);
-    font-size: 0.9rem;
-    margin-bottom: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
 }
 
-.stat-value,
-.stat-card .stat-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-dark);
-    margin-bottom: var(--spacing-xs);
-}
-
-.stat-description,
-.stat-card .stat-description {
-    font-size: 0.9rem;
-    color: var(--text-light);
+.full-description {
+    margin-top: var(--spacing-sm);
+    display: none;
 }
 
 .btn {
     display: inline-block;
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: 1rem;
-    font-weight: 600;
-    text-align: center;
-    text-decoration: none;
-    border-radius: var(--radius-md);
-    transition: background-color var(--transition-normal), color var(--transition-normal);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
 }
 
 .btn-primary {
     background-color: var(--primary-color);
-    color: #fff;
-    border: 1px solid var(--primary-color);
+    color: white;
 }
 
 .btn-primary:hover {
-    background-color: var(--background-light);
-    border-color: var(--primary-color);
-    color: var(--primary-color);
+    background-color: #142a4a; /* Adjusted to a darker shade */
 }
 
+.btn-secondary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #718096; /* Adjusted to a darker shade */
+}
+
+/* Added styles for event-item-box */
 .event-item-box {
     margin-bottom: var(--spacing-lg);
     padding: var(--spacing-md);
-    background-color: #fff;
+    background: white;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-    .welcome-card {
-        flex-direction: column;
-        text-align: center;
-        gap: var(--spacing-lg);
-    }
-
-    .points-overview {
-        padding-left: 0;
-        border-left: none;
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-        padding-top: var(--spacing-lg);
-    }
+/* Added styles for event-item */
+.event-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
 }
 
+.event-item h2 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.event-item p {
+    color: var(--text-light);
+    margin: 0;
+}
+
+.event-item .btn {
+    align-self: flex-start;
+}
+
+/* Styles for swipeable image container */
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300px; /* Adjusted width for a rectangular shape */
+    height: 180px; /* Adjusted height for a rectangular shape */
+    overflow: hidden; /* Ensure images don't overflow */
+    background-color: var(--background-light); /* Background color for empty space */
+    border: none; /* Remove border for the container */
+    border-radius: var(--radius-md); /* Rounded corners */
+    box-shadow: none; /* Remove shadow */
+    position: relative; /* Allow positioning of arrows outside */
+    margin: 0 auto; /* Center the image box horizontally */
+    user-select: none; /* Disable text selection */
+    -webkit-user-drag: none; /* Disable dragging in WebKit browsers */
+}
+
+.image-container img {
+    width: 100%; /* Ensure the image fills the container width */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: cover; /* Ensure the image fills the container without distortion */
+    display: block; /* Ensure the image is treated as a block element */
+    margin: auto; /* Center the image vertically and horizontally */
+    border: none; /* Remove the border for the image */
+    user-select: none; /* Disable text selection */
+    -webkit-user-drag: none; /* Disable dragging in WebKit browsers */
+    pointer-events: none; /* Prevent pointer events on the image */
+}
+
+/* Styles for image indicators below the image container */
+.image-indicators {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-sm); /* Add spacing below the image container */
+    position: relative; /* Ensure proper positioning */
+    z-index: 10; /* Ensure visibility above other elements */
+}
+
+.indicator {
+    width: 14px; /* Slightly larger for visibility */
+    height: 14px;
+    background-color: rgba(0, 0, 0, 0.6); /* Darker background for visibility */
+    border: 2px solid white; /* White border for contrast */
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.indicator.active {
+    background-color: var(--primary-color); /* Highlight active indicator */
+    transform: scale(1.3); /* Slightly enlarge active indicator */
+}
+
+/* Styles for event image border */
+.event-image {
+    display: none; /* Hide all images by default */
+    width: 100%; /* Ensure all images take up the full width of the container */
+    height: 300px; /* Set a fixed height for consistency */
+    object-fit: cover; /* Ensure images maintain their aspect ratio and fill the container */
+    border-radius: var(--radius-md); /* Rounded corners */
+    box-shadow: var(--shadow-sm); /* Add shadow for better visibility */
+}
+
+.event-image:first-child {
+    display: block; /* Show the first image initially */
+}
+
+/* Styles for smaller "Learn More" button */
+.small-btn {
+    font-size: 0.875rem;
+    padding: var(--spacing-xs) var(--spacing-xs);
+}
+
+/* Styles for image box with a larger size */
+.image-box {
+    border: none; /* Remove border for the image box */
+    border-radius: var(--radius-md); /* Rounded corners */
+    padding: 0; /* Remove padding */
+    background-color: transparent; /* Remove background color */
+    box-shadow: none; /* Remove shadow */
+    overflow: hidden;
+    width: 320px; /* Adjust width to match the container */
+    height: 200px; /* Adjust height to match the container */
+    margin: 0 auto; /* Center the image box */
+    position: relative; /* Ensure it stays above other elements */
+    z-index: 1; /* Ensure visibility */
+}
+
+/* Styles for navigation buttons */
+.image-slider {
+    position: relative;
+}
+
+.nav-button {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust for centering */
+    background-color: rgba(0, 0, 0, 0.7); /* Darker semi-transparent background */
+    color: white;
+    border: none;
+    border-radius: var(--radius-full);
+    width: 40px; /* Larger size for better visibility */
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: var(--shadow-md); /* Add shadow for better visibility */
+}
+
+.nav-button.left {
+    left: -50px; /* Position outside the left edge of the image box */
+}
+
+.nav-button.right {
+    right: -50px; /* Position outside the right edge of the image box */
+}
+
+.nav-button:hover {
+    background-color: rgba(0, 0, 0, 0.9); /* Darker background on hover */
+    transform: translateY(-50%) scale(1.1); /* Slightly enlarge on hover */
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+/* Ensure responsiveness */
 @media (max-width: 768px) {
-    .tab-navigation {
-        overflow-x: auto;
-        padding-bottom: var(--spacing-xs);
-        gap: var(--spacing-xs);
-    }
-
-    .tab-item {
-        padding: var(--spacing-xs) var(--spacing-sm);
-        white-space: nowrap;
-    }
-    
-    .welcome-content h1 {
-        font-size: 1.5rem;
-    }
-
-    .welcome-content p {
-        font-size: 1rem;
-    }
-}
-
-@media screen and (max-width: 576px) {
-    .stats-container,
-    .quick-stats {
+    .dashboard-grid {
         grid-template-columns: 1fr;
+    }
+
+    .event-slide {
+        flex: 0 0 100%;
+    }
+
+    .image-container {
+        width: 120px; /* Smaller size for mobile view */
+        height: 120px; /* Square shape for mobile view */
+    }
+
+    .image-box {
+        width: 140px; /* Adjust width for mobile view */
+        height: 140px; /* Adjust height for mobile view */
+    }
+
+    .nav-button {
+        width: 30px; /* Smaller size for arrows on mobile */
+        height: 30px;
+    }
+
+    .nav-button.left {
+        left: -30px; /* Adjust position for smaller screens */
+    }
+
+    .nav-button.right {
+        right: -30px; /* Adjust position for smaller screens */
     }
 }
