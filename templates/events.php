@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/events.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
+    <script src="<?php echo BASE_URL; ?>/assets/js/events.js" defer></script> <!-- Added events.js -->
 </head>
 <body>
 <div class="dashboard-container">
@@ -53,7 +54,7 @@
                             <a href="<?php echo BASE_URL; ?>/settings" class="dropdown-item" role="menuitem">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <circle cx="12" cy="12" r="3"></circle>
-                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06-.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                                 </svg>
                                 Settings
                             </a>
@@ -101,28 +102,137 @@
                 <?php endif; ?>
     <div class="container">
         <h1>Upcoming and Available Events</h1>
-        <?php
-        $events = [
-            ["name" => "Event 1", "description" => "Description for event 1.", "date" => "2025-04-01" , "time" => "10:00 AM" , "location" => "Location 1", "enrichment_points" => 10],
-            ["name" => "Event 2", "description" => "Description for event 2.", "date" => "2025-05-15" , "time" => "11:00 AM" , "location" => "Location 2" , "enrichment_points" => 15],
-            ["name" => "Event 3", "description" => "Description for event 3.", "date" => "2025-06-20" , "time" => "12:00 PM" , "location" => "Location 3" , "enrichment_points" => 30]
-        ];
+        <div class="event-slider">
+            <?php
+            $events = [
+                [
+                    "name" => "Event A",
+                    "description" => "New description for event A.",
+                    "date" => "2025-07-01",
+                    "time" => "09:00 AM",
+                    "location" => "New Location A",
+                    "enrichment_points" => 20,
+                    "images" => [
+                        "event-a-1.jpg",
+                        "event-a-2.jpg",
+                        "event-a-3.jpg"
+                    ]
+                ],
+                [
+                    "name" => "Event B",
+                    "description" => "New description for event B.",
+                    "date" => "2025-08-15",
+                    "time" => "10:30 AM",
+                    "location" => "New Location B",
+                    "enrichment_points" => 25,
+                    "images" => [
+                        "event-b-1.jpg",
+                        "event-b-2.jpg",
+                        "event-b-3.jpg"
+                    ]
+                ],
+                [
+                    "name" => "Event C",
+                    "description" => "New description for event C.",
+                    "date" => "2025-09-20",
+                    "time" => "02:00 PM",
+                    "location" => "New Location C",
+                    "enrichment_points" => 35,
+                    "images" => [
+                        "event-c-1.jpg",
+                        "event-c-2.jpg",
+                        "event-c-3.jpg"
+                    ]
+                ]
+            ];
 
-        foreach ($events as $event) {
-            echo "<div class='event-item-box'>"; // Added container
-            echo "<div class='event-item'>";
-            echo "<h2>" . $event['name'] . "</h2>";
-            echo "<p>" . $event['description'] . "</p>";
-            echo "<p>Date: " . $event['date'] . "</p>";
-            echo "<p>Time: " . $event['time'] . "</p>";
-            echo "<p>Location: " . $event['location'] . "</p>";
-            echo "<p>Enrichment Points: " . $event['enrichment_points'] . "</p>";
-            echo "<button class='btn btn-primary'>Register</button>";
-            echo "</div>";
-            echo "</div>"; // Close container
-        }
-        ?>
-         <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
+            foreach ($events as $event) {
+                echo "<div class='event-slide'>";
+                echo "<h2>" . $event['name'] . "</h2>";
+                echo "<div class='image-slider'>";
+                echo "<div class='image-box'>";
+                echo "<div class='image-container'>";
+                foreach ($event['images'] as $index => $image) {
+                    $display = $index === 0 ? "block" : "none";
+                    echo "<img src='" . BASE_URL . "/assets/images/events/$image' alt='" . $event['name'] . " Image' class='event-image' style='display: $display;'>";
+                }
+                echo "</div>";
+                echo "<button class='nav-button left' aria-label='Previous Image'>&lt;</button>";
+                echo "<button class='nav-button right' aria-label='Next Image'>&gt;</button>";
+                echo "</div>";
+                echo "<div class='image-indicators'>";
+                foreach ($event['images'] as $index => $image) {
+                    $activeClass = $index === 0 ? "active" : "";
+                    echo "<span class='indicator $activeClass' data-index='$index'></span>";
+                }
+                echo "</div>";
+                echo "</div>";
+                echo "<p class='short-description'>" . substr($event['description'], 0, 50) . "...</p>";
+                echo "<button class='btn btn-secondary learn-more-btn small-btn'>Learn More</button>";
+                echo "<div class='full-description' style='display: none;'>";
+                echo "<p>" . $event['description'] . "</p>";
+                echo "<p>Date: " . $event['date'] . "</p>";
+                echo "<p>Time: " . $event['time'] . "</p>";
+                echo "<p>Location: " . $event['location'] . "</p>";
+                echo "<p>Enrichment Points: " . $event['enrichment_points'] . "</p>";
+                echo "<button class='btn btn-primary'>Register</button>";
+                echo "</div>";
+                echo "</div>";
+            }
+            ?>
+        </div>
+        <script>
+            document.querySelectorAll('.learn-more-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const fullDescription = button.nextElementSibling;
+                    if (fullDescription.style.display === 'none') {
+                        fullDescription.style.display = 'block';
+                        button.textContent = 'Show Less';
+                    } else {
+                        fullDescription.style.display = 'none';
+                        button.textContent = 'Learn More';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.image-slider').forEach(slider => {
+                const images = slider.querySelectorAll('.event-image');
+                const indicators = slider.querySelectorAll('.indicator');
+                const leftButton = slider.querySelector('.nav-button.left');
+                const rightButton = slider.querySelector('.nav-button.right');
+                let currentIndex = 0;
+
+                // Allow manual switching using indicators
+                indicators.forEach(indicator => {
+                    indicator.addEventListener('click', () => {
+                        images[currentIndex].style.display = 'none';
+                        indicators[currentIndex].classList.remove('active');
+                        currentIndex = parseInt(indicator.getAttribute('data-index'));
+                        images[currentIndex].style.display = 'block';
+                        indicators[currentIndex].classList.add('active');
+                    });
+                });
+
+                // Allow navigation using buttons
+                leftButton.addEventListener('click', () => {
+                    images[currentIndex].style.display = 'none';
+                    indicators[currentIndex].classList.remove('active');
+                    currentIndex = (currentIndex - 1 + images.length) % images.length;
+                    images[currentIndex].style.display = 'block';
+                    indicators[currentIndex].classList.add('active');
+                });
+
+                rightButton.addEventListener('click', () => {
+                    images[currentIndex].style.display = 'none';
+                    indicators[currentIndex].classList.remove('active');
+                    currentIndex = (currentIndex + 1) % images.length;
+                    images[currentIndex].style.display = 'block';
+                    indicators[currentIndex].classList.add('active');
+                });
+            });
+        </script>
+        <script src="<?php echo BASE_URL; ?>/assets/js/events.js"></script>
+        <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
     </div>
 </body>
 </html>
