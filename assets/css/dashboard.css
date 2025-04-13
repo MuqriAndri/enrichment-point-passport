@@ -4,6 +4,7 @@
 :root {
     /* Color Variables */
     --primary-color: #1a365d;
+    --primary-gradient: #2d4a7c; /* Adding a lighter primary color for gradients and buttons */
     --accent-color: #efbf04;
     --text-dark: #2d3748;
     --text-light: #718096;

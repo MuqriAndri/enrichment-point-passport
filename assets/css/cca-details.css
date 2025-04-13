@@ -164,8 +164,17 @@
     align-items: center;
     gap: var(--spacing-md);
     flex-wrap: wrap;
+    position: relative;
 }
 
+/* Ensure consistent spacing and layout for badges and icons */
+.category-badge,
+.member-count,
+.points-info {
+    margin-right: 0.5rem;
+}
+
+/* Category badge styling */
 .category-badge {
     display: inline-flex;
     align-items: center;
@@ -176,6 +185,29 @@
     font-size: 0.8rem;
     font-weight: 600;
     border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.points-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    white-space: nowrap; /* Prevent the text from wrapping */
+    position: relative; /* Ensure proper positioning */
+}
+
+.points-info svg {
+    color: inherit;
+    flex-shrink: 0; /* Prevent the icon from shrinking */
+    vertical-align: middle; /* Align the SVG with the text */
+    margin-right: 4px; /* Add a bit of space between icon and text */
+}
+
+/* Ensure points text stays on the same line */
+.points-info span {
+    display: inline-block;
+    white-space: nowrap;
 }
 
 /* Remove category-specific badge styles */
@@ -212,10 +244,13 @@
     gap: 0.25rem;
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.8);
+    white-space: nowrap;
+    position: relative;
 }
 
 .member-count svg, .points-info svg {
     color: inherit;
+    flex-shrink: 0;
 }
 
 /* Club action buttons */
@@ -247,6 +282,32 @@
     background: rgba(255, 255, 255, 0.3);
     transform: translateY(-2px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.edit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    background-color: var(--primary-gradient, #2d4a7c);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    text-decoration: none;
+    margin-right: var(--spacing-sm);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.edit-btn:hover {
+    background-color: #3a5a8c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 .leave-btn {

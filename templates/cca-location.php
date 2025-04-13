@@ -10,6 +10,12 @@ $clubId = $_GET['club_id'] ?? '';
 $locationName = $_GET['location'] ?? 'Unknown Location';
 $destLat = $_GET['lat'] ?? 4.8856000;
 $destLng = $_GET['lng'] ?? 114.9370000;
+
+// Extract club slug from URL
+$clubSlug = '';
+if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'), $matches)) {
+    $clubSlug = $matches[1];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -100,7 +106,7 @@ $destLng = $_GET['lng'] ?? 114.9370000;
                 </div>
 
                 <div class="back-link">
-                    <a href="<?php echo BASE_URL; ?>/cca/details?id=<?php echo $clubId; ?>">
+                    <a href="<?php echo BASE_URL; ?>/cca/<?php echo $clubSlug; ?>">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M19 12H5M12 19l-7-7 7-7" />
                         </svg>

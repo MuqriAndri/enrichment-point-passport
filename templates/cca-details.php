@@ -11,6 +11,9 @@ $isMember = $pageData['isMember'] ?? false;
 $upcomingEvents = $pageData['upcoming_events'] ?? [];
 $activities = $pageData['activities'] ?? [];
 $gallery = $pageData['gallery'] ?? [];
+
+// Get the club mapping
+$clubMapping = require 'config/club-mapping.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -170,11 +173,43 @@ $gallery = $pageData['gallery'] ?? [];
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                                     </svg>
-                                    2 points/session
+                                    <span>2 points/session</span>
                                 </span>
                             </div>
                         </div>
                         <div class="club-actions">
+                            <?php 
+                            // Check if the user is an officer (president or vice president) of this club
+                            $isClubOfficer = false;
+                            if (isset($_SESSION['user_id']) && isset($clubDetails['club_id'])) {
+                                // Check if user is an officer
+                                $isClubOfficer = isset($pageData['is_officer']) ? $pageData['is_officer'] : false;
+                            }
+                            
+                            // Get the club slug for the management URL
+                            $clubSlug = '';
+                            $clubName = $clubDetails['club_name'] ?? '';
+                            
+                            foreach ($clubMapping as $category => $clubs) {
+                                foreach ($clubs as $name => $slug) {
+                                    if ($name === $clubName) {
+                                        $clubSlug = $slug;
+                                        break 2;
+                                    }
+                                }
+                            }
+                            
+                            // Show edit button only to club officers
+                            if ($isClubOfficer && !empty($clubSlug)): 
+                            ?>
+                            <a href="<?php echo BASE_URL; ?>/cca/<?php echo $clubSlug; ?>-management" class="edit-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                </svg>
+                                Manage Club
+                            </a>
+                            <?php endif; ?>
+                            
                             <form method="POST" action="<?php echo BASE_URL; ?>/cca">
                                 <input type="hidden" name="action" value="cca">
                                 <input type="hidden" name="club_id" value="<?php echo $clubDetails['club_id'] ?? ''; ?>">
@@ -236,8 +271,21 @@ $gallery = $pageData['gallery'] ?? [];
                                             $lat = $clubDetails['latitude'] ?? 4.8856000;
                                             $lng = $clubDetails['longitude'] ?? 114.9370000;
                                             
+                                            // Get the club's slug from the club mapping
+                                            $clubSlug = '';
+                                            $clubName = $clubDetails['club_name'] ?? '';
+                                            
+                                            foreach ($clubMapping as $category => $clubs) {
+                                                foreach ($clubs as $name => $slug) {
+                                                    if ($name === $clubName) {
+                                                        $clubSlug = $slug;
+                                                        break 2;
+                                                    }
+                                                }
+                                            }
+                                            
                                             if ($location != 'Not specified') {
-                                                echo '<a href="' . BASE_URL . '/cca-location?club_id=' . $clubDetails['club_id'] . '&location=' . urlencode($location) . '&lat=' . $lat . '&lng=' . $lng . '" class="location-link">' . $location . '</a>';
+                                                echo '<a href="' . BASE_URL . '/' . $clubSlug . '-location?club_id=' . $clubDetails['club_id'] . '&location=' . urlencode($location) . '&lat=' . $lat . '&lng=' . $lng . '" class="location-link">' . $location . '</a>';
                                             } else {
                                                 echo $location;
                                             }

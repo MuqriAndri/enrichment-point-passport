@@ -22,20 +22,6 @@ $params = explode('/', $path);
 // Default to login if no path
 $page = $params[0] ?: $appConfig['default_page'];
 
-// Check if this is a club location page (format: club-slug-location)
-$isClubLocation = false;
-if (preg_match('/^([a-z0-9-]+)-location$/', $page, $matches)) {
-    $clubSlug = $matches[1];
-    $isClubLocation = true;
-}
-
-// Check if this is a club management page (format: club-slug-management)
-$isClubManagement = false;
-if (isset($params[0]) && $params[0] === 'cca' && isset($params[1]) && preg_match('/^([a-z0-9-]+)-management$/', $params[1], $matches)) {
-    $clubSlug = $matches[1];
-    $isClubManagement = true;
-}
-
 // Redirect to dashboard if already logged in and trying to access login page
 if ($page === 'login' && isset($_SESSION['user_id'])) {
     header("Location: " . BASE_URL . "/dashboard");
@@ -58,10 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         require_once 'controllers/cca.php';
         handleClubAction($ccaDB, $profilesDB); // Pass both database connections
     }
-    elseif (isset($_POST['action']) && $_POST['action'] === 'cca_manage') {
-        require_once 'controllers/cca.php';
-        handleClubManagement($ccaDB, $profilesDB); // Handle club management actions
-    }
 }
 
 // Prepare page data
@@ -74,66 +56,7 @@ if ($page === 'cca') {
         // Use ccaDB for club repository
         $clubRepo = new clubRepository($ccaDB, $profilesDB);
 
-        // Check if this is a club management page request
-        if (isset($params[1]) && preg_match('/^([a-z0-9-]+)-management$/', $params[1], $matches)) {
-            $clubSlug = $matches[1];
-            
-            // Find the club based on the slug
-            $clubFound = false;
-            $clubName = '';
-            $clubCategory = '';
-            
-            foreach ($clubMapping as $category => $clubs) {
-                foreach ($clubs as $name => $slug) {
-                    if ($slug === $clubSlug) {
-                        $clubFound = true;
-                        $clubName = $name;
-                        $clubCategory = $category;
-                        break 2;
-                    }
-                }
-            }
-            
-            if ($clubFound) {
-                // Get club details
-                $clubDetails = $clubRepo->getClubDetails($clubName);
-                
-                if ($clubDetails) {
-                    // Check if user has permission to edit this club
-                    $isOfficer = false;
-                    if (isset($_SESSION['user_id'])) {
-                        $isOfficer = $clubRepo->isClubOfficer($_SESSION['user_id'], $clubDetails['club_id']);
-                    }
-                    
-                    if ($isOfficer) {
-                        // Fetch additional data needed for club management
-                        $gallery = $clubRepo->getClubGallery($clubDetails['club_id']);
-                        $activities = $clubRepo->getClubActivities($clubDetails['club_id']);
-                        $locations = $clubRepo->getClubLocations($clubDetails['club_id']);
-                        
-                        // User has permission, show management page
-                        $pageData = [
-                            'details' => $clubDetails,
-                            'is_officer' => true,
-                            'gallery' => $gallery,
-                            'activities' => $activities,
-                            'locations' => $locations,
-                            'clubMapping' => $clubMapping,
-                            'clubSlug' => $clubSlug // Add the slug for back navigation
-                        ];
-                        include 'templates/cca-edit.php';
-                        exit();
-                    }
-                }
-            }
-            
-            // No permission, club not found, or invalid slug - redirect to CCA page
-            $_SESSION['error'] = 'You do not have permission to manage this club.';
-            header("Location: " . BASE_URL . "/cca");
-            exit();
-        }
-        
-        // Handle regular club detail pages
+        // If specific club page is requested
         if (isset($params[1])) {
             $requestedClub = $params[1];
             $clubFound = false;
@@ -161,17 +84,10 @@ if ($page === 'cca') {
                     if (isset($_SESSION['student_id'])) {
                         $isMember = $clubRepo->isUserMemberOfClub($_SESSION['student_id'], $clubDetails['club_id']);
                     }
-                    
-                    // Check if user is an officer of this club
-                    $isOfficer = false;
-                    if (isset($_SESSION['user_id'])) {
-                        $isOfficer = $clubRepo->isClubOfficer($_SESSION['user_id'], $clubDetails['club_id']);
-                    }
 
                     $pageData = [
                         'details' => $clubDetails,
                         'isMember' => $isMember,
-                        'is_officer' => $isOfficer,
                         'upcoming_events' => [], // Placeholder for events data
                         'activities' => [],      // Placeholder for activities data
                         'gallery' => []          // Placeholder for gallery data
@@ -258,12 +174,6 @@ switch ($page) {
         include 'templates/settings.php';
         break;
     default:
-        // Check if this is a club location page
-        if ($isClubLocation) {
-            include 'templates/cca-location.php';
-            break;
-        }
-        
         header("HTTP/1.0 404 Not Found");
         include 'templates/404.php';
         break;
