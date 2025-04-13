@@ -237,7 +237,7 @@ $gallery = $pageData['gallery'] ?? [];
                                             $lng = $clubDetails['longitude'] ?? 114.9370000;
                                             
                                             if ($location != 'Not specified') {
-                                                echo '<a href="https://www.google.com/maps/search/?api=1&query=' . $lat . ',' . $lng . '" target="_blank" class="location-link">' . $location . '</a>';
+                                                echo '<a href="' . BASE_URL . '/cca-location?club_id=' . $clubDetails['club_id'] . '&location=' . urlencode($location) . '&lat=' . $lat . '&lng=' . $lng . '" class="location-link">' . $location . '</a>';
                                             } else {
                                                 echo $location;
                                             }

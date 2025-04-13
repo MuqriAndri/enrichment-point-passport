@@ -144,6 +144,9 @@ switch ($page) {
     case 'cca':
         include 'templates/cca.php';
         break;
+    case 'cca-location':
+        include 'templates/cca-location.php';
+        break;
     case 'contact':
         include 'templates/contact.php';
         break;
