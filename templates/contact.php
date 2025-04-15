@@ -6,12 +6,12 @@ if (!defined('BASE_URL')) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>FAQs</title>
+    <title>Contact Us</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/settings.css">
 </head>
 <body>
     <a class="back" href="<?php echo BASE_URL; ?>/settings">&#8592;</a>
-    <h1>FAQs</h1>
-    <p>Frequently asked questions about the app.</p>
+    <h1>Contact Us</h1>
+    <p>Send us a message or feedback.</p>
 </body>
 </html>

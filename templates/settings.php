@@ -82,28 +82,28 @@
                     <a href="<?php echo BASE_URL; ?>/history" class="tab-item">History</a>
                 </div>
 
-    <a class="back" href="templates/dashboard.php">&#8592;</a>
-    <div class="top-icons">👤 ⚙️</div>
+                <a class="back" href="<?php echo BASE_URL; ?>/dashboard">&#8592;</a>
+                <div class="top-icons">👤 ⚙️</div>
 
     <h1>SETTINGS</h1>
 
     <div class="container">
         <div class="box">
             <h3>USER ACCOUNT</h3>
-            <a href="templates/change-password.php">CHANGE PASSWORD</a>
-            <a href="templates/notification-pref.php">NOTIFICATION PREFERENCE</a>
-            <a href="templates/display-pref.php">DISPLAY PREFERENCE</a>
+            <a href="<?php echo BASE_URL; ?>/templates/change-password.php">CHANGE PASSWORD</a>
+            <a href="<?php echo BASE_URL; ?>/templates/notification-pref.php">NOTIFICATION PREFERENCE</a>
+            <a href="<?php echo BASE_URL; ?>/templates/display-pref.php">DISPLAY PREFERENCE</a>
         </div>
 
         <div class="box">
             <h3>GUIDE</h3>
-            <a href="templates/help.php">HELP ?</a>
-            <a href="templates/faqs.php">FAQS</a>
+            <a href="<?php echo BASE_URL; ?>/templates/help.php">HELP ?</a>
+            <a href="<?php echo BASE_URL; ?>/templates/faqs.php">FAQS</a>
         </div>
 
         <div class="box">
             <h3>ABOUT US</h3>
-            <a href="templates/contact.php">CONTACT US</a>
+            <a href="<?php echo BASE_URL; ?>/templates/contact.php">CONTACT US</a>
         </div>
     </div>
 
