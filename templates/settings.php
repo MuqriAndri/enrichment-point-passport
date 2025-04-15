@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Settings</title>
-    <link rel="stylesheet" href="settings.css">
+    <link rel="stylesheet" href="assets/css/settings.css">
+
 </head>
 <body>
 
-    <div class="back">&#8592;</div>
-    <div class="top-icons">👤 ⚙️</div>
+    <a class="back" href="dashboard">&#8592;</a>
 
     <h1>SETTINGS</h1>
 
@@ -19,7 +19,6 @@
             <a href="#">CHANGE PASSWORD</a>
             <a href="#">NOTIFICATION PREFERENCE</a>
             <a href="#">DISPLAY PREFERENCE</a>
-            <a href="#">LOG OUT</a>
         </div>
 
         <div class="box">
