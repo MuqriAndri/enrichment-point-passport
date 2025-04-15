@@ -1,104 +1,66 @@
-/* General Styles */
 body {
-    font-family: 'Montserrat', sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
+    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    padding: 20px;
+    text-align: center;
+    background-color: #fff;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 2em;
+    margin-bottom: 30px;
 }
 
 .container {
-    background: #fff;
-    padding: 20px;
-    width: 400px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    border: 2px solid #a05dfd;
+    padding: 30px;
+    margin-top: 20px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 20px;
 }
 
-h2 {
+.box {
+    border: 1px solid #000;
+    width: 250px;
+    padding: 15px;
+    text-align: left;
+    background-color: #fdfdfd;
+}
+
+.box h3 {
     text-align: center;
-    font-weight: 600;
-}
-
-/* Form Styles */
-.form-group {
+    margin-top: 0;
     margin-bottom: 15px;
 }
 
-label {
+.box a {
     display: block;
-    font-weight: 500;
-    margin-bottom: 5px;
+    text-decoration: none;
+    color: black;
+    margin: 10px 0;
 }
 
-input[type="checkbox"] {
-    margin-right: 5px;
+.box a:hover {
+    text-decoration: underline;
 }
 
-/* Button Styles */
-button {
-    width: 100%;
-    background: #007bff;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s;
+.top-icons {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 20px;
+    color: #5f2ecc;
 }
 
-button:hover {
-    background: #0056b3;
-}
-
-/* Danger Zone */
-.danger-zone {
-    margin-top: 20px;
-    padding: 15px;
-    background: #ffe5e5;
-    border: 1px solid #ff4d4d;
-    border-radius: 5px;
-}
-
-.danger-zone h3 {
-    color: #ff4d4d;
-}
-
-.deactivate-btn {
-    background: #ff4d4d;
-    margin-top: 10px;
-}
-
-.deactivate-btn:hover {
-    background: #cc0000;
-}
-
-/* Dark Mode */
-.dark-mode {
-    background-color: #222;
-    color: #ddd;
-}
-
-.dark-mode .container {
-    background: #333;
-    color: white;
-}
-
-.dark-mode input[type="checkbox"] {
-    background: #444;
-    color: white;
-    border: 1px solid #666;
-}
-
-.dark-mode button {
-    background: #009688;
-}
-
-.dark-mode button:hover {
-    background: #00796b;
+.back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
 }
