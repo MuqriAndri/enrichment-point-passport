@@ -17,8 +17,8 @@
         <div class="box">
             <h3>USER ACCOUNT</h3>
             <a href="templates/change-password.php">CHANGE PASSWORD</a>
-            <a href="templates/notification-preference.php">NOTIFICATION PREFERENCE</a>
-            <a href="templates/display-preference.php">DISPLAY PREFERENCE</a>
+            <a href="templates/notification-pref.php">NOTIFICATION PREFERENCE</a>
+            <a href="templates/display-pref.php">DISPLAY PREFERENCE</a>
         </div>
 
         <div class="box">
