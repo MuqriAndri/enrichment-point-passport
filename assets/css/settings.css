@@ -1,73 +1,97 @@
+/* Reset some default styles */
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 20px;
-    text-align: center;
-    background-color: #fff;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f8fafc;
+    color: #1f2937;
 }
 
+/* Top icons for profile/settings */
+.top-icons {
+    font-size: 1.5rem;
+    margin: 1rem 0 0 1rem;
+}
+
+/* Page title */
 h1 {
-    font-weight: bold;
-    font-size: 2em;
-    margin-bottom: 30px;
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 2.25rem;
+    font-weight: 700;
 }
 
+/* Container for settings sections */
 .container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    border: 2px solid #a05dfd;
-    padding: 30px;
-    margin-top: 20px;
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
-    gap: 20px;
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 1rem;
 }
 
 .box {
-    border: 1px solid #000;
-    width: 250px;
-    padding: 15px;
-    text-align: left;
-    background-color: #fdfdfd;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    width: 300px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+
+.box:hover {
+    transform: translateY(-4px);
 }
 
 .box h3 {
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 15px;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    color: #374151;
+    border-left: 4px solid #6366f1;
+    padding-left: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.box ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.box li {
+    margin: 0.5rem 0;
 }
 
 .box a {
-    display: block;
+    display: inline-block;
     text-decoration: none;
-    color: black;
-    margin: 10px 0;
+    color: #4f46e5;
+    font-weight: 500;
+    transition: 0.2s ease;
 }
 
 .box a:hover {
+    color: #3730a3;
     text-decoration: underline;
 }
 
-.top-icons {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    font-size: 20px;
-    color: #5f2ecc;
+/* Icon style */
+.icon {
+    font-size: 1.25rem;
 }
 
-.back {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 24px;
-    text-decoration: none;
-    color: black;
-}
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
 
-.back:hover {
-    color: #5f2ecc;
+    .box {
+        width: 90%;
+    }
 }
-

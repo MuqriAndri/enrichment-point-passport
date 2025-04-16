@@ -85,27 +85,37 @@
                 <a class="back" href="<?php echo BASE_URL; ?>/dashboard">&#8592;</a>
                 <div class="top-icons">👤 ⚙️</div>
 
-    <h1>SETTINGS</h1>
+                <h1>Settings</h1>
 
-    <div class="container">
-        <div class="box">
-            <h3>USER ACCOUNT</h3>
-            <a href="<?php echo BASE_URL; ?>/templates/change-password.php">CHANGE PASSWORD</a>
-            <a href="<?php echo BASE_URL; ?>/templates/notification-pref.php">NOTIFICATION PREFERENCE</a>
-            <a href="<?php echo BASE_URL; ?>/templates/display-pref.php">DISPLAY PREFERENCE</a>
-        </div>
-
-        <div class="box">
-            <h3>GUIDE</h3>
-            <a href="<?php echo BASE_URL; ?>/templates/help.php">HELP ?</a>
-            <a href="<?php echo BASE_URL; ?>/templates/faqs.php">FAQS</a>
-        </div>
-
-        <div class="box">
-            <h3>ABOUT US</h3>
-            <a href="<?php echo BASE_URL; ?>/templates/contact.php">CONTACT US</a>
-        </div>
+<div class="container">
+    <!-- USER ACCOUNT -->
+    <div class="box">
+        <h3><i class="icon">👤</i> User Account</h3>
+        <ul>
+            <li><a href="<?php echo BASE_URL; ?>/templates/change-password.php">Change Password</a></li>
+            <li><a href="<?php echo BASE_URL; ?>/templates/notification-pref.php">Notification Preference</a></li>
+            <li><a href="<?php echo BASE_URL; ?>/templates/display-pref.php">Display Preference</a></li>
+        </ul>
     </div>
+
+    <!-- GUIDE -->
+    <div class="box">
+        <h3><i class="icon">📘</i> Guide</h3>
+        <ul>
+            <li><a href="<?php echo BASE_URL; ?>/templates/help.php">Help</a></li>
+            <li><a href="<?php echo BASE_URL; ?>/templates/faqs.php">FAQs</a></li>
+        </ul>
+    </div>
+
+    <!-- ABOUT US -->
+    <div class="box">
+        <h3><i class="icon">📞</i> About Us</h3>
+        <ul>
+            <li><a href="<?php echo BASE_URL; ?>/templates/contact.php">Contact Us</a></li>
+        </ul>
+    </div>
+</div>
+
 
     <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
