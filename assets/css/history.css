@@ -1,67 +1,157 @@
-/* General container styling */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+:root {
+    --primary-color: #1a365d;
+    --accent-color: #efbf04;
+    --text-dark: #2d3748;
+    --text-light: #718096;
+    --success-color: #48BB78;
+    --background-light: #f7fafc;
+    --border-color: #e2e8f0;
+
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+
+    --radius-md: 8px;
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--primary-color);
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-lg);
+}
+
+.navbar-left img {
+    height: 40px;
+    margin-right: var(--spacing-sm);
+    vertical-align: middle;
+}
+
+.navbar-left h1 {
+    font-size: 1.25rem;
+    margin: 0;
+    display: inline-block;
+}
+
+.navbar-center {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-center input {
+    padding: 0.4rem;
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+    border: none;
+}
+
+.navbar-center button {
+    background-color: white;
+    color: var(--primary-color);
+    padding: 0.4rem 0.6rem;
+    border: none;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    cursor: pointer;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.badge {
+    background-color: red;
+    color: white;
+    font-size: 0.7rem;
+    border-radius: 50%;
+    padding: 0.2rem 0.5rem;
+    margin-left: 0.2rem;
+}
+
+.user-initial {
+    background-color: white;
+    color: var(--primary-color);
+    font-weight: bold;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-tabs {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    background-color: white;
+    padding: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.menu-tabs button {
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+    padding: var(--spacing-sm) var(--spacing-md);
+    cursor: pointer;
+    color: var(--text-dark);
+}
+
+.menu-tabs .active {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: var(--radius-md);
+}
+
 .container {
-    width: 80%;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    color: #333;
+    max-width: 960px;
+    margin: var(--spacing-lg) auto;
+    padding: var(--spacing-lg);
+    background: white;
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-md);
 }
 
-/* Title section */
-.history-title {
+.semester-dropdown {
+    padding: 0.5rem;
+    margin-bottom: var(--spacing-md);
+    font-family: inherit;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--spacing-sm);
+}
+
+.history-table th,
+.history-table td {
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
     text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
+}
+
+.history-table caption {
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.25rem;
     font-weight: bold;
+    color: var(--primary-color);
 }
 
-/* History grid layout */
-.history-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Makes a responsive grid */
-    gap: 20px;
-}
-
-/* Card styling */
-.history-card {
-    background-color: #f8f8f8;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.history-card:hover {
-    transform: translateY(-5px); /* Adds a little lift on hover */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Activity name styling */
-.activity-name {
-    font-size: 18px;
+.points-total {
+    color: var(--success-color);
     font-weight: bold;
-    color: #2c3e50;
-    margin-bottom: 10px;
-}
-
-/* Enrichment points styling */
-.ep-points {
-    font-size: 16px;
-    color: #27ae60;
-    margin-bottom: 10px;
-}
-
-/* Date range styling */
-.date-range {
-    font-size: 14px;
-    color: #7f8c8d;
-}
-
-/* "No history" message styling */
-.no-history {
-    text-align: center;
-    font-size: 18px;
-    color: #e74c3c;
-    font-weight: bold;
-    margin-top: 20px;
 }

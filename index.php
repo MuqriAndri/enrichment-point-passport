@@ -167,6 +167,9 @@ if ($page === 'cca') {
                     if (isset($_SESSION['user_id'])) {
                         $isOfficer = $clubRepo->isClubOfficer($_SESSION['user_id'], $clubDetails['club_id']);
                     }
+                    
+                    // Fetch club gallery images
+                    $gallery = $clubRepo->getClubGallery($clubDetails['club_id']);
 
                     $pageData = [
                         'details' => $clubDetails,
@@ -174,7 +177,7 @@ if ($page === 'cca') {
                         'is_officer' => $isOfficer,
                         'upcoming_events' => [], // Placeholder for events data
                         'activities' => [],      // Placeholder for activities data
-                        'gallery' => []          // Placeholder for gallery data
+                        'gallery' => $gallery    // Gallery data
                     ];
 
                     include 'templates/cca-details.php';

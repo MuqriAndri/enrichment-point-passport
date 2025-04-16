@@ -6,121 +6,97 @@
     <title>Enrichment Points History</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/history.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
+
 </head>
 <body>
-    <div class="dashboard-container">
-        <nav class="top-nav">
-            <div class="nav-left">
-                <img src="<?php echo BASE_URL; ?>/assets/images/logo/politeknik-brunei-logo.png" alt="PB Logo" class="nav-logo">
-                <h2>Enrichment Point Passport</h2>
-            </div>
-            <div class="nav-right">
-                <div class="search-bar">
-                    <input type="text" placeholder="Search events..." aria-label="Search activities">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                </div>
-                <div class="nav-actions">
-                    <button class="notification-btn" aria-label="Notifications">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                        </svg>
-                        <span class="notification-badge" aria-label="3 notifications">3</span>
-                    </button>
-                    <div class="profile-dropdown">
-                        <div class="profile-trigger" tabindex="0" role="button" aria-haspopup="true" aria-expanded="false">
-                            <div class="user-avatar">
-                                <?php if (isset($_SESSION['profile_picture'])): ?>
-                                    <img src="<?php echo $_SESSION['profile_picture']; ?>" alt="Profile Picture">
-                                <?php else: ?>
-                                    <?php echo strtoupper(substr($_SESSION['full_name'], 0, 1)); ?>
-                                <?php endif; ?>
-                            </div>
-                            <span class="user-name"><?php echo explode(' ', $_SESSION['full_name'])[0]; ?></span>
-                        </div>
-                        <div class="dropdown-menu" role="menu">
-                            <a href="<?php echo BASE_URL; ?>/profile" class="dropdown-item" role="menuitem">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-                                My Profile
-                            </a>
-                            <a href="<?php echo BASE_URL; ?>/settings" class="dropdown-item" role="menuitem">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                                </svg>
-                                Settings
-                            </a>
-                            <div class="dropdown-divider" role="separator"></div>
-                            <a href="<?php echo BASE_URL; ?>/logout" class="dropdown-item" role="menuitem">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                    <polyline points="16 17 21 12 16 7"></polyline>
-                                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                                </svg>
-                                Logout
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav>
 
-        <div class="main-content">
-            <div class="tab-navigation">
-                <a href="<?php echo BASE_URL; ?>/dashboard" class="tab-item">Dashboard</a>
-                <a href="<?php echo BASE_URL; ?>/ep" class="tab-item">Enrichment Point</a>
-                <a href="<?php echo BASE_URL; ?>/events" class="tab-item">Events</a>
-                <a href="<?php echo BASE_URL; ?>/cca" class="tab-item">CCAs</a>
-                <a href="<?php echo BASE_URL; ?>/history" class="tab-item active">History</a>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="navbar-left">
+            <img src="pb-logo.png" alt="PB Logo" class="logo">
+            <span class="ep-title">Enrichment Point Passport</span>
+        </div>
+        <div class="navbar-center">
+            <input type="text" placeholder="Search activities..." class="search-box">
+            <button class="search-btn">&#128269;</button>
+        </div>
+        <div class="navbar-right">
+            <div class="notif">
+                <span class="bell">&#128276;</span>
+                <span class="notif-badge">3</span>
             </div>
-            <div class="main-wrapper">
-                <?php if (isset($_SESSION['success'])): ?>
-                    <div class="alert alert-success">
-                        <?php
-                        echo $_SESSION['success'];
-                        unset($_SESSION['success']);
-                        ?>
-                    </div>
-                <?php endif; ?>
+            <div class="profile-circle">M</div>
+            <span class="username">Muhammad</span>
+        </div>
+    </header>
 
-                <?php if (isset($_SESSION['error'])): ?>
-                    <div class="alert alert-error">
-                        <?php
-                        echo $_SESSION['error'];
-                        unset($_SESSION['error']);
-                        ?>
-                    </div>
-                <?php endif; ?>
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+        <a href="#" class="tab">Dashboard</a>
+        <a href="#" class="tab">Enrichment Point</a>
+        <a href="#" class="tab">Events</a>
+        <a href="#" class="tab">CCAs</a>
+        <a href="#" class="tab active">History</a>
+    </nav>
 
-<div class="container">
-    <div class="history-title">Enrichment Points History</div>
-    <!-- Example static data for testing -->
-    <div class="history-grid">
-        <div class="history-card">
-            <div class="activity-name">Workshop on AI</div>
-            <div class="ep-points">10 EP</div>
-            <div class="date-range">2024-03-10</div>
+    <!-- Main Content -->
+    <div class="container">
+        <a href="#" class="back-arrow">&#8592;</a>
+
+        <h1 class="title">HISTORY</h1>
+
+        <div class="semester-select">
+            <button class="dropdown-btn">SEMESTER 1 &#x25B2;</button>
+            <div class="dropdown-content">
+                <a href="#">SEMESTER 2</a>
+                <a href="#">SEMESTER 3</a>
+                <a href="#">SEMESTER 4</a>
+                <a href="#">SEMESTER 5</a>
+                <a href="#">SEMESTER 6</a>
+            </div>
         </div>
-        <div class="history-card">
-            <div class="activity-name">Coding Bootcamp</div>
-            <div class="ep-points">15 EP</div>
-            <div class="date-range">2024-02-15</div>
+
+        <div class="history-table">
+            <h2>SEMESTER 1 <span>JAN - JUNE</span></h2>
+            <table>
+                <tr>
+                    <th>Club Name</th>
+                    <td>Frisbee</td>
+                    <td>Netball</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <th>EP Earned</th>
+                    <td>45</td>
+                    <td>67</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>Completed</td>
+                    <td>Completed</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <th>Role</th>
+                    <td>President</td>
+                    <td>Member</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <th>Overall Points</th>
+                    <td colspan="4" class="overall">112</td>
+                </tr>
+            </table>
         </div>
-        <div class="history-card">
-            <div class="activity-name">Research Presentation</div>
-            <div class="ep-points">20 EP</div>
-            <div class="date-range">2024-01-22</div>
-        </div>
+
     </div>
-    <!-- If no data, show this message -->
-    <div class="no-history">No history available for this user.</div>
+    <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
-    </div>
 </body>
 </html>

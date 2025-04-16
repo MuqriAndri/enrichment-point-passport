@@ -7,6 +7,77 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Club Join: Initializing');
     initializeJoinButtons();
     initializeApplicationModal();
+    
+    // Join Club Button Handler
+    const joinButton = document.querySelector('form.join-btn');
+    if (joinButton) {
+        joinButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('club-application-modal').style.display = 'block';
+        });
+    }
+    
+    // Close Application Modal
+    const closeButton = document.querySelector('.application-modal-close');
+    if (closeButton) {
+        closeButton.addEventListener('click', function() {
+            document.getElementById('club-application-modal').style.display = 'none';
+        });
+    }
+    
+    // Close modal on outside click
+    window.addEventListener('click', function(e) {
+        const modal = document.getElementById('club-application-modal');
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+        
+        const galleryModal = document.getElementById('gallery-modal');
+        if (galleryModal && e.target === galleryModal) {
+            galleryModal.style.display = 'none';
+        }
+    });
+    
+    // Gallery Read More buttons
+    const readMoreButtons = document.querySelectorAll('.gallery-read-more');
+    if (readMoreButtons.length > 0) {
+        readMoreButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const imageId = this.getAttribute('data-image-id');
+                const galleryItems = document.querySelectorAll('.gallery-item');
+                let image, title, description;
+                
+                // Find the corresponding gallery item
+                galleryItems.forEach(item => {
+                    if (item.querySelector(`[data-image-id="${imageId}"]`)) {
+                        const imgElement = item.querySelector('img');
+                        image = imgElement.getAttribute('src');
+                        title = item.querySelector('.gallery-item-title')?.textContent || 'Gallery Image';
+                        
+                        // Get description from data attribute or use a default message
+                        const descriptionElement = this.closest('.gallery-item-overlay');
+                        description = descriptionElement.getAttribute('data-description') || 'No description available.';
+                    }
+                });
+                
+                // Populate modal
+                document.getElementById('modal-image-title').textContent = title;
+                document.getElementById('modal-image').src = image;
+                document.getElementById('modal-image-description').textContent = description;
+                
+                // Show modal
+                document.getElementById('gallery-modal').style.display = 'block';
+            });
+        });
+        
+        // Close Gallery Modal
+        const galleryCloseButton = document.querySelector('.gallery-modal-close');
+        if (galleryCloseButton) {
+            galleryCloseButton.addEventListener('click', function() {
+                document.getElementById('gallery-modal').style.display = 'none';
+            });
+        }
+    }
 });
 
 /**

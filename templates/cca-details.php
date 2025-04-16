@@ -411,9 +411,31 @@ $clubMapping = require 'config/club-mapping.php';
                                 <div class="gallery-grid">
                                     <?php foreach ($gallery as $image): ?>
                                         <div class="gallery-item">
-                                            <img src="<?php echo BASE_URL; ?>/assets/images/clubs/<?php echo $image; ?>" alt="<?php echo htmlspecialchars($clubDetails['club_name'] ?? 'Club'); ?> image">
+                                            <img src="<?php echo BASE_URL; ?>/assets/images/<?php echo htmlspecialchars($image['image_path']); ?>" alt="<?php echo htmlspecialchars($image['image_title'] ?? $clubDetails['club_name'] . ' image'); ?>">
+                                            <?php if (!empty($image['image_title']) || !empty($image['image_description'])): ?>
+                                                <div class="gallery-item-overlay" data-description="<?php echo htmlspecialchars($image['image_description'] ?? ''); ?>">
+                                                    <?php if (!empty($image['image_title'])): ?>
+                                                        <h4 class="gallery-item-title"><?php echo htmlspecialchars($image['image_title']); ?></h4>
+                                                    <?php endif; ?>
+                                                    <button class="gallery-read-more" data-image-id="<?php echo $image['image_id']; ?>">Read More</button>
+                                                </div>
+                                            <?php endif; ?>
                                         </div>
                                     <?php endforeach; ?>
+                                </div>
+                                
+                                <!-- Image Modal -->
+                                <div id="gallery-modal" class="gallery-modal">
+                                    <div class="gallery-modal-content">
+                                        <span class="gallery-modal-close">&times;</span>
+                                        <div id="gallery-modal-details">
+                                            <h3 id="modal-image-title"></h3>
+                                            <div id="modal-image-container">
+                                                <img id="modal-image" src="" alt="">
+                                            </div>
+                                            <p id="modal-image-description"></p>
+                                        </div>
+                                    </div>
                                 </div>
                             <?php else: ?>
                                 <p class="no-images">No gallery images available.</p>
@@ -428,6 +450,7 @@ $clubMapping = require 'config/club-mapping.php';
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/join-club.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/gallery-modal.js"></script>
 
     <?php include 'templates/cca-application-form.php'; ?>
 </body>

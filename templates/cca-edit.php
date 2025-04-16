@@ -314,6 +314,20 @@ $locations = $pageData['locations'] ?? [];
                             
                             <div id="gallery-upload-preview" class="gallery-preview" style="display: none;"></div>
                             
+                            <div id="image-details-fields" style="display: none; margin-top: 1rem; padding: 1rem; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 5px;">
+                                <h3 style="margin-top: 0; color: var(--primary-color);">Image Details</h3>
+                                <div class="edit-form-group">
+                                    <label class="edit-form-label" for="image_title">Image Title <span class="required">*</span></label>
+                                    <input type="text" id="image_title" name="image_title" class="edit-form-input" placeholder="Enter a title for this image" required>
+                                    <div class="form-hint">A brief, descriptive title for the image</div>
+                                </div>
+                                <div class="edit-form-group">
+                                    <label class="edit-form-label" for="image_description">Image Description</label>
+                                    <textarea id="image_description" name="image_description" class="edit-form-textarea" rows="3" placeholder="Describe what's happening in this image"></textarea>
+                                    <div class="form-hint">This description will be displayed when users click "Read More"</div>
+                                </div>
+                            </div>
+                            
                             <div class="upload-actions">
                                 <button type="submit" class="submit-btn primary-btn" onclick="this.form.submit()">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -336,9 +350,12 @@ $locations = $pageData['locations'] ?? [];
                                 <div class="gallery-grid">
                                     <?php foreach ($gallery as $image): ?>
                                         <div class="gallery-item">
-                                            <img src="<?php echo BASE_URL; ?>/assets/images/<?php echo htmlspecialchars($image['image_path']); ?>" alt="Gallery image">
+                                            <img src="<?php echo BASE_URL; ?>/assets/images/<?php echo htmlspecialchars($image['image_path']); ?>" alt="<?php echo htmlspecialchars($image['image_title'] ?? 'Gallery image'); ?>">
                                             <div class="gallery-item-overlay">
-                                                <form method="POST" action="<?php echo BASE_URL; ?>/cca">
+                                                <?php if (!empty($image['image_title'])): ?>
+                                                    <h4 class="gallery-item-title"><?php echo htmlspecialchars($image['image_title']); ?></h4>
+                                                <?php endif; ?>
+                                                <form method="POST" action="<?php echo BASE_URL; ?>/cca" style="margin: 0;">
                                                     <input type="hidden" name="action" value="cca_manage">
                                                     <input type="hidden" name="club_id" value="<?php echo $clubDetails['club_id']; ?>">
                                                     <input type="hidden" name="operation" value="delete_gallery">
@@ -378,14 +395,94 @@ $locations = $pageData['locations'] ?? [];
                                 <input type="text" id="activity-title" name="title" class="edit-form-input" required>
                             </div>
                             
+                            <div class="edit-form-group">
+                                <label class="edit-form-label" for="activity-type">Activity Type</label>
+                                <select id="activity-type" name="activity_type" class="edit-form-input" required>
+                                    <option value="Regular Session">Regular Session</option>
+                                    <option value="3K Event">3K Event</option>
+                                    <option value="Tournament">Tournament</option>
+                                    <option value="Workshop">Workshop</option>
+                                    <option value="Meeting">Meeting</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <div class="form-hint">Select the type of activity</div>
+                            </div>
+                            
+                            <!-- Activity Date/Time Selectors Section -->
                             <div class="edit-form-row">
                                 <div class="edit-form-group">
                                     <label class="edit-form-label" for="activity-start-date">Start Date & Time</label>
-                                    <input type="datetime-local" id="activity-start-date" name="start_datetime" class="edit-form-input datetime-input" required>
+                                    <div class="custom-datetime-wrapper">
+                                        <div class="custom-date-selector">
+                                            <div class="date-selects">
+                                                <select id="activity-start-month" class="edit-form-input date-select month-select">
+                                                    <option value="01">January</option>
+                                                    <option value="02">February</option>
+                                                    <option value="03">March</option>
+                                                    <option value="04">April</option>
+                                                    <option value="05">May</option>
+                                                    <option value="06">June</option>
+                                                    <option value="07">July</option>
+                                                    <option value="08">August</option>
+                                                    <option value="09">September</option>
+                                                    <option value="10">October</option>
+                                                    <option value="11">November</option>
+                                                    <option value="12">December</option>
+                                                </select>
+                                                <select id="activity-start-day" class="edit-form-input date-select day-select"></select>
+                                                <select id="activity-start-year" class="edit-form-input date-select year-select"></select>
+                                            </div>
+                                        </div>
+                                        <div class="custom-time-selector">
+                                            <div class="time-selects">
+                                                <input type="number" id="activity-start-hour" class="edit-form-input time-input hour-input" min="1" max="12" placeholder="Hour">
+                                                <span class="time-separator">:</span>
+                                                <input type="number" id="activity-start-minute" class="edit-form-input time-input minute-input" min="0" max="59" placeholder="Min">
+                                                <select id="activity-start-period" class="edit-form-input time-select period-select">
+                                                    <option value="AM">AM</option>
+                                                    <option value="PM">PM</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="start_datetime" id="activity-start-datetime-hidden">
+                                    </div>
                                 </div>
                                 <div class="edit-form-group">
                                     <label class="edit-form-label" for="activity-end-date">End Date & Time</label>
-                                    <input type="datetime-local" id="activity-end-date" name="end_datetime" class="edit-form-input datetime-input" required>
+                                    <div class="custom-datetime-wrapper">
+                                        <div class="custom-date-selector">
+                                            <div class="date-selects">
+                                                <select id="activity-end-month" class="edit-form-input date-select month-select">
+                                                    <option value="01">January</option>
+                                                    <option value="02">February</option>
+                                                    <option value="03">March</option>
+                                                    <option value="04">April</option>
+                                                    <option value="05">May</option>
+                                                    <option value="06">June</option>
+                                                    <option value="07">July</option>
+                                                    <option value="08">August</option>
+                                                    <option value="09">September</option>
+                                                    <option value="10">October</option>
+                                                    <option value="11">November</option>
+                                                    <option value="12">December</option>
+                                                </select>
+                                                <select id="activity-end-day" class="edit-form-input date-select day-select"></select>
+                                                <select id="activity-end-year" class="edit-form-input date-select year-select"></select>
+                                            </div>
+                                        </div>
+                                        <div class="custom-time-selector">
+                                            <div class="time-selects">
+                                                <input type="number" id="activity-end-hour" class="edit-form-input time-input hour-input" min="1" max="12" placeholder="Hour">
+                                                <span class="time-separator">:</span>
+                                                <input type="number" id="activity-end-minute" class="edit-form-input time-input minute-input" min="0" max="59" placeholder="Min">
+                                                <select id="activity-end-period" class="edit-form-input time-select period-select">
+                                                    <option value="AM">AM</option>
+                                                    <option value="PM">PM</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="end_datetime" id="activity-end-datetime-hidden">
+                                    </div>
                                 </div>
                             </div>
                             
@@ -404,11 +501,6 @@ $locations = $pageData['locations'] ?? [];
                                     <label class="edit-form-label" for="activity-points">Enrichment Points</label>
                                     <input type="number" id="activity-points" name="points" class="edit-form-input" min="0" value="2">
                                     <div class="form-hint">Number of enrichment points awarded for participation</div>
-                                </div>
-                                <div class="edit-form-group">
-                                    <label class="edit-form-label" for="activity-capacity">Capacity</label>
-                                    <input type="number" id="activity-capacity" name="capacity" class="edit-form-input" min="0">
-                                    <div class="form-hint">Maximum number of participants (leave empty for unlimited)</div>
                                 </div>
                             </div>
                             
@@ -436,9 +528,6 @@ $locations = $pageData['locations'] ?? [];
                                             <div class="activity-header">
                                                 <h4 class="activity-title"><?php echo htmlspecialchars($activity['title']); ?></h4>
                                                 <div class="activity-actions">
-                                                    <span class="attendance-code-badge" title="Attendance Code">
-                                                        <?php echo htmlspecialchars($activity['attendance_code'] ?? 'N/A'); ?>
-                                                    </span>
                                                     <form method="POST" action="<?php echo BASE_URL; ?>/cca" style="display: inline;">
                                                         <input type="hidden" name="action" value="cca_manage">
                                                         <input type="hidden" name="club_id" value="<?php echo $clubDetails['club_id']; ?>">
@@ -487,17 +576,6 @@ $locations = $pageData['locations'] ?? [];
                                                     </svg>
                                                     <?php echo $activity['points_awarded'] ?? 2; ?> points
                                                 </span>
-                                                <?php if (!empty($activity['capacity'])): ?>
-                                                <span class="activity-meta-item">
-                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                                        <circle cx="9" cy="7" r="4"></circle>
-                                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                                    </svg>
-                                                    Capacity: <?php echo htmlspecialchars($activity['capacity']); ?>
-                                                </span>
-                                                <?php endif; ?>
                                             </div>
                                             <?php if (!empty($activity['description'])): ?>
                                             <p class="activity-description"><?php echo htmlspecialchars($activity['description']); ?></p>
@@ -525,10 +603,24 @@ $locations = $pageData['locations'] ?? [];
                                 <div class="form-hint">Enter the primary meeting location of the club (e.g., building name, room number)</div>
                             </div>
                             
+                            <div class="edit-form-group">
+                                <label class="edit-form-label" for="location-search">Search Location</label>
+                                <input type="text" id="location-search" class="edit-form-input" placeholder="Search for a location...">
+                                <div class="form-hint">Type an address or place name to find it on the map</div>
+                            </div>
+                            
                             <div class="map-container">
                                 <div id="location-map"></div>
                                 <div class="map-instructions">
-                                    <p>Click on the map to set the meeting location coordinates, or manually enter them below.</p>
+                                    <p>
+                                        <strong>Set your club location:</strong>
+                                        <ul>
+                                            <li>Click on the map to place the marker at your club's meeting location</li>
+                                            <li>Drag the marker to fine-tune the position</li>
+                                            <li>Use the "Use My Current Location" button if you're at your club location</li>
+                                            <li>Manually enter coordinates if you have specific latitude/longitude values</li>
+                                        </ul>
+                                    </p>
                                 </div>
                             </div>
                             
@@ -541,6 +633,17 @@ $locations = $pageData['locations'] ?? [];
                                     <label class="edit-form-label" for="longitude">Longitude</label>
                                     <input type="text" id="longitude" name="longitude" class="edit-form-input" value="<?php echo htmlspecialchars($clubDetails['longitude'] ?? '114.940826'); ?>">
                                 </div>
+                            </div>
+
+                            <div class="location-actions">
+                                <button type="button" id="use-current-location" class="secondary-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                    Use My Current Location
+                                </button>
+                                <div id="geolocation-status" class="geolocation-status"></div>
                             </div>
                             
                             <button type="submit" class="submit-btn primary-btn" onclick="this.form.submit()">
@@ -575,8 +678,13 @@ $locations = $pageData['locations'] ?? [];
     </div>
     
     <!-- Map Scripts -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
     <script>
+        let map;
+        let marker;
+        let geocoder;
+        let searchBox;
+        const statusElement = document.getElementById('geolocation-status');
+        
         // Initialize the map
         function initMap() {
             // Default to PB location if no coordinates are set
@@ -588,33 +696,244 @@ $locations = $pageData['locations'] ?? [];
                 zoom: 15,
             };
             
-            const map = new google.maps.Map(document.getElementById('location-map'), mapOptions);
+            map = new google.maps.Map(document.getElementById('location-map'), mapOptions);
             
             // Add a marker at the current position
-            let marker = new google.maps.Marker({
+            marker = new google.maps.Marker({
                 position: { lat, lng },
                 map: map,
                 draggable: true,
                 title: 'Club Meeting Location'
             });
             
+            // Initialize geocoder
+            geocoder = new google.maps.Geocoder();
+            
+            // Setup search box
+            const locationSearch = document.getElementById('location-search');
+            if (locationSearch) {
+                // Create autocomplete
+                const autocomplete = new google.maps.places.Autocomplete(locationSearch);
+                autocomplete.bindTo('bounds', map);
+                
+                // Listen for place selection
+                autocomplete.addListener('place_changed', function() {
+                    const place = autocomplete.getPlace();
+                    
+                    if (!place.geometry || !place.geometry.location) {
+                        showStatus('error', 'No location details available for this search');
+                        return;
+                    }
+                    
+                    // If the place has a geometry, present it on the map
+                    if (place.geometry.viewport) {
+                        map.fitBounds(place.geometry.viewport);
+                    } else {
+                        map.setCenter(place.geometry.location);
+                        map.setZoom(17);
+                    }
+                    
+                    // Set marker position to the selected place
+                    marker.setPosition(place.geometry.location);
+                    
+                    // Update lat/lng fields
+                    document.getElementById('latitude').value = place.geometry.location.lat().toFixed(6);
+                    document.getElementById('longitude').value = place.geometry.location.lng().toFixed(6);
+                    
+                    // Update location name field
+                    if (place.name) {
+                        document.getElementById('location').value = place.name;
+                    }
+                    
+                    showStatus('success', 'Location found: ' + place.name);
+                });
+            }
+            
             // Update coordinates when marker is dragged
             google.maps.event.addListener(marker, 'dragend', function() {
                 const position = marker.getPosition();
-                document.getElementById('latitude').value = position.lat();
-                document.getElementById('longitude').value = position.lng();
+                document.getElementById('latitude').value = position.lat().toFixed(6);
+                document.getElementById('longitude').value = position.lng().toFixed(6);
+                
+                // Reverse geocode to get address
+                geocoder.geocode({ 'location': position }, function(results, status) {
+                    if (status === 'OK' && results[0]) {
+                        document.getElementById('location').value = results[0].formatted_address;
+                    }
+                });
             });
             
             // Allow clicking on map to move marker
             google.maps.event.addListener(map, 'click', function(event) {
                 marker.setPosition(event.latLng);
-                document.getElementById('latitude').value = event.latLng.lat();
-                document.getElementById('longitude').value = event.latLng.lng();
+                document.getElementById('latitude').value = event.latLng.lat().toFixed(6);
+                document.getElementById('longitude').value = event.latLng.lng().toFixed(6);
+                
+                // Reverse geocode to get address
+                geocoder.geocode({ 'location': event.latLng }, function(results, status) {
+                    if (status === 'OK' && results[0]) {
+                        document.getElementById('location').value = results[0].formatted_address;
+                    }
+                });
             });
+            
+            // Setup geolocation button
+            setupGeolocationButton();
+        }
+        
+        function setupGeolocationButton() {
+            const geoButton = document.getElementById('use-current-location');
+            if (!geoButton) return;
+            
+            geoButton.addEventListener('click', function() {
+                // Check if geolocation is supported
+                if (!navigator.geolocation) {
+                    showStatus('error', 'Geolocation is not supported by your browser');
+                    return;
+                }
+                
+                // Show loading status
+                showStatus('loading', 'Getting your location...');
+                
+                // Get current position
+                navigator.geolocation.getCurrentPosition(
+                    // Success callback
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        
+                        // Update map and marker
+                        const newLatLng = new google.maps.LatLng(lat, lng);
+                        marker.setPosition(newLatLng);
+                        map.setCenter(newLatLng);
+                        
+                        // Update form fields
+                        document.getElementById('latitude').value = lat.toFixed(6);
+                        document.getElementById('longitude').value = lng.toFixed(6);
+                        
+                        // Show success message
+                        showStatus('success', 'Location updated successfully');
+                        
+                        // Clear status after a few seconds
+                        setTimeout(function() {
+                            statusElement.style.display = 'none';
+                            statusElement.className = 'geolocation-status';
+                        }, 5000);
+                    },
+                    // Error callback
+                    function(error) {
+                        let errorMessage = 'Unable to retrieve your location';
+                        
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMessage = 'Location access denied. Please check your browser permissions.';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMessage = 'Location information unavailable at this time.';
+                                break;
+                            case error.TIMEOUT:
+                                errorMessage = 'Location request timed out. Please try again.';
+                                break;
+                        }
+                        
+                        showStatus('error', errorMessage);
+                    },
+                    // Options
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            });
+        }
+        
+        function showStatus(type, message) {
+            if (!statusElement) return;
+            
+            // Clear previous classes and set new one
+            statusElement.className = 'geolocation-status';
+            statusElement.classList.add(type);
+            
+            // Set message content
+            if (type === 'loading') {
+                statusElement.innerHTML = `
+                    <div class="geolocation-spinner"></div>
+                    <span>${message}</span>
+                `;
+            } else {
+                statusElement.textContent = message;
+            }
+            
+            // Show the status
+            statusElement.style.display = 'block';
+            
+            // Auto-hide error messages after 8 seconds
+            if (type === 'error') {
+                setTimeout(function() {
+                    statusElement.style.display = 'none';
+                    statusElement.className = 'geolocation-status';
+                }, 8000);
+            }
         }
     </script>
     
+    <!-- Load Google Maps API with Places library -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXXh-Lwbrw-UKAC9YsrBq09vyKNmG0Lzo&libraries=places&callback=initMap" async defer></script>
+    
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/cca-edit.js"></script>
+    
+    <!-- Additional script to enforce date picker styling -->
+    <script>
+        // Custom script to enforce calendar icon styling
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply styling directly after DOM is loaded
+            const styleFixForDatetime = document.createElement('style');
+            styleFixForDatetime.textContent = `
+                /* Strong override for calendar icon styling */
+                input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+                    background-color: transparent !important;
+                    cursor: pointer !important;
+                    color: var(--primary-color) !important;
+                    opacity: 1 !important;
+                    filter: invert(30%) sepia(90%) saturate(1000%) hue-rotate(175deg) !important;
+                }
+                
+                /* Target Webkit/Blink browsers specifically */
+                @media screen and (-webkit-min-device-pixel-ratio:0) {
+                    input[type="datetime-local"] {
+                        color-scheme: light !important;
+                        background-color: white !important;
+                    }
+                    
+                    input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+                        filter: invert(30%) sepia(90%) saturate(1000%) hue-rotate(175deg) !important;
+                    }
+                }
+                
+                /* Firefox specific styling */
+                @-moz-document url-prefix() {
+                    input[type="datetime-local"] {
+                        background-color: white !important;
+                        color: var(--text-dark) !important;
+                    }
+                }
+            `;
+            document.head.appendChild(styleFixForDatetime);
+            
+            // Direct manipulation of inputs for stronger enforcement
+            const datetimeInputs = document.querySelectorAll('input[type="datetime-local"]');
+            datetimeInputs.forEach(input => {
+                // Create an observer to watch for any browser resets of the style
+                const observer = new MutationObserver(function(mutations) {
+                    input.style.colorScheme = 'light';
+                    input.style.backgroundColor = 'white';
+                });
+                
+                observer.observe(input, { attributes: true, attributeFilter: ['style'] });
+            });
+        });
+    </script>
 </body>
 </html> 

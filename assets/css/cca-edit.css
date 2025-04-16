@@ -118,7 +118,7 @@
 }
 
 .edit-form-group {
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
 }
 
 .edit-form-label {
@@ -322,6 +322,7 @@
 /* Activity Section */
 .activity-section {
     margin-top: 2rem;
+    text-align: justify;
 }
 
 .activity-section h3 {
@@ -330,6 +331,7 @@
     border-bottom: 1px solid var(--border-color);
     font-size: 1.25rem;
     color: var(--text-dark);
+    text-align: left;
 }
 
 .activity-list {
@@ -337,6 +339,7 @@
     flex-direction: column;
     gap: 1rem;
     margin-top: 1rem;
+    text-align: justify;
 }
 
 .activity-item {
@@ -347,8 +350,11 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     border-left: 4px solid var(--primary-color);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    animation: slideIn 0.3s ease forwards;
-    opacity: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 15px;
+    margin-bottom: 15px;
 }
 
 .activity-item:hover {
@@ -418,9 +424,10 @@
 .activity-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
+    align-items: flex-start;
     padding-right: 4rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
 }
 
 .activity-title {
@@ -431,11 +438,11 @@
 }
 
 .activity-meta {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
-    margin-bottom: 0.75rem;
-    font-size: 0.9rem;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .activity-meta-item {
@@ -443,6 +450,7 @@
     align-items: center;
     gap: 0.35rem;
     color: #4a5568;
+    justify-content: center;
 }
 
 .activity-meta-item svg {
@@ -451,10 +459,12 @@
 }
 
 .activity-description {
-    margin: 0.75rem 0 0;
+    margin: 0;
     font-size: 0.95rem;
     line-height: 1.5;
     color: #4a5568;
+    text-align: justify;
+    padding-top: 5px;
 }
 
 .activity-actions {
@@ -526,6 +536,79 @@
 
 .primary-btn:hover {
     background-color: #3a5a8c;
+}
+
+.secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background-color: white;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.secondary-btn:hover {
+    background-color: rgba(var(--primary-rgb), 0.05);
+    transform: translateY(-1px);
+}
+
+.secondary-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--primary-color);
+}
+
+.location-actions {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    gap: 1rem;
+}
+
+.geolocation-status {
+    font-size: 0.9rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: var(--radius-sm);
+    display: none;
+}
+
+.geolocation-status.success {
+    display: block;
+    background-color: rgba(var(--success-rgb, 46, 160, 67), 0.1);
+    color: var(--success-color, #2ea043);
+    border-left: 3px solid var(--success-color, #2ea043);
+}
+
+.geolocation-status.error {
+    display: block;
+    background-color: rgba(var(--danger-rgb, 220, 53, 69), 0.1);
+    color: var(--danger-color, #dc3545);
+    border-left: 3px solid var(--danger-color, #dc3545);
+}
+
+.geolocation-status.loading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary-color);
+    border-left: 3px solid var(--primary-color);
+}
+
+.geolocation-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--primary-color);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
 
 /* Location Panel Styles */
@@ -620,8 +703,7 @@
     }
     
     .activity-meta {
-        flex-direction: column;
-        gap: 0.5rem;
+        grid-template-columns: repeat(2, 1fr);
     }
     
     .club-header-content {
@@ -653,6 +735,14 @@
         justify-content: flex-end;
         margin-top: 0.5rem;
     }
+    
+    .activity-meta {
+        grid-template-columns: 1fr;
+    }
+    
+    .activity-meta-item {
+        justify-content: flex-start;
+    }
 }
 
 /* Animations */
@@ -676,6 +766,11 @@
         opacity: 1;
         transform: translateX(0);
     }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .animate-in {
@@ -750,12 +845,6 @@
     animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
 /* Tooltip styling */
 [data-tooltip] {
     position: relative;
@@ -812,4 +901,338 @@
     height: 20px;
     position: relative;
     z-index: 25;
+}
+
+/* Datetime input styling - with stronger overrides */
+input[type="datetime-local"] {
+    color-scheme: light;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    /* More aggressive resets */
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: white;
+    color: var(--text-dark);
+    width: 100%;
+}
+
+/* Calendar icon styling */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: none; /* Remove the default blue */
+    opacity: 0.7;
+    cursor: pointer;
+    color: var(--primary-color);
+    background-color: transparent;
+    /* Match theme color */
+    filter: invert(0.5) sepia(1) saturate(3) hue-rotate(175deg);
+}
+
+input[type="datetime-local"]:hover::-webkit-calendar-picker-indicator {
+    opacity: 1;
+}
+
+/* Focus state */
+input[type="datetime-local"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+}
+
+/* Remove inner time spinner buttons */
+input[type="datetime-local"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
+}
+
+/* Ensure consistency with other form elements */
+.edit-form-input.datetime-input {
+    color-scheme: light;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Browser-specific date/time picker overrides */
+::-webkit-datetime-edit {
+    padding: 0;
+}
+
+::-webkit-datetime-edit-fields-wrapper {
+    background-color: transparent;
+}
+
+::-webkit-datetime-edit-text,
+::-webkit-datetime-edit-hour,
+::-webkit-datetime-edit-minute,
+::-webkit-datetime-edit-ampm,
+::-webkit-datetime-edit-month, 
+::-webkit-datetime-edit-day, 
+::-webkit-datetime-edit-year {
+    color: var(--text-dark);
+}
+
+::-webkit-datetime-edit-ampm {
+    color: var(--primary-color);
+}
+
+::-webkit-calendar-picker-indicator {
+    background-color: transparent;
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+/* Styling for other form elements to match */
+select.edit-form-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+select.edit-form-input:focus {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232d4a7c' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* Styling for hovered datetime inputs */
+input[type="datetime-local"].hovered::-webkit-calendar-picker-indicator {
+    opacity: 1;
+    filter: invert(0.4) sepia(1) saturate(5) hue-rotate(175deg);
+}
+
+/* Override for color schemes - important to force our colors */
+input[type="datetime-local"] {
+    background-color: white !important;
+    color: var(--text-dark) !important;
+}
+
+/* AM/PM text styling */
+::-webkit-datetime-edit-ampm {
+    font-weight: 600;
+}
+
+/* Custom datetime input styling */
+.custom-datetime-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    position: relative;
+    padding: 10px 0;
+}
+
+.custom-date-selector,
+.custom-time-selector {
+    position: relative;
+    width: 100%;
+    background-color: rgba(var(--primary-rgb), 0.02);
+    border-radius: var(--radius-md);
+    padding: 12px;
+}
+
+.date-selects,
+.time-selects {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* Date select styling */
+.date-select {
+    appearance: none;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 0.5rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232d4a7c' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 14px;
+    padding-right: 2rem;
+    text-align: center;
+    height: 45px;
+    flex: 1;
+}
+
+.month-select {
+    flex: 2;
+}
+
+.day-select {
+    flex: 1;
+}
+
+.year-select {
+    flex: 1.2;
+}
+
+/* Time input and select styling */
+.time-select,
+.time-input {
+    appearance: none;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 0.5rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    transition: all 0.2s ease;
+    text-align: center;
+    height: 45px;
+}
+
+.time-select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232d4a7c' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 14px;
+    padding-right: 2rem;
+}
+
+.time-input {
+    /* Remove spinner buttons for number inputs */
+    -moz-appearance: textfield; /* Firefox */
+}
+
+.time-input::-webkit-outer-spin-button,
+.time-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.hour-input,
+.minute-input {
+    flex: 1;
+    width: 70px;
+}
+
+.period-select {
+    flex: 0.8;
+    min-width: 70px;
+}
+
+.time-separator {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text-light);
+    margin: 0;
+    flex: none;
+    width: 5px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Focus styles */
+.date-select:focus,
+.time-select:focus,
+.time-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+}
+
+/* Hover styles */
+.date-select:hover,
+.time-select:hover,
+.time-input:hover {
+    border-color: var(--primary-color);
+}
+
+/* Responsive adjustments for smaller screens */
+@media screen and (max-width: 768px) {
+    .date-selects,
+    .time-selects {
+        flex-wrap: nowrap;
+        gap: 8px;
+        justify-content: space-between;
+    }
+    
+    .custom-date-selector,
+    .custom-time-selector {
+        padding: 8px;
+    }
+    
+    .hour-input,
+    .minute-input {
+        width: 60px;
+    }
+    
+    .period-select {
+        width: 65px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .date-selects {
+        flex-wrap: wrap;
+    }
+    
+    .month-select {
+        flex: 1 1 100%;
+        margin-bottom: 8px;
+    }
+    
+    .day-select,
+    .year-select {
+        flex: 1 1 48%;
+    }
+    
+    .hour-input,
+    .minute-input {
+        width: 50px;
+    }
+    
+    .period-select {
+        width: 60px;
+    }
+    
+    .time-input,
+    .time-select,
+    .date-select {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.4rem;
+    }
+}
+
+.preview-info .image-details-message {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background-color: rgba(var(--primary-rgb), 0.1);
+    border-left: 3px solid var(--primary-color);
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    border-radius: var(--radius-sm);
+}
+
+.required {
+    color: var(--danger-color);
+    margin-left: 0.25rem;
+}
+
+/* Highlight animation for image details fields */
+@keyframes highlight-pulse {
+    0% { background-color: #f9f9f9; }
+    50% { background-color: rgba(var(--primary-rgb), 0.1); }
+    100% { background-color: #f9f9f9; }
+}
+
+.highlight-fields {
+    animation: highlight-pulse 1.5s ease;
+    border-color: var(--primary-color) !important;
 } 

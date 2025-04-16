@@ -381,46 +381,80 @@ function handleClubManagement($ccaDB, $profilesDB) {
                     $_SESSION['error'] = 'File size exceeds the maximum limit of 5MB.';
                     break;
                 }
+
+                // Create base directories if they don't exist
+                $baseImagePath = __DIR__ . '/../assets/images';
+                $galleryDir = $baseImagePath . '/gallery';
+                $clubsDir = $galleryDir . '/clubs';
+                
+                // Create directory structure if it doesn't exist
+                foreach ([$galleryDir, $clubsDir] as $dir) {
+                    if (!file_exists($dir)) {
+                        if (!mkdir($dir, 0777, true)) {
+                            error_log("Failed to create directory: " . $dir);
+                            $_SESSION['error'] = 'Failed to create upload directory.';
+                            break 2;
+                        }
+                    }
+                }
                 
                 // Load club mapping
                 $clubMapping = require_once __DIR__ . '/../config/club-mapping.php';
                 
-                // Create club-specific directory if it doesn't exist
+                // Get club slug
                 $clubSlug = '';
                 foreach ($clubMapping as $category => $clubs) {
                     foreach ($clubs as $name => $slug) {
-                        if ($name === $clubDetails['club_name']) {
+                        if (strcasecmp($name, $clubDetails['club_name']) === 0) {
                             $clubSlug = $slug;
                             break 2;
                         }
                     }
                 }
                 
-                $clubSpecificDir = 'clubs/' . $clubSlug;
-                $uploadDir = __DIR__ . '/../assets/images/' . $clubSpecificDir . '/';
+                if (empty($clubSlug)) {
+                    error_log("Could not find club slug for: " . $clubDetails['club_name']);
+                    $_SESSION['error'] = 'Failed to determine club directory.';
+                    break;
+                }
+                
+                // Create club-specific directory
+                $clubSpecificDir = 'gallery/clubs/' . $clubSlug;
+                $uploadDir = $baseImagePath . '/' . $clubSpecificDir;
+                
                 if (!file_exists($uploadDir)) {
-                    mkdir($uploadDir, 0777, true);
+                    if (!mkdir($uploadDir, 0777, true)) {
+                        error_log("Failed to create club specific directory: " . $uploadDir);
+                        $_SESSION['error'] = 'Failed to create club directory.';
+                        break;
+                    }
                 }
                 
                 // Generate a unique filename
-                $extension = pathinfo($_FILES['gallery_image']['name'], PATHINFO_EXTENSION);
-                $newFilename = uniqid() . '.' . $extension;
-                $uploadPath = $uploadDir . $newFilename;
+                $extension = strtolower(pathinfo($_FILES['gallery_image']['name'], PATHINFO_EXTENSION));
+                $newFilename = uniqid('gallery_') . '.' . $extension;
+                $uploadPath = $uploadDir . '/' . $newFilename;
                 
                 // Move the uploaded file
                 if (move_uploaded_file($fileTmp, $uploadPath)) {
                     try {
-                        // Save to database
+                        // Save to database with relative path
                         $imagePath = $clubSpecificDir . '/' . $newFilename;
-                        $sql = "INSERT INTO club_gallery (club_id, image_path, created_at) VALUES (:club_id, :image_path, NOW())";
+                        $imageTitle = isset($_POST['image_title']) ? $_POST['image_title'] : null;
+                        $imageDescription = isset($_POST['image_description']) ? $_POST['image_description'] : null;
+                        
+                        $sql = "INSERT INTO club_gallery (club_id, image_path, image_title, image_description, created_at) 
+                                VALUES (:club_id, :image_path, :image_title, :image_description, NOW())";
                         $stmt = $ccaDB->prepare($sql);
                         $stmt->bindParam(':club_id', $clubId);
                         $stmt->bindParam(':image_path', $imagePath);
+                        $stmt->bindParam(':image_title', $imageTitle);
+                        $stmt->bindParam(':image_description', $imageDescription);
                         $stmt->execute();
                         
                         $_SESSION['success'] = 'Image added to gallery successfully.';
                     } catch (PDOException $e) {
-                        error_log("Error adding gallery image: " . $e->getMessage());
+                        error_log("Error adding gallery image to database: " . $e->getMessage());
                         $_SESSION['error'] = 'Failed to save image to database. Please try again.';
                         // Delete the uploaded file if database insert fails
                         if (file_exists($uploadPath)) {
@@ -428,9 +462,13 @@ function handleClubManagement($ccaDB, $profilesDB) {
                         }
                     }
                 } else {
+                    $uploadError = error_get_last();
+                    error_log("Failed to move uploaded file. Error: " . json_encode($uploadError));
                     $_SESSION['error'] = 'Failed to upload image. Please try again.';
                 }
             } else {
+                $errorCode = isset($_FILES['gallery_image']) ? $_FILES['gallery_image']['error'] : 'No file uploaded';
+                error_log("Gallery upload error: " . $errorCode);
                 $_SESSION['error'] = 'No image selected or upload error occurred.';
             }
             break;
@@ -499,11 +537,11 @@ function handleClubManagement($ccaDB, $profilesDB) {
                 $activityData = [
                     'title' => $_POST['title'],
                     'description' => $_POST['description'] ?? null,
-                    'location' => $_POST['location'] ?? null,
+                    'location_name' => $_POST['location'] ?? null,
+                    'activity_type' => $_POST['activity_type'] ?? 'Regular Session',
                     'start_datetime' => $_POST['start_datetime'],
                     'end_datetime' => $_POST['end_datetime'],
-                    'points_awarded' => isset($_POST['points']) && !empty($_POST['points']) ? $_POST['points'] : 2,
-                    'capacity' => isset($_POST['capacity']) && !empty($_POST['capacity']) ? $_POST['capacity'] : null
+                    'points_awarded' => isset($_POST['points']) && !empty($_POST['points']) ? $_POST['points'] : 2
                 ];
                 
                 try {
@@ -511,49 +549,43 @@ function handleClubManagement($ccaDB, $profilesDB) {
                         club_id,
                         title,
                         description,
-                        location_name,
+                        activity_type,
                         start_datetime,
                         end_datetime,
+                        location_name,
                         points_awarded,
-                        capacity,
-                        attendance_code,
                         status,
                         created_at
                     ) VALUES (
                         :club_id,
                         :title,
                         :description,
-                        :location_name,
+                        :activity_type,
                         :start_datetime,
                         :end_datetime,
+                        :location_name,
                         :points_awarded,
-                        :capacity,
-                        :attendance_code,
                         :status,
                         NOW()
                     )";
-                    
-                    // Generate a random 6-character attendance code
-                    $attendanceCode = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 6));
                     
                     $stmt = $ccaDB->prepare($sql);
                     $stmt->bindParam(':club_id', $clubId);
                     $stmt->bindParam(':title', $activityData['title']);
                     $stmt->bindParam(':description', $activityData['description'], PDO::PARAM_STR);
-                    $stmt->bindParam(':location', $activityData['location'], PDO::PARAM_STR);
+                    $stmt->bindParam(':activity_type', $activityData['activity_type']);
+                    $stmt->bindParam(':location_name', $activityData['location_name'], PDO::PARAM_STR);
                     $stmt->bindParam(':start_datetime', $activityData['start_datetime']);
                     $stmt->bindParam(':end_datetime', $activityData['end_datetime']);
                     $stmt->bindParam(':points_awarded', $activityData['points_awarded']);
-                    $stmt->bindParam(':capacity', $activityData['capacity'], PDO::PARAM_INT);
-                    $stmt->bindParam(':attendance_code', $attendanceCode);
                     
-                    $status = 'Upcoming';
+                    $status = 'Planned';
                     $stmt->bindParam(':status', $status);
                     
                     $stmt->execute();
                     $activityId = $ccaDB->lastInsertId();
                     
-                    $_SESSION['success'] = 'Activity added successfully with attendance code: ' . $attendanceCode;
+                    $_SESSION['success'] = 'Activity added successfully.';
                 } catch (PDOException $e) {
                     error_log("Error adding activity: " . $e->getMessage());
                     $_SESSION['error'] = 'Failed to add activity: ' . $e->getMessage();
@@ -583,15 +615,15 @@ function handleClubManagement($ccaDB, $profilesDB) {
                     }
                     
                     // Check if there's attendance records
-                    $attendanceSql = "SELECT COUNT(*) FROM club_attendance WHERE activity_id = :activity_id";
+                    $attendanceSql = "SELECT COUNT(*) FROM club_attendance WHERE club_id = :club_id";
                     $attendanceStmt = $ccaDB->prepare($attendanceSql);
-                    $attendanceStmt->bindParam(':activity_id', $activityId);
+                    $attendanceStmt->bindParam(':club_id', $clubId);
                     $attendanceStmt->execute();
                     $attendanceCount = $attendanceStmt->fetchColumn();
                     
                     if ($attendanceCount > 0) {
                         // If there's attendance, just mark it as cancelled instead of deleting
-                        $updateSql = "UPDATE club_activities SET status = 'Cancelled', updated_at = NOW() WHERE activity_id = :activity_id AND club_id = :club_id";
+                        $updateSql = "UPDATE club_activities SET status = 'Cancelled', last_modified_at = NOW() WHERE activity_id = :activity_id AND club_id = :club_id";
                         $updateStmt = $ccaDB->prepare($updateSql);
                         $updateStmt->bindParam(':activity_id', $activityId);
                         $updateStmt->bindParam(':club_id', $clubId);

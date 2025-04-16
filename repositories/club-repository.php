@@ -402,13 +402,6 @@ class clubRepository
         }
     }
     
-    /**
-     * Get club activities
-     * 
-     * @param int $clubId The club ID
-     * @param string $status Optional filter by status
-     * @return array Array of activities
-     */
     public function getClubActivities($clubId, $status = null)
     {
         try {
@@ -435,12 +428,6 @@ class clubRepository
         }
     }
     
-    /**
-     * Get club locations
-     * 
-     * @param int $clubId The club ID
-     * @return array Array of locations
-     */
     public function getClubLocations($clubId)
     {
         try {
@@ -455,13 +442,6 @@ class clubRepository
         }
     }
 
-    /**
-     * Create a new club activity
-     * 
-     * @param int $clubId The club ID
-     * @param array $activityData Activity data (title, description, location, start_datetime, end_datetime, points_awarded, attendance_code, status)
-     * @return array Array with success status and message
-     */
     public function createClubActivity($clubId, $activityData)
     {
         try {
@@ -471,22 +451,28 @@ class clubRepository
                 club_id,
                 title,
                 description,
-                location,
+                activity_type,
                 start_datetime,
                 end_datetime,
+                location_name,
+                location_details,
+                latitude,
+                longitude,
                 points_awarded,
-                attendance_code,
                 status,
                 created_at
             ) VALUES (
                 :club_id,
                 :title,
                 :description,
-                :location,
+                :activity_type,
                 :start_datetime,
                 :end_datetime,
+                :location_name,
+                :location_details,
+                :latitude,
+                :longitude,
                 :points_awarded,
-                :attendance_code,
                 :status,
                 NOW()
             )";
@@ -494,20 +480,32 @@ class clubRepository
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindParam(':club_id', $clubId);
             $stmt->bindParam(':title', $activityData['title']);
-            $stmt->bindParam(':description', $activityData['description']);
-            $stmt->bindParam(':location', $activityData['location']);
+            $stmt->bindParam(':description', $activityData['description'], PDO::PARAM_STR);
+            
+            // Default activity type if not specified
+            $activityType = isset($activityData['activity_type']) ? $activityData['activity_type'] : 'Regular Session';
+            $stmt->bindParam(':activity_type', $activityType);
+            
             $stmt->bindParam(':start_datetime', $activityData['start_datetime']);
             $stmt->bindParam(':end_datetime', $activityData['end_datetime']);
-            $stmt->bindParam(':points_awarded', $activityData['points_awarded']);
             
-            // Generate a random 6-character attendance code if not provided
-            if (!isset($activityData['attendance_code']) || empty($activityData['attendance_code'])) {
-                $activityData['attendance_code'] = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 6));
-            }
-            $stmt->bindParam(':attendance_code', $activityData['attendance_code']);
+            $locationName = isset($activityData['location_name']) ? $activityData['location_name'] : '';
+            $stmt->bindParam(':location_name', $locationName);
             
-            // Default status is "Upcoming" if not provided
-            $status = isset($activityData['status']) ? $activityData['status'] : 'Upcoming';
+            $locationDetails = isset($activityData['location_details']) ? $activityData['location_details'] : null;
+            $stmt->bindParam(':location_details', $locationDetails, PDO::PARAM_STR);
+            
+            // Location coordinates (optional)
+            $latitude = isset($activityData['latitude']) ? $activityData['latitude'] : null;
+            $longitude = isset($activityData['longitude']) ? $activityData['longitude'] : null;
+            $stmt->bindParam(':latitude', $latitude);
+            $stmt->bindParam(':longitude', $longitude);
+            
+            $pointsAwarded = isset($activityData['points_awarded']) ? $activityData['points_awarded'] : 2;
+            $stmt->bindParam(':points_awarded', $pointsAwarded);
+            
+            // Default status is "Planned" if not provided
+            $status = isset($activityData['status']) ? $activityData['status'] : 'Planned';
             $stmt->bindParam(':status', $status);
 
             $stmt->execute();
@@ -518,8 +516,7 @@ class clubRepository
             return [
                 'success' => true,
                 'message' => 'Activity created successfully',
-                'activity_id' => $activityId,
-                'attendance_code' => $activityData['attendance_code']
+                'activity_id' => $activityId
             ];
         } catch (PDOException $e) {
             if ($this->pdo->inTransaction()) {
@@ -533,12 +530,6 @@ class clubRepository
         }
     }
 
-    /**
-     * Get a specific club activity
-     * 
-     * @param int $activityId The activity ID
-     * @return array|false Activity data or false on failure
-     */
     public function getActivityById($activityId)
     {
         try {
@@ -553,26 +544,20 @@ class clubRepository
         }
     }
 
-    /**
-     * Update a club activity
-     * 
-     * @param int $activityId The activity ID
-     * @param array $activityData Activity data to update
-     * @return array Array with success status and message
-     */
     public function updateActivity($activityId, $activityData)
     {
         try {
             $this->pdo->beginTransaction();
 
             // Build the update query dynamically based on provided fields
-            $sql = "UPDATE club_activities SET updated_at = NOW()";
+            $sql = "UPDATE club_activities SET last_modified_at = NOW()";
             $params = [];
 
             // Only include fields that are provided in the update
             $allowedFields = [
-                'title', 'description', 'location', 'start_datetime', 
-                'end_datetime', 'points_awarded', 'attendance_code', 'status'
+                'title', 'description', 'activity_type', 'start_datetime', 
+                'end_datetime', 'location_name', 'location_details', 'latitude', 
+                'longitude', 'radius_meters', 'points_awarded', 'status'
             ];
 
             foreach ($allowedFields as $field) {
@@ -620,12 +605,6 @@ class clubRepository
         }
     }
 
-    /**
-     * Delete a club activity
-     * 
-     * @param int $activityId The activity ID
-     * @return array Array with success status and message
-     */
     public function deleteActivity($activityId)
     {
         try {
@@ -643,39 +622,28 @@ class clubRepository
                     'message' => 'Activity not found'
                 ];
             }
+            
+            $clubId = $checkStmt->fetchColumn();
 
-            // Check if there's attendance records
-            $attendanceSql = "SELECT COUNT(*) FROM club_attendance WHERE activity_id = :activity_id";
+            // Since club_attendance doesn't have activity_id, we'll just check if there are any attendance records for this club
+            // If this is too broad, we would need to modify the club_attendance table to include activity_id
+            $attendanceSql = "SELECT COUNT(*) FROM club_attendance WHERE club_id = :club_id";
             $attendanceStmt = $this->pdo->prepare($attendanceSql);
-            $attendanceStmt->bindParam(':activity_id', $activityId);
+            $attendanceStmt->bindParam(':club_id', $clubId);
             $attendanceStmt->execute();
             $attendanceCount = $attendanceStmt->fetchColumn();
 
-            if ($attendanceCount > 0) {
-                // If there's attendance, just mark it as cancelled instead of deleting
-                $updateSql = "UPDATE club_activities SET status = 'Cancelled', updated_at = NOW() WHERE activity_id = :activity_id";
-                $updateStmt = $this->pdo->prepare($updateSql);
-                $updateStmt->bindParam(':activity_id', $activityId);
-                $updateStmt->execute();
+            // If there's attendance, just mark it as cancelled instead of deleting
+            $updateSql = "UPDATE club_activities SET status = 'Cancelled', last_modified_at = NOW() WHERE activity_id = :activity_id";
+            $updateStmt = $this->pdo->prepare($updateSql);
+            $updateStmt->bindParam(':activity_id', $activityId);
+            $updateStmt->execute();
 
-                $this->pdo->commit();
-                return [
-                    'success' => true,
-                    'message' => 'Activity cancelled instead of deleted due to existing attendance records'
-                ];
-            } else {
-                // If no attendance, delete the activity
-                $deleteSql = "DELETE FROM club_activities WHERE activity_id = :activity_id";
-                $deleteStmt = $this->pdo->prepare($deleteSql);
-                $deleteStmt->bindParam(':activity_id', $activityId);
-                $deleteStmt->execute();
-
-                $this->pdo->commit();
-                return [
-                    'success' => true,
-                    'message' => 'Activity deleted successfully'
-                ];
-            }
+            $this->pdo->commit();
+            return [
+                'success' => true,
+                'message' => 'Activity cancelled successfully'
+            ];
         } catch (PDOException $e) {
             if ($this->pdo->inTransaction()) {
                 $this->pdo->rollBack();
@@ -688,38 +656,29 @@ class clubRepository
         }
     }
 
-    /**
-     * Record attendance for an activity
-     * 
-     * @param int $activityId The activity ID
-     * @param string $studentId The student ID
-     * @param string $attendanceCode The attendance code to verify
-     * @return array Array with success status and message
-     */
-    public function recordActivityAttendance($activityId, $studentId, $attendanceCode)
+    public function recordActivityAttendance($activityId, $studentId)
     {
         try {
             $this->pdo->beginTransaction();
 
-            // First verify the attendance code
-            $verifySql = "SELECT club_id, status FROM club_activities 
-                         WHERE activity_id = :activity_id AND attendance_code = :attendance_code";
-            $verifyStmt = $this->pdo->prepare($verifySql);
-            $verifyStmt->bindParam(':activity_id', $activityId);
-            $verifyStmt->bindParam(':attendance_code', $attendanceCode);
-            $verifyStmt->execute();
-            $activity = $verifyStmt->fetch(PDO::FETCH_ASSOC);
+            // First get the activity details
+            $activitySql = "SELECT club_id, status FROM club_activities 
+                         WHERE activity_id = :activity_id";
+            $activityStmt = $this->pdo->prepare($activitySql);
+            $activityStmt->bindParam(':activity_id', $activityId);
+            $activityStmt->execute();
+            $activity = $activityStmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$activity) {
                 $this->pdo->rollBack();
                 return [
                     'success' => false,
-                    'message' => 'Invalid attendance code or activity not found'
+                    'message' => 'Activity not found'
                 ];
             }
 
             // Check if activity status is valid for attendance
-            if ($activity['status'] !== 'Active' && $activity['status'] !== 'Ongoing') {
+            if ($activity['status'] !== 'Ongoing' && $activity['status'] !== 'Planned') {
                 $this->pdo->rollBack();
                 return [
                     'success' => false,
@@ -745,9 +704,9 @@ class clubRepository
 
             // Check if attendance has already been recorded
             $checkSql = "SELECT attendance_id FROM club_attendance 
-                        WHERE activity_id = :activity_id AND student_id = :student_id";
+                        WHERE club_id = :club_id AND student_id = :student_id";
             $checkStmt = $this->pdo->prepare($checkSql);
-            $checkStmt->bindParam(':activity_id', $activityId);
+            $checkStmt->bindParam(':club_id', $activity['club_id']);
             $checkStmt->bindParam(':student_id', $studentId);
             $checkStmt->execute();
             
@@ -759,23 +718,33 @@ class clubRepository
                 ];
             }
 
+            // Get user's current location for attendance
+            // In a real app, you would get this from the client
+            $latitude = 4.8855970;  // Default value
+            $longitude = 114.9316160;  // Default value
+
             // Record the attendance
             $insertSql = "INSERT INTO club_attendance (
-                activity_id, 
                 club_id, 
                 student_id, 
-                check_in_time
+                check_in_time,
+                latitude,
+                longitude,
+                attendance_status
             ) VALUES (
-                :activity_id,
                 :club_id,
                 :student_id,
-                NOW()
+                NOW(),
+                :latitude,
+                :longitude,
+                'Present'
             )";
             
             $insertStmt = $this->pdo->prepare($insertSql);
-            $insertStmt->bindParam(':activity_id', $activityId);
             $insertStmt->bindParam(':club_id', $activity['club_id']);
             $insertStmt->bindParam(':student_id', $studentId);
+            $insertStmt->bindParam(':latitude', $latitude);
+            $insertStmt->bindParam(':longitude', $longitude);
             $insertStmt->execute();
 
             $this->pdo->commit();
@@ -804,21 +773,48 @@ class clubRepository
     public function getActivityAttendance($activityId)
     {
         try {
+            // First get the club ID for this activity
+            $activitySql = "SELECT club_id FROM club_activities WHERE activity_id = :activity_id";
+            $activityStmt = $this->pdo->prepare($activitySql);
+            $activityStmt->bindParam(':activity_id', $activityId);
+            $activityStmt->execute();
+            
+            if ($clubId = $activityStmt->fetchColumn()) {
+                // Use the club attendance method instead since activity_id doesn't exist in club_attendance
+                return $this->getClubAttendance($clubId);
+            }
+            
+            return [];
+        } catch (PDOException $e) {
+            error_log("Error getting activity attendance: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get attendance for a club
+     * 
+     * @param int $clubId The club ID
+     * @return array Array of attendees
+     */
+    public function getClubAttendance($clubId)
+    {
+        try {
             $sql = "SELECT 
                         ca.attendance_id,
                         ca.student_id,
-                        cm.full_name,
+                        cu.full_name,
                         ca.check_in_time
                     FROM club_attendance ca
-                    JOIN club_members cm ON ca.student_id = cm.student_id
-                    WHERE ca.activity_id = :activity_id
+                    JOIN profiles.users cu ON ca.student_id = cu.student_id
+                    WHERE ca.club_id = :club_id
                     ORDER BY ca.check_in_time DESC";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':activity_id', $activityId);
+            $stmt->bindParam(':club_id', $clubId);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            error_log("Error getting activity attendance: " . $e->getMessage());
+            error_log("Error getting club attendance: " . $e->getMessage());
             return [];
         }
     }
