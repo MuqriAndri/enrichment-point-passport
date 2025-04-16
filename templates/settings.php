@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Settings</title>
-    <link rel="stylesheet" href="assets/css/settings.css">
+    <link rel="stylesheet" href="/assets/css/settings.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
 </head>
 <body>
