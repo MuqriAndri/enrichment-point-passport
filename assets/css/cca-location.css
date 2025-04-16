@@ -521,6 +521,7 @@
     margin-top: var(--spacing-sm);
 }
 
+/* Replace primary button styling completely */
 .primary-btn {
     display: flex;
     align-items: center;
@@ -530,36 +531,17 @@
     border-radius: var(--radius-md);
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.25s ease;
-    background-color: var(--primary-color);
-    color: white;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+    background-color: var(--primary-color, #3b82f6);
+    color: white !important;
     border: none;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
-}
-
-.primary-btn::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(rgba(255, 255, 255, 0.2), transparent);
-    opacity: 0;
-    transition: opacity 0.25s ease;
-}
-
-.primary-btn:hover:not(:disabled)::after {
-    opacity: 1;
 }
 
 .primary-btn:hover:not(:disabled) {
-    background-color: var(--primary-dark);
+    background-color: var(--primary-dark, #2563eb);
     transform: translateY(-3px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    color: white; /* Ensure text stays white on hover */
 }
 
 .primary-btn:active:not(:disabled) {
@@ -570,6 +552,45 @@
 .primary-btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+.primary-btn svg,
+.primary-btn span {
+    color: white !important;
+    fill: white !important;
+    stroke: white !important;
+}
+
+/* Direction button specific overrides */
+#directions-btn,
+#directions-btn:hover,
+#directions-btn:active,
+#directions-btn:focus {
+    color: white !important;
+    background-color: var(--primary-color, #3b82f6);
+}
+
+#directions-btn:hover {
+    background-color: var(--primary-dark, #2563eb);
+}
+
+#directions-btn span,
+#directions-btn svg,
+#directions-btn:hover span,
+#directions-btn:hover svg {
+    color: white !important;
+    fill: none !important;
+    stroke: white !important;
+}
+
+.tooltip-actions .primary-btn,
+.tooltip-actions .primary-btn:hover {
+    color: white !important;
+}
+
+.tooltip-actions .primary-btn span,
+.tooltip-actions .primary-btn svg {
+    color: white !important;
 }
 
 .secondary-btn {

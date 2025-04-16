@@ -29,6 +29,44 @@ if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/cca-location.css">
     <!-- Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXXh-Lwbrw-UKAC9YsrBq09vyKNmG0Lzo&libraries=places,geometry" async defer></script>
+    
+    <!-- Custom styles to ensure button text stays white -->
+    <style>
+        .white-text-button,
+        .white-text-button:hover,
+        .white-text-button:active,
+        .white-text-button:focus {
+            color: white !important;
+        }
+        
+        .white-text-button span,
+        .white-text-button:hover span {
+            color: white !important;
+        }
+        
+        .white-text-button svg,
+        .white-text-button:hover svg {
+            color: white !important;
+            stroke: white !important;
+        }
+        
+        /* Extra specific rule to override any other styles */
+        button#directions-btn.primary-btn.white-text-button,
+        button#directions-btn.primary-btn.white-text-button:hover {
+            color: white !important;
+        }
+        
+        button#directions-btn.primary-btn.white-text-button span,
+        button#directions-btn.primary-btn.white-text-button:hover span {
+            color: white !important;
+        }
+        
+        button#directions-btn.primary-btn.white-text-button svg,
+        button#directions-btn.primary-btn.white-text-button:hover svg {
+            color: white !important;
+            stroke: white !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -194,11 +232,11 @@ if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI
                             </div>
 
                             <div class="button-container">
-                                <button id="directions-btn" class="primary-btn" disabled>
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <button id="directions-btn" class="primary-btn white-text-button" disabled style="color: white !important;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="color: white !important;">
                                         <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
                                     </svg>
-                                    Get Directions
+                                    <span style="color: white !important;">Get Directions</span>
                                 </button>
                                 <button id="clear-route-btn" class="secondary-btn" style="display: none;">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -939,6 +977,11 @@ if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI
         if (directionsBtn) {
             directionsBtn.addEventListener('click', function() {
                 if (userLat && userLng) {
+                    // Make sure text stays white
+                    this.style.color = 'white';
+                    this.querySelector('span').style.color = 'white';
+                    this.querySelector('svg').style.color = 'white';
+                    
                     // Get directions on the map
                     getDirections();
                     
