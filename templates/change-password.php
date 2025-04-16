@@ -41,29 +41,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Change Password</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/settings.css">
 </head>
 <body>
-    <a class="back" href="<?php echo BASE_URL; ?>/settings">&#8592;</a>
+    <div class="form-wrapper">
+        <a class="back" href="<?php echo BASE_URL; ?>/settings">&#8592; Back to Settings</a>
+        <h1>Change Password</h1>
 
-    <h1>Change Password</h1>
+        <?php if (!empty($message)) : ?>
+            <p class="form-message"><?php echo htmlspecialchars($message); ?></p>
+        <?php endif; ?>
 
-    <?php if (!empty($message)) echo "<p>$message</p>"; ?>
+        <form method="POST" action="" class="password-form">
+            <div class="form-group">
+                <label for="current_password">Current Password:</label>
+                <input type="password" name="current_password" id="current_password" required>
+            </div>
 
-    <form method="POST" action="">
-        <label for="current_password">Current Password:</label>
-        <input type="password" name="current_password" required><br>
+            <div class="form-group">
+                <label for="new_password">New Password:</label>
+                <input type="password" name="new_password" id="new_password" required>
+            </div>
 
-        <label for="new_password">New Password:</label>
-        <input type="password" name="new_password" required><br>
+            <div class="form-group">
+                <label for="confirm_password">Confirm New Password:</label>
+                <input type="password" name="confirm_password" id="confirm_password" required>
+            </div>
 
-        <label for="confirm_password">Confirm New Password:</label>
-        <input type="password" name="confirm_password" required><br>
-
-        <button type="submit" name="change_password">Change Password</button>
-    </form>
+            <button type="submit" name="change_password" class="btn-submit">Change Password</button>
+        </form>
+    </div>
 </body>
 </html>
