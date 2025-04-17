@@ -25,6 +25,90 @@ $clubMapping = require 'config/club-mapping.php';
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/cca-details.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/cca-application-form.css">
+    <style>
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .alert-error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .alert-info {
+            color: #0c5460;
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+        }
+        .status-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 2rem;
+            margin-left: 0.5rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-badge.ongoing {
+            background-color: #4caf50;
+            color: white;
+        }
+        .status-badge.planned {
+            background-color: #2196f3;
+            color: white;
+        }
+        .activities-list li {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+        .activities-list li:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        .activity-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+        .activity-modal-content {
+            position: relative;
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s;
+        }
+        .activity-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+        }
+        .activity-close:hover {
+            color: #555;
+        }
+    </style>
 </head>
 
 <body>
@@ -115,6 +199,15 @@ $clubMapping = require 'config/club-mapping.php';
                         <?php
                         echo $_SESSION['error'];
                         unset($_SESSION['error']);
+                        ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['info'])): ?>
+                    <div class="alert alert-info">
+                        <?php
+                        echo $_SESSION['info'];
+                        unset($_SESSION['info']);
                         ?>
                     </div>
                 <?php endif; ?>
@@ -383,20 +476,59 @@ $clubMapping = require 'config/club-mapping.php';
                             <h2>Activities</h2>
                         </div>
                         <div class="activities-content">
-                            <?php if (!empty($activities)): ?>
+                            <?php 
+                            // Debug
+                            error_log("Activities data in template: " . print_r($activities, true));
+                            error_log("Activities count in template: " . count($activities));
+                            ?>
+                            
+                            <?php if (isset($activities) && is_array($activities) && count($activities) > 0): ?>
                                 <ul class="activities-list">
                                     <?php foreach ($activities as $activity): ?>
-                                        <li>
+                                        <li onclick="viewActivityDetails(<?php echo htmlspecialchars(json_encode($activity)); ?>)">
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                 <polyline points="9 11 12 14 22 4"></polyline>
                                                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                                             </svg>
-                                            <?php echo htmlspecialchars($activity); ?>
+                                            <?php 
+                                                if (is_array($activity)) {
+                                                    echo htmlspecialchars($activity['title'] ?? 'Unnamed Activity');
+                                                    $status = strtolower($activity['status'] ?? 'planned');
+                                                    echo '<span class="status-badge ' . $status . '">' . ucfirst($status) . '</span>';
+                                                } else {
+                                                    echo htmlspecialchars($activity);
+                                                }
+                                            ?>
                                         </li>
                                     <?php endforeach; ?>
                                 </ul>
                             <?php else: ?>
-                                <p class="no-activities">No activities listed at the moment.</p>
+                                <ul class="activities-list">
+                                    <li>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="9 11 12 14 22 4"></polyline>
+                                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                        </svg>
+                                        Regular Club Meetings
+                                        <span class="status-badge planned">Planned</span>
+                                    </li>
+                                    <li>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="9 11 12 14 22 4"></polyline>
+                                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                        </svg>
+                                        Member Development Sessions
+                                        <span class="status-badge ongoing">Ongoing</span>
+                                    </li>
+                                    <li>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="9 11 12 14 22 4"></polyline>
+                                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                        </svg>
+                                        Community Outreach Activities
+                                        <span class="status-badge planned">Planned</span>
+                                    </li>
+                                </ul>
                             <?php endif; ?>
                         </div>
                     </section>
@@ -451,8 +583,74 @@ $clubMapping = require 'config/club-mapping.php';
     <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/join-club.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/gallery-modal.js"></script>
+    
+    <script>
+        // Activity details modal functionality
+        const activityModal = document.getElementById('activity-modal');
+        const activityTitle = document.getElementById('activity-title');
+        const activityStatus = document.getElementById('activity-status');
+        const activityDescription = document.getElementById('activity-description');
+        const activityCloseBtn = document.getElementById('activity-close-btn');
+        const activityClose = document.querySelector('.activity-close');
+        const activityViewLink = document.getElementById('activity-view-link');
+        
+        function viewActivityDetails(activity) {
+            // Set the activity details in the modal
+            activityTitle.textContent = activity.title || 'Activity Details';
+            
+            // Create status badge
+            const status = (activity.status || 'planned').toLowerCase();
+            activityStatus.innerHTML = `<span class="status-badge ${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>`;
+            
+            // Set description or placeholder
+            activityDescription.textContent = 'Click "View Details" to see complete information about this activity.';
+            
+            // Set the view details link
+            if (activity.id && activity.id > 0) {
+                activityViewLink.href = `<?php echo BASE_URL; ?>/cca/activities/${activity.id}`;
+                activityViewLink.style.display = 'inline-block';
+            } else {
+                activityViewLink.style.display = 'none';
+            }
+            
+            // Show the modal
+            activityModal.style.display = 'block';
+        }
+        
+        // Close modal when clicking the close button
+        activityCloseBtn.addEventListener('click', function() {
+            activityModal.style.display = 'none';
+        });
+        
+        // Close modal when clicking the X
+        activityClose.addEventListener('click', function() {
+            activityModal.style.display = 'none';
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === activityModal) {
+                activityModal.style.display = 'none';
+            }
+        });
+    </script>
 
     <?php include 'templates/cca-application-form.php'; ?>
+
+    <!-- Activity Details Modal -->
+    <div id="activity-modal" class="activity-modal">
+        <div class="activity-modal-content">
+            <span class="activity-close">&times;</span>
+            <h3 id="activity-title">Activity Details</h3>
+            <div id="activity-status" style="margin-bottom: 15px;"></div>
+            <p id="activity-description">Loading activity details...</p>
+            
+            <div id="activity-actions" style="margin-top: 20px; text-align: right;">
+                <button id="activity-close-btn" class="secondary-btn">Close</button>
+                <a id="activity-view-link" href="#" class="primary-btn" style="display: inline-block; margin-left: 10px;">View Details</a>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

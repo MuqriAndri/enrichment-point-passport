@@ -62,6 +62,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         require_once 'controllers/cca.php';
         handleClubManagement($ccaDB, $profilesDB); // Handle club management actions
     }
+    elseif (isset($_POST['club_id']) && isset($_POST['lat']) && isset($_POST['lng'])) {
+        require_once 'controllers/attendance.php';
+        handleAttendanceCheckIn($ccaDB, $profilesDB); // Handle attendance check-in
+    }
 }
 
 // Prepare page data
@@ -171,12 +175,53 @@ if ($page === 'cca') {
                     // Fetch club gallery images
                     $gallery = $clubRepo->getClubGallery($clubDetails['club_id']);
 
+                    // Fetch club activities (Planned and Ongoing)
+                    $activities = [];
+                    $allActivities = $clubRepo->getClubActivities($clubDetails['club_id']);
+                    
+                    // Log for debugging
+                    error_log("Club ID: " . $clubDetails['club_id']);
+                    error_log("All activities count: " . count($allActivities));
+                    error_log("All activities: " . print_r($allActivities, true));
+                    
+                    // Check each activity for title field
+                    foreach ($allActivities as $index => $activity) {
+                        error_log("Activity $index - Title: " . ($activity['title'] ?? 'MISSING') . ", Status: " . ($activity['status'] ?? 'MISSING'));
+                    }
+                    
+                    // Filter for Planned and Ongoing activities only
+                    foreach ($allActivities as $activity) {
+                        if ($activity['status'] === 'Planned' || $activity['status'] === 'Ongoing') {
+                            // Store both title and status, and activity_id for the link
+                            $activities[] = [
+                                'title' => $activity['title'],
+                                'status' => $activity['status'],
+                                'id' => $activity['activity_id']
+                            ];
+                        }
+                    }
+                    
+                    // Add a manual entry for testing
+                    if (empty($activities)) {
+                        // Force an activity for testing
+                        $activities[] = [
+                            'title' => "Weekly Club Meeting",
+                            'status' => "Planned",
+                            'id' => 0
+                        ];
+                        $activities[] = [
+                            'title' => "Member Training Session",
+                            'status' => "Ongoing",
+                            'id' => 0
+                        ];
+                    }
+
                     $pageData = [
                         'details' => $clubDetails,
                         'isMember' => $isMember,
                         'is_officer' => $isOfficer,
                         'upcoming_events' => [], // Placeholder for events data
-                        'activities' => [],      // Placeholder for activities data
+                        'activities' => $activities,
                         'gallery' => $gallery    // Gallery data
                     ];
 

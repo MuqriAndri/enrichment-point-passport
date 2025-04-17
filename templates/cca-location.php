@@ -66,6 +66,128 @@ if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI
             color: white !important;
             stroke: white !important;
         }
+        
+        /* Alert message styling */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .alert-error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .alert-info {
+            color: #0c5460;
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+        }
+        
+        /* Notification Modal Styles */
+        .notification-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+        
+        .notification-content {
+            position: relative;
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: slideIn 0.3s;
+        }
+        
+        .notification-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+        }
+        
+        .notification-close:hover {
+            color: #555;
+        }
+        
+        .notification-icon {
+            margin-bottom: 20px;
+        }
+        
+        .notification-icon svg {
+            width: 64px;
+            height: 64px;
+            stroke: #28a745;
+        }
+        
+        .notification-icon.error svg {
+            stroke: #dc3545;
+        }
+        
+        .notification-icon.warning svg {
+            stroke: #ffc107;
+        }
+        
+        .notification-icon.info svg {
+            stroke: #17a2b8;
+        }
+        
+        #notification-title {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        #notification-message {
+            margin-bottom: 20px;
+            color: #555;
+        }
+        
+        #notification-ok-btn {
+            padding: 10px 30px;
+            font-size: 16px;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Spinner animation */
+        .spinner {
+            animation: spin 1.5s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 
@@ -144,6 +266,33 @@ if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI
                     <a href="<?php echo BASE_URL; ?>/history" class="tab-item">History</a>
                 </div>
 
+                <?php if (isset($_SESSION['success'])): ?>
+                    <div class="alert alert-success">
+                        <?php
+                        echo $_SESSION['success'];
+                        unset($_SESSION['success']);
+                        ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-error">
+                        <?php
+                        echo $_SESSION['error'];
+                        unset($_SESSION['error']);
+                        ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['info'])): ?>
+                    <div class="alert alert-info">
+                        <?php
+                        echo $_SESSION['info'];
+                        unset($_SESSION['info']);
+                        ?>
+                    </div>
+                <?php endif; ?>
+
                 <div class="back-link">
                     <a href="<?php echo BASE_URL; ?>/cca/<?php echo $clubSlug; ?>">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -174,11 +323,11 @@ if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI
                                         <h3>You've arrived!</h3>
                                         <p>You're within the club's location radius</p>
                                     </div>
-                                    <form method="POST" action="<?php echo BASE_URL; ?>/attendance/check-in">
+                                    <form id="check-in-form" method="POST" action="<?php echo BASE_URL; ?>/attendance/check-in">
                                         <input type="hidden" name="club_id" value="<?php echo htmlspecialchars($clubId); ?>">
                                         <input type="hidden" name="lat" id="user-lat">
                                         <input type="hidden" name="lng" id="user-lng">
-                                        <button type="submit" class="check-in-btn">
+                                        <button type="submit" class="check-in-btn" id="check-in-submit-btn">
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                 <path d="M9 11l3 3L22 4"></path>
                                                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
@@ -275,6 +424,22 @@ if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI
             <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
         </svg>
     </button>
+    
+    <!-- Popup notification for check-in results -->
+    <div id="notification-modal" class="notification-modal" style="display: none;">
+        <div class="notification-content">
+            <span class="notification-close">&times;</span>
+            <div class="notification-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </div>
+            <h3 id="notification-title">Success!</h3>
+            <p id="notification-message">Your attendance has been recorded successfully.</p>
+            <button id="notification-ok-btn" class="primary-btn">OK</button>
+        </div>
+    </div>
     
     <script>
         // Define constants
@@ -628,8 +793,19 @@ if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI
             userLng = position.coords.longitude;
             
             // Store in hidden inputs for form submission
-            if (userLatInput) userLatInput.value = userLat;
-            if (userLngInput) userLngInput.value = userLng;
+            if (userLatInput) {
+                userLatInput.value = userLat;
+                console.log("Set userLatInput value to:", userLat);
+            } else {
+                console.error("userLatInput element not found");
+            }
+            
+            if (userLngInput) {
+                userLngInput.value = userLng;
+                console.log("Set userLngInput value to:", userLng);
+            } else {
+                console.error("userLngInput element not found");
+            }
             
             // Update status and UI
             showLocationStatus('success', 'Location found');
@@ -669,6 +845,18 @@ if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI
         
         // Function to update user's location on map
         function updateUserLocationOnMap(lat, lng, accuracy) {
+            // Ensure lat and lng are valid numbers
+            lat = parseFloat(lat);
+            lng = parseFloat(lng);
+            accuracy = parseFloat(accuracy);
+            
+            if (isNaN(lat) || isNaN(lng)) {
+                console.error('Invalid coordinates provided to updateUserLocationOnMap:', lat, lng);
+                return;
+            }
+            
+            console.log('Updating user location on map:', lat, lng, accuracy);
+            
             const userLatLng = new google.maps.LatLng(lat, lng);
             
             // If marker already exists, update its position
@@ -776,6 +964,15 @@ if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI
                         });
                     });
                 }
+                
+                // Show a helpful notification if it's the first time the overlay appears
+                if (sessionStorage.getItem('checkInOverlayShown') !== 'true') {
+                    setTimeout(() => {
+                        showNotification('success', 'You\'ve Arrived!', 
+                            'You\'re within the check-in radius. Click the "Check In" button to record your attendance.');
+                        sessionStorage.setItem('checkInOverlayShown', 'true');
+                    }, 1000);
+                }
             } else {
                 // User needs to get closer
                 const remainingDistance = Math.round(distance - CHECK_IN_RADIUS);
@@ -788,6 +985,17 @@ if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI
                 const floatingCheckInBtn = document.getElementById('floating-check-in-btn');
                 if (floatingCheckInBtn) {
                     floatingCheckInBtn.style.display = 'none';
+                }
+                
+                // If they're very far away (more than 500m), show a helpful notification
+                // but only once per page load 
+                if (distance > 500 && sessionStorage.getItem('farAwayNotificationShown') !== 'true') {
+                    setTimeout(() => {
+                        showNotification('info', 'You\'re Too Far Away', 
+                            `You are ${Math.round(distance)}m from the check-in location. ` + 
+                            `You need to be within ${CHECK_IN_RADIUS}m to check in. Use the "Get Directions" button to find your way.`);
+                        sessionStorage.setItem('farAwayNotificationShown', 'true');
+                    }, 1500);
                 }
             }
         }
@@ -1071,6 +1279,175 @@ if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI
             // Initialize the map
             initMap();
         };
+        
+        // Function to show notification popup
+        function showNotification(type, title, message) {
+            const modal = document.getElementById('notification-modal');
+            const iconDiv = modal.querySelector('.notification-icon');
+            const titleEl = document.getElementById('notification-title');
+            const messageEl = document.getElementById('notification-message');
+            
+            // Reset classes
+            iconDiv.className = 'notification-icon';
+            
+            // Set icon and colors based on type
+            if (type === 'success') {
+                iconDiv.innerHTML = '<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
+            } else if (type === 'error') {
+                iconDiv.className += ' error';
+                iconDiv.innerHTML = '<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+            } else if (type === 'warning') {
+                iconDiv.className += ' warning';
+                iconDiv.innerHTML = '<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ffc107" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
+            } else if (type === 'info') {
+                iconDiv.className += ' info';
+                iconDiv.innerHTML = '<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#17a2b8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+            }
+            
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            
+            // Show modal
+            modal.style.display = 'block';
+            
+            // Add event listeners for closing
+            const closeBtn = document.querySelector('.notification-close');
+            const okBtn = document.getElementById('notification-ok-btn');
+            
+            closeBtn.onclick = function() {
+                modal.style.display = 'none';
+            };
+            
+            okBtn.onclick = function() {
+                modal.style.display = 'none';
+            };
+            
+            // Close when clicking outside the modal
+            window.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            };
+        }
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the check in form
+            const checkInForm = document.querySelector('#check-in-form');
+            const floatingCheckInBtn = document.getElementById('floating-check-in-btn');
+            
+            if (checkInForm) {
+                checkInForm.addEventListener('submit', function(e) {
+                    e.preventDefault(); // Prevent normal form submission
+                    
+                    // Prevent form submission if coordinates are not set
+                    if (!userLatInput.value || !userLngInput.value) {
+                        showNotification('error', 'Error', 'Could not get your location. Please try refreshing your location.');
+                        return false;
+                    }
+                    
+                    // Disable the submit button to prevent double submission
+                    const submitBtn = document.getElementById('check-in-submit-btn');
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = `
+                            <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"></path>
+                            </svg>
+                            Checking In...
+                        `;
+                    }
+                    
+                    // Get form data
+                    const formData = new FormData(checkInForm);
+                    
+                    // Make AJAX request
+                    fetch(checkInForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.text();
+                    })
+                    .then(html => {
+                        // Success - show a popup
+                        showNotification('success', 'Success!', 'Your attendance has been recorded successfully.');
+                        
+                        // Hide the check-in overlay
+                        if (checkInOverlay) {
+                            checkInOverlay.style.display = 'none';
+                        }
+                        
+                        // Hide floating button
+                        if (floatingCheckInBtn) {
+                            floatingCheckInBtn.style.display = 'none';
+                        }
+                        
+                        // Update the check-in status
+                        showCheckInStatus('success', 'You have checked in successfully!');
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showNotification('error', 'Error', 'Failed to record attendance. Please try again.');
+                    })
+                    .finally(() => {
+                        // Re-enable the submit button
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = `
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 11l3 3L22 4"></path>
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                </svg>
+                                Check In
+                            `;
+                        }
+                    });
+                });
+            }
+            
+            // Make the floating check-in button trigger the form submission
+            if (floatingCheckInBtn) {
+                floatingCheckInBtn.addEventListener('click', function() {
+                    // Scroll to the check-in overlay
+                    document.querySelector('.map-container').scrollIntoView({ 
+                        behavior: 'smooth' 
+                    });
+                    
+                    // Trigger the form submission after a short delay
+                    setTimeout(() => {
+                        const submitBtn = document.getElementById('check-in-submit-btn');
+                        if (submitBtn) {
+                            submitBtn.click();
+                        }
+                    }, 500);
+                });
+            }
+            
+            // Check for success/error/info messages on page load
+            <?php if (isset($_SESSION['success'])): ?>
+                showNotification('success', 'Success!', '<?php echo addslashes($_SESSION['success']); ?>');
+                <?php unset($_SESSION['success']); ?>
+            <?php endif; ?>
+            
+            <?php if (isset($_SESSION['error'])): ?>
+                showNotification('error', 'Error', '<?php echo addslashes($_SESSION['error']); ?>');
+                <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
+            
+            <?php if (isset($_SESSION['info'])): ?>
+                showNotification('info', 'Information', '<?php echo addslashes($_SESSION['info']); ?>');
+                <?php unset($_SESSION['info']); ?>
+            <?php endif; ?>
+        });
     </script>
 </body>
 

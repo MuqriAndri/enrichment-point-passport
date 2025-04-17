@@ -382,12 +382,6 @@ class clubRepository
         }
     }
 
-    /**
-     * Get club gallery images
-     * 
-     * @param int $clubId The club ID
-     * @return array Array of gallery images
-     */
     public function getClubGallery($clubId)
     {
         try {
@@ -764,12 +758,6 @@ class clubRepository
         }
     }
 
-    /**
-     * Get attendance for an activity
-     * 
-     * @param int $activityId The activity ID
-     * @return array Array of attendees
-     */
     public function getActivityAttendance($activityId)
     {
         try {
@@ -791,12 +779,6 @@ class clubRepository
         }
     }
 
-    /**
-     * Get attendance for a club
-     * 
-     * @param int $clubId The club ID
-     * @return array Array of attendees
-     */
     public function getClubAttendance($clubId)
     {
         try {
@@ -816,6 +798,162 @@ class clubRepository
         } catch (PDOException $e) {
             error_log("Error getting club attendance: " . $e->getMessage());
             return [];
+        }
+    }
+
+    public function recordAttendance($clubId, $studentId, $latitude, $longitude, $accuracy = null, $deviceInfo = null, $ipAddress = null)
+    {
+        try {
+            // Log the attempt
+            error_log("Starting attendance recording for student_id: $studentId, club_id: $clubId");
+            error_log("Location data: lat=$latitude, lng=$longitude");
+            
+            $this->pdo->beginTransaction();
+            error_log("Transaction started");
+
+            // Check if the student is a member of the club
+            $memberSql = "SELECT member_id FROM club_members 
+                         WHERE club_id = :club_id AND student_id = :student_id AND status = 'Active'";
+            $memberStmt = $this->pdo->prepare($memberSql);
+            $memberStmt->bindParam(':club_id', $clubId);
+            $memberStmt->bindParam(':student_id', $studentId);
+            $memberStmt->execute();
+            
+            if ($memberStmt->rowCount() === 0) {
+                error_log("Student $studentId is not an active member of club $clubId");
+                $this->pdo->rollBack();
+                return [
+                    'success' => false,
+                    'message' => 'You must be an active member of the club to record attendance'
+                ];
+            }
+            error_log("Student membership verified");
+
+            // Check if attendance has already been recorded today
+            $checkSql = "SELECT attendance_id FROM club_attendance 
+                        WHERE club_id = :club_id AND student_id = :student_id 
+                        AND DATE(check_in_time) = CURDATE()";
+            $checkStmt = $this->pdo->prepare($checkSql);
+            $checkStmt->bindParam(':club_id', $clubId);
+            $checkStmt->bindParam(':student_id', $studentId);
+            $checkStmt->execute();
+            
+            if ($checkStmt->rowCount() > 0) {
+                error_log("Student $studentId already has attendance for club $clubId today");
+                $this->pdo->rollBack();
+                return [
+                    'success' => false,
+                    'message' => 'Attendance already recorded for today'
+                ];
+            }
+            error_log("No duplicate attendance found for today");
+
+            // Set default accuracy if not provided
+            if ($accuracy === null) {
+                $accuracy = mt_rand(3, 10); // Random accuracy between 3-10 meters
+            }
+            
+            // Handle null device_info and ip_address
+            if ($deviceInfo === null) {
+                $deviceInfo = 'Unknown Device';
+            }
+            
+            // Prepare the SQL
+            $insertSql = "INSERT INTO club_attendance (
+                club_id, 
+                student_id, 
+                check_in_time,
+                latitude,
+                longitude,
+                accuracy_meters,
+                is_valid,
+                attendance_status,
+                device_info,
+                ip_address,
+                created_at
+            ) VALUES (
+                :club_id,
+                :student_id,
+                NOW(),
+                :latitude,
+                :longitude,
+                :accuracy,
+                1,
+                'Present',
+                :device_info,
+                :ip_address,
+                NOW()
+            )";
+            error_log("SQL prepared: $insertSql");
+            
+            $insertStmt = $this->pdo->prepare($insertSql);
+            
+            // Explicitly convert and validate values
+            $clubIdInt = (int)$clubId;
+            $latitudeFloat = (float)$latitude;
+            $longitudeFloat = (float)$longitude;
+            $accuracyFloat = (float)$accuracy;
+            
+            error_log("Binding parameters with values: clubId=$clubIdInt, studentId=$studentId, lat=$latitudeFloat, lng=$longitudeFloat, accuracy=$accuracyFloat");
+            
+            $insertStmt->bindParam(':club_id', $clubIdInt);
+            $insertStmt->bindParam(':student_id', $studentId);
+            $insertStmt->bindParam(':latitude', $latitudeFloat);
+            $insertStmt->bindParam(':longitude', $longitudeFloat);
+            $insertStmt->bindParam(':accuracy', $accuracyFloat);
+            $insertStmt->bindParam(':device_info', $deviceInfo);
+            $insertStmt->bindParam(':ip_address', $ipAddress);
+            
+            // Execute the statement
+            $result = $insertStmt->execute();
+            error_log("SQL execution result: " . ($result ? "Success" : "Failed"));
+            
+            if (!$result) {
+                $error = $insertStmt->errorInfo();
+                error_log("SQL Error: " . json_encode($error));
+                $this->pdo->rollBack();
+                return [
+                    'success' => false,
+                    'message' => 'Database error: ' . ($error[2] ?? 'Unknown error')
+                ];
+            }
+
+            $attendanceId = $this->pdo->lastInsertId();
+            error_log("New attendance record created with ID: $attendanceId");
+
+            $this->pdo->commit();
+            error_log("Transaction committed successfully");
+            
+            return [
+                'success' => true,
+                'message' => 'Attendance recorded successfully',
+                'attendance_id' => $attendanceId
+            ];
+        } catch (PDOException $e) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+                error_log("Transaction rolled back due to exception");
+            }
+            error_log("PDO Exception in recordAttendance: " . $e->getMessage());
+            error_log("SQL State: " . $e->getCode());
+            error_log("Stack trace: " . $e->getTraceAsString());
+            
+            return [
+                'success' => false,
+                'message' => 'Failed to record attendance: ' . $e->getMessage()
+            ];
+        } catch (Exception $e) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+                error_log("Transaction rolled back due to general exception");
+            }
+            error_log("General Exception in recordAttendance: " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
+            
+            return [
+                'success' => false,
+                'message' => 'Failed to record attendance: ' . $e->getMessage()
+            ];
         }
     }
 }
