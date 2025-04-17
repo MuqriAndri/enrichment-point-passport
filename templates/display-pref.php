@@ -15,7 +15,7 @@ require_once '../config/database.php';
 
 $message = "";
 
-// Save changes
+// Save preferences
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_display'])) {
     $user_id = $_SESSION['user_id'];
     $dark_mode = isset($_POST['dark_mode']) ? 1 : 0;
@@ -26,10 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_display'])) {
     $message = "Display preferences saved.";
 }
 
-// Load current preferences
+// Load preferences for the current user
 $stmt = $pdo->prepare("SELECT dark_mode, language_pref FROM users WHERE user_id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $pref = $stmt->fetch();
+
+// Determine if dark mode is enabled
+$isDark = $pref && $pref['dark_mode'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +41,7 @@ $pref = $stmt->fetch();
     <title>Display Preferences</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/settings.css">
 </head>
-<body>
+<body class="<?php echo $isDark ? 'dark' : ''; ?>">
     <div class="form-wrapper">
         <a class="back" href="<?php echo BASE_URL; ?>/settings">&#8592; Back to Settings</a>
         <h1>Display Preferences</h1>
@@ -58,8 +61,8 @@ $pref = $stmt->fetch();
             <div class="form-group">
                 <label for="language">Language:</label>
                 <select name="language" id="language" required>
-                    <option value="en" <?php if ($pref && $pref['language_pref'] == 'en') echo 'selected'; ?>>English</option>
-                    <option value="ms" <?php if ($pref && $pref['language_pref'] == 'ms') echo 'selected'; ?>>Malay</option>
+                    <option value="en" <?php if ($pref && $pref['language_pref'] === 'en') echo 'selected'; ?>>English</option>
+                    <option value="ms" <?php if ($pref && $pref['language_pref'] === 'ms') echo 'selected'; ?>>Malay</option>
                 </select>
             </div>
 
