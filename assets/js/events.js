@@ -139,3 +139,65 @@ window.addEventListener('click', (e) => {
         modal.style.display = 'none';
     }
 });
+
+function generateCalendar(events) {
+    const calendar = document.getElementById('calendar');
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+
+    // Get the first and last day of the month
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    // Clear the calendar
+    calendar.innerHTML = '';
+
+    // Add empty days for the first week
+    for (let i = 0; i < firstDay; i++) {
+        const emptyDay = document.createElement('div');
+        emptyDay.classList.add('calendar-day');
+        calendar.appendChild(emptyDay);
+    }
+
+    // Add days of the month
+    for (let date = 1; date <= lastDate; date++) {
+        const day = document.createElement('div');
+        day.classList.add('calendar-day');
+        day.textContent = date;
+
+        // Highlight today's date
+        if (date === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
+            day.classList.add('today');
+        }
+
+        // Highlight event dates
+        const event = events.find(event => {
+            const eventDate = new Date(event.date);
+            return (
+                eventDate.getDate() === date &&
+                eventDate.getMonth() === currentMonth &&
+                eventDate.getFullYear() === currentYear
+            );
+        });
+
+        if (event) {
+            day.classList.add('event-day');
+            day.setAttribute('data-event', event.name); // Add event name as a data attribute
+        }
+
+        calendar.appendChild(day);
+    }
+}
+
+// Example event data
+const events = [
+    { date: '2025-04-17', name: 'SICT & SBS RAYA 2025' },
+    { date: '2025-08-15', name: 'Event B' },
+    { date: '2025-09-20', name: 'Event C' }
+];
+
+// Generate the calendar
+document.addEventListener('DOMContentLoaded', () => {
+    generateCalendar(events);
+});
