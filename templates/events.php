@@ -108,11 +108,11 @@
                             <?php
                             $events = [
                                 [
-                                    "name" => "Event A",
-                                    "description" => "New description for event A.",
+                                    "name" => "SICT & SBS RAYA 2025",
+                                    "description" => "Raya event for 2025 by Politeknik Brunei for SICT and SBS students.",
                                     "date" => "2025-04-17",
-                                    "time" => "09:00 AM",
-                                    "location" => "New Location A",
+                                    "time" => "10:00 AM",
+                                    "location" => "Ong Sum Ping",
                                     "enrichment_points" => 20,
                                     "images" => [
                                         "event-a-1.jpg",
@@ -123,7 +123,7 @@
                                 [
                                     "name" => "Event B",
                                     "description" => "New description for event B.",
-                                    "date" => "2025-08-15",
+                                    "date" => "2025-04-29",
                                     "time" => "10:30 AM",
                                     "location" => "New Location B",
                                     "enrichment_points" => 25,
@@ -200,6 +200,78 @@
                                 <button id="modal-register-btn" class="btn btn-primary">Register</button>
                             </div>
                         </div>
+                        <div class="calendar-container">
+                            <h2>Event Calendar</h2>
+                            <div id="calendar"></div>
+                        </div>
+                        <script>
+                            function generateCalendar(events) {
+                                const calendar = document.getElementById('calendar');
+                                const today = new Date();
+                                const currentMonth = today.getMonth();
+                                const currentYear = today.getFullYear();
+
+                                // Get the first and last day of the month
+                                const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+                                const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+                                // Clear the calendar
+                                calendar.innerHTML = '';
+
+                                // Add empty days for the first week
+                                for (let i = 0; i < firstDay; i++) {
+                                    const emptyDay = document.createElement('div');
+                                    emptyDay.classList.add('calendar-day');
+                                    calendar.appendChild(emptyDay);
+                                }
+
+                                // Add days of the month
+                                for (let date = 1; date <= lastDate; date++) {
+                                    const day = document.createElement('div');
+                                    day.classList.add('calendar-day');
+                                    day.textContent = date;
+
+                                    // Highlight today's date
+                                    if (date === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
+                                        day.classList.add('today');
+                                    }
+
+                                    // Highlight event dates
+                                    const event = events.find(event => {
+                                        const eventDate = new Date(event.date);
+                                        return (
+                                            eventDate.getDate() === date &&
+                                            eventDate.getMonth() === currentMonth &&
+                                            eventDate.getFullYear() === currentYear
+                                        );
+                                    });
+
+                                    if (event) {
+                                        day.classList.add('event-day');
+                                        day.setAttribute('data-event', event.name); // Add event name as a data attribute
+                                    } else {
+                                        day.setAttribute('data-event', 'No events'); // Default message for no events
+                                    }
+
+                                    // Add tooltip on hover
+                                    const tooltip = document.createElement('div');
+                                    tooltip.classList.add('tooltip');
+                                    tooltip.textContent = day.getAttribute('data-event');
+                                    day.appendChild(tooltip);
+
+                                    // Show tooltip on hover
+                                    day.addEventListener('mouseenter', () => {
+                                        tooltip.style.display = 'block';
+                                    });
+
+                                    day.addEventListener('mouseleave', () => {
+                                        tooltip.style.display = 'none';
+                                    });
+
+                                    calendar.appendChild(day);
+                                }
+                            }
+                        </script>
                         <script>
                             document.querySelectorAll('.learn-more-btn').forEach(button => {
                                 button.addEventListener('click', () => {
@@ -252,6 +324,12 @@
                         </script>
                         <script src="<?php echo BASE_URL; ?>/assets/js/events.js"></script>
                         <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
+                        <script>
+                            const events = <?php echo json_encode($events); ?>;
+                            document.addEventListener('DOMContentLoaded', () => {
+                                generateCalendar(events);
+                            });
+                        </script>
                     </div>
     </body>
 
