@@ -203,3 +203,38 @@ h1 {
     background-color: #4338ca;
 }
 
+/* Dark Mode Styling */
+body.dark {
+    background-color: #111827;
+    color: #f9fafb;
+}
+
+body.dark .form-wrapper {
+    background-color: #1f2937;
+    color: #f9fafb;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+body.dark input,
+body.dark select {
+    background-color: #374151;
+    color: #f9fafb;
+    border: 1px solid #4b5563;
+}
+
+body.dark .btn-submit {
+    background-color: #6366f1;
+}
+
+body.dark .btn-submit:hover {
+    background-color: #4f46e5;
+}
+
+body.dark .form-message {
+    color: #f87171;
+}
+
+body.dark .back {
+    color: #a5b4fc;
+}
+
