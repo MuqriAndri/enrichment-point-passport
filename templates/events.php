@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="en">
 
     <head>
@@ -111,7 +110,7 @@
                                 [
                                     "name" => "Event A",
                                     "description" => "New description for event A.",
-                                    "date" => "2025-07-01",
+                                    "date" => "2025-04-17",
                                     "time" => "09:00 AM",
                                     "location" => "New Location A",
                                     "enrichment_points" => 20,
@@ -150,8 +149,14 @@
                             ];
 
                             foreach ($events as $event) {
+                                // Determine the status of the event
+                                $eventDate = strtotime($event['date']);
+                                $currentDate = strtotime(date('Y-m-d'));
+                                $status = $eventDate > $currentDate ? "Upcoming" : "Available";
+
                                 echo "<div class='event-slide'>";
                                 echo "<h2>" . $event['name'] . "</h2>";
+                                echo "<span class='event-status " . strtolower($status) . "'>$status</span>"; // Add status indicator
                                 echo "<div class='image-slider'>";
                                 echo "<div class='image-box'>";
                                 echo "<div class='image-container'>";
@@ -171,18 +176,29 @@
                                 echo "</div>";
                                 echo "</div>";
                                 echo "<p class='short-description'>" . substr($event['description'], 0, 50) . "...</p>";
-                                echo "<button class='btn btn-secondary learn-more-btn small-btn'>Learn More</button>";
-                                echo "<div class='full-description' style='display: none;'>";
-                                echo "<p>" . $event['description'] . "</p>";
-                                echo "<p>Date: " . $event['date'] . "</p>";
-                                echo "<p>Time: " . $event['time'] . "</p>";
-                                echo "<p>Location: " . $event['location'] . "</p>";
-                                echo "<p>Enrichment Points: " . $event['enrichment_points'] . "</p>";
-                                echo "<button class='btn btn-primary'>Register</button>";
-                                echo "</div>";
+                                echo "<button class='btn btn-secondary learn-more-btn small-btn' 
+                                    data-name='" . $event['name'] . "' 
+                                    data-description='" . $event['description'] . "' 
+                                    data-date='" . $event['date'] . "' 
+                                    data-time='" . $event['time'] . "' 
+                                    data-location='" . $event['location'] . "' 
+                                    data-points='" . $event['enrichment_points'] . "' 
+                                    data-status='" . $status . "'>Learn More</button>";
                                 echo "</div>";
                             }
                             ?>
+                        </div>
+                        <div id="event-modal" class="modal" style="display: none;">
+                            <div class="modal-content">
+                                <span class="close-btn">&times;</span>
+                                <h2 id="modal-event-name"></h2>
+                                <p id="modal-event-description"></p>
+                                <p id="modal-event-date"></p>
+                                <p id="modal-event-time"></p>
+                                <p id="modal-event-location"></p>
+                                <p id="modal-event-points"></p>
+                                <button id="modal-register-btn" class="btn btn-primary">Register</button>
+                            </div>
                         </div>
                         <script>
                             document.querySelectorAll('.learn-more-btn').forEach(button => {
