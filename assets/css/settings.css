@@ -238,3 +238,19 @@ body.dark .back {
     color: #a5b4fc;
 }
 
+/* Checkbox appearance improvements */
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #6366f1; /* purple tone to match buttons */
+    cursor: pointer;
+}
+
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+

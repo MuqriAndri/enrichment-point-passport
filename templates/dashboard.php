@@ -4,6 +4,15 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: " . BASE_URL);
     exit();
 }
+
+$isDark = false;
+if (isset($_SESSION['user_id'])) {
+    $stmt = $pdo->prepare("SELECT dark_mode FROM users WHERE user_id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $user = $stmt->fetch();
+    $isDark = $user && $user['dark_mode'];
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,9 +22,12 @@ if (!isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enrichment Point Passport - Dashboard</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/settings.css">
+
 </head>
 
-<body>
+<body class="<?php echo $isDark ? 'dark' : ''; ?>">
+
     <div class="dashboard-container">
         <!-- Top Navigation Bar -->
         <nav class="top-nav">

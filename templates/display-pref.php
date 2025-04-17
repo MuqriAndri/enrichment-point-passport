@@ -19,10 +19,9 @@ $message = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_display'])) {
     $user_id = $_SESSION['user_id'];
     $dark_mode = isset($_POST['dark_mode']) ? 1 : 0;
-    $language = $_POST['language'];
 
-    $stmt = $pdo->prepare("UPDATE users SET dark_mode = ?, language_pref = ? WHERE user_id = ?");
-    $stmt->execute([$dark_mode, $language, $user_id]);
+    $stmt = $pdo->prepare("UPDATE users SET dark_mode = ? WHERE user_id = ?");
+    $stmt->execute([$dark_mode, $user_id]);
     $message = "Display preferences saved.";
 }
 
@@ -56,14 +55,6 @@ $isDark = $pref && $pref['dark_mode'];
                     <input type="checkbox" name="dark_mode" value="1" <?php if ($pref && $pref['dark_mode']) echo 'checked'; ?>>
                     Enable Dark Mode
                 </label>
-            </div>
-
-            <div class="form-group">
-                <label for="language">Language:</label>
-                <select name="language" id="language" required>
-                    <option value="en" <?php if ($pref && $pref['language_pref'] === 'en') echo 'selected'; ?>>English</option>
-                    <option value="ms" <?php if ($pref && $pref['language_pref'] === 'ms') echo 'selected'; ?>>Malay</option>
-                </select>
             </div>
 
             <button type="submit" name="save_display" class="btn-submit">Save Preferences</button>
