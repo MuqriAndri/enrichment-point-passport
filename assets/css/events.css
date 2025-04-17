@@ -182,11 +182,11 @@ body {
 
 /* Styles for swipeable image container */
 .image-container {
+    width: 200px; /* Set width for a square shape */
+    height: 200px; /* Set height equal to width for a square shape */
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 300px; /* Adjusted width for a rectangular shape */
-    height: 180px; /* Adjusted height for a rectangular shape */
     overflow: hidden; /* Ensure images don't overflow */
     background-color: var(--background-light); /* Background color for empty space */
     border: none; /* Remove border for the container */
@@ -200,7 +200,7 @@ body {
 
 .image-container img {
     width: 100%; /* Ensure the image fills the container width */
-    height: auto; /* Maintain aspect ratio */
+    height: 100%; /* Ensure the image fills the container height */
     object-fit: cover; /* Ensure the image fills the container without distortion */
     display: block; /* Ensure the image is treated as a block element */
     margin: auto; /* Center the image vertically and horizontally */
@@ -370,6 +370,76 @@ body {
 
 .event-status.upcoming {
     background-color: var(--info-color); /* Blue for upcoming events */
+}
+
+/* Calendar Styles */
+.calendar-container {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+#calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.calendar-day {
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background-color: var(--background-light);
+    text-align: center;
+    font-size: 0.875rem;
+    position: relative;
+}
+
+.calendar-day.today {
+    background-color: var(--accent-color);
+    color: white;
+    font-weight: bold;
+}
+
+.calendar-day.event-day {
+    background-color: var(--success-color); /* Highlight event days with a green background */
+    color: white;
+    font-weight: bold;
+    position: relative;
+    cursor: pointer; /* Add a pointer cursor for interactivity */
+}
+
+.calendar-day.event-day:hover {
+    background-color: var(--accent-color); /* Change color on hover for better visibility */
+}
+
+.calendar-day span {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 0.75rem;
+    color: white;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    padding: 0.25rem;
+}
+
+/* Tooltip Styles */
+.tooltip {
+    display: none;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: var(--shadow-md);
 }
 
 /* Ensure responsiveness */
