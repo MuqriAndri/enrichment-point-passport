@@ -202,78 +202,6 @@
                         </div>
                         <div class="calendar-container">
                             <h2>Event Calendar</h2>
-<<<<<<< HEAD
-                            <div id="calendar"></div>
-                        </div>
-                        <script>
-                            function generateCalendar(events) {
-                                const calendar = document.getElementById('calendar');
-                                const today = new Date();
-                                const currentMonth = today.getMonth();
-                                const currentYear = today.getFullYear();
-
-                                // Get the first and last day of the month
-                                const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-                                const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-                                // Clear the calendar
-                                calendar.innerHTML = '';
-
-                                // Add empty days for the first week
-                                for (let i = 0; i < firstDay; i++) {
-                                    const emptyDay = document.createElement('div');
-                                    emptyDay.classList.add('calendar-day');
-                                    calendar.appendChild(emptyDay);
-                                }
-
-                                // Add days of the month
-                                for (let date = 1; date <= lastDate; date++) {
-                                    const day = document.createElement('div');
-                                    day.classList.add('calendar-day');
-                                    day.textContent = date;
-
-                                    // Highlight today's date
-                                    if (date === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
-                                        day.classList.add('today');
-                                    }
-
-                                    // Highlight event dates
-                                    const event = events.find(event => {
-                                        const eventDate = new Date(event.date);
-                                        return (
-                                            eventDate.getDate() === date &&
-                                            eventDate.getMonth() === currentMonth &&
-                                            eventDate.getFullYear() === currentYear
-                                        );
-                                    });
-
-                                    if (event) {
-                                        day.classList.add('event-day');
-                                        day.setAttribute('data-event', event.name); // Add event name as a data attribute
-                                    } else {
-                                        day.setAttribute('data-event', 'No events'); // Default message for no events
-                                    }
-
-                                    // Add tooltip on hover
-                                    const tooltip = document.createElement('div');
-                                    tooltip.classList.add('tooltip');
-                                    tooltip.textContent = day.getAttribute('data-event');
-                                    day.appendChild(tooltip);
-
-                                    // Show tooltip on hover
-                                    day.addEventListener('mouseenter', () => {
-                                        tooltip.style.display = 'block';
-                                    });
-
-                                    day.addEventListener('mouseleave', () => {
-                                        tooltip.style.display = 'none';
-                                    });
-
-                                    calendar.appendChild(day);
-                                }
-                            }
-                        </script>
-=======
                             <section class="calendar-section" aria-labelledby="calendar-heading">
                                 <h3 id="calendar-heading">Calendar</h3>
                                 <div class="calendar-header" role="row">
@@ -289,7 +217,6 @@
                                 </div>
                             </section>
                         </div>
->>>>>>> 3b738d1 (Update)
                         <script>
                             // Constants
                             const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -680,12 +607,6 @@
                             }
                         </style>
                         <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
-                        <script>
-                            const events = <?php echo json_encode($events); ?>;
-                            document.addEventListener('DOMContentLoaded', () => {
-                                generateCalendar(events);
-                            });
-                        </script>
                     </div>
     </body>
 

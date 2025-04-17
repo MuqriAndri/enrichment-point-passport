@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_display'])) {
 }
 
 // Load preferences for the current user
-$stmt = $pdo->prepare("SELECT dark_mode, language_pref FROM users WHERE user_id = ?");
+$stmt = $pdo->prepare("SELECT dark_mode FROM users WHERE user_id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $pref = $stmt->fetch();
 

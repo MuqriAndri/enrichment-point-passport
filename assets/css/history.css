@@ -134,7 +134,7 @@ body {
 .history-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: var(--spacing-sm);
+    margin-top: var(--spacing-md);
 }
 
 .history-table th,
@@ -155,3 +155,24 @@ body {
     color: var(--success-color);
     font-weight: bold;
 }
+
+.details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--spacing-md);
+}
+
+.details-table th,
+.details-table td {
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    text-align: center;
+}
+
+.details-table caption {
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+

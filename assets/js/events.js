@@ -200,8 +200,4 @@ const events = [
 // Generate the calendar
 document.addEventListener('DOMContentLoaded', () => {
     generateCalendar(events);
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> 3b738d1 (Update)

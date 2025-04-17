@@ -7,96 +7,190 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/history.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
-
 </head>
 <body>
-
-    <!-- Navbar -->
-    <header class="navbar">
-        <div class="navbar-left">
-            <img src="pb-logo.png" alt="PB Logo" class="logo">
-            <span class="ep-title">Enrichment Point Passport</span>
-        </div>
-        <div class="navbar-center">
-            <input type="text" placeholder="Search activities..." class="search-box">
-            <button class="search-btn">&#128269;</button>
-        </div>
-        <div class="navbar-right">
-            <div class="notif">
-                <span class="bell">&#128276;</span>
-                <span class="notif-badge">3</span>
+    <div class="dashboard-container">
+        <nav class="top-nav">
+            <div class="nav-left">
+                <img src="<?php echo BASE_URL; ?>/assets/images/logo/politeknik-brunei-logo.png" alt="PB Logo" class="nav-logo">
+                <h2>Enrichment Point Passport</h2>
             </div>
-            <div class="profile-circle">M</div>
-            <span class="username">Muhammad</span>
-        </div>
-    </header>
+            <div class="nav-right">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search events..." aria-label="Search activities">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                <div class="nav-actions">
+                    <button class="notification-btn" aria-label="Notifications">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span class="notification-badge" aria-label="3 notifications">3</span>
+                    </button>
+                    <div class="profile-dropdown">
+                        <div class="profile-trigger" tabindex="0" role="button" aria-haspopup="true" aria-expanded="false">
+                            <div class="user-avatar">
+                                <?php if (isset($_SESSION['profile_picture'])): ?>
+                                    <img src="<?php echo $_SESSION['profile_picture']; ?>" alt="Profile Picture">
+                                <?php else: ?>
+                                    <?php echo strtoupper(substr($_SESSION['full_name'], 0, 1)); ?>
+                                <?php endif; ?>
+                            </div>
+                            <span class="user-name"><?php echo explode(' ', $_SESSION['full_name'])[0]; ?></span>
+                        </div>
+                        <div class="dropdown-menu" role="menu">
+                            <a href="<?php echo BASE_URL; ?>/profile" class="dropdown-item" role="menuitem">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                My Profile
+                            </a>
+                            <a href="<?php echo BASE_URL; ?>/settings" class="dropdown-item" role="menuitem">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06-.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                                Settings
+                            </a>
+                            <div class="dropdown-divider" role="separator"></div>
+                            <a href="<?php echo BASE_URL; ?>/logout" class="dropdown-item" role="menuitem">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
-    <!-- Navigation Tabs -->
-    <nav class="nav-tabs">
-        <a href="#" class="tab">Dashboard</a>
-        <a href="#" class="tab">Enrichment Point</a>
-        <a href="#" class="tab">Events</a>
-        <a href="#" class="tab">CCAs</a>
-        <a href="#" class="tab active">History</a>
-    </nav>
+        <div class="main-content">
+            <div class="main-wrapper">
+                <div class="tab-navigation">
+                    <a href="<?php echo BASE_URL; ?>/dashboard" class="tab-item">Dashboard</a>
+                    <a href="<?php echo BASE_URL; ?>/ep" class="tab-item">Enrichment Point</a>
+                    <a href="<?php echo BASE_URL; ?>/events" class="tab-item">Events</a>
+                    <a href="<?php echo BASE_URL; ?>/cca" class="tab-item">CCAs</a>
+                    <a href="<?php echo BASE_URL; ?>/history" class="tab-item active">History</a>
+                </div>
 
-    <!-- Main Content -->
+
+
     <div class="container">
-        <a href="#" class="back-arrow">&#8592;</a>
+        <header>
+            <h1>HISTORY OVERVIEW</h1>
+            <select id="semesterSelect">
+                <option value="1">SEMESTER 1</option>
+                <option value="2">SEMESTER 2</option>
+                <option value="3">SEMESTER 3</option>
+                <option value="4">SEMESTER 4</option>
+                <option value="5">SEMESTER 5</option>
+                <option value="6">SEMESTER 6</option>
+            </select>
+        </header>
 
-        <h1 class="title">HISTORY</h1>
-
-        <div class="semester-select">
-            <button class="dropdown-btn">SEMESTER 1 &#x25B2;</button>
-            <div class="dropdown-content">
-                <a href="#">SEMESTER 2</a>
-                <a href="#">SEMESTER 3</a>
-                <a href="#">SEMESTER 4</a>
-                <a href="#">SEMESTER 5</a>
-                <a href="#">SEMESTER 6</a>
-            </div>
-        </div>
-
-        <div class="history-table">
-            <h2>SEMESTER 1 <span>JAN - JUNE</span></h2>
-            <table>
+        <!-- New Table for History Overview -->
+        <table class="history-table">
+            <caption>History Overview</caption>
+            <thead>
                 <tr>
                     <th>Club Name</th>
-                    <td>Frisbee</td>
-                    <td>Netball</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
                     <th>EP Earned</th>
-                    <td>45</td>
-                    <td>67</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
                     <th>Status</th>
-                    <td>Completed</td>
-                    <td>Completed</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
                     <th>Role</th>
-                    <td>President</td>
-                    <td>Member</td>
-                    <td>-</td>
-                    <td>-</td>
+                    <th>Overall Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="clubName">Drama Club</td>
+                    <td id="epEarned1">50</td>
+                    <td id="status1">Active</td>
+                    <td id="role1">President</td>
+                    <td id="overallPoints">150</td>
                 </tr>
                 <tr>
-                    <th>Overall Points</th>
-                    <td colspan="4" class="overall">112</td>
+                    <td id="clubName2">Sports Club</td>
+                    <td id="epEarned2">30</td>
+                    <td id="status2">Inactive</td>
+                    <td id="role2">Member</td>
+                    <td id="overallPoints2">80</td>
                 </tr>
-            </table>
-        </div>
+            </tbody>
+        </table>
 
+        <table>
+            <tr>
+                <th>Club Name</th>
+                <td id="clubName"></td>
+                <td id="clubName2"></td>
+            </tr>
+            <tr>
+                <th>EP Earned</th>
+                <td id="epEarned1"></td>
+                <td id="epEarned2"></td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td id="status1"></td>
+                <td id="status2"></td>
+            </tr>
+            <tr>
+                <th>Role</th>
+                <td id="role1"></td>
+                <td id="role2"></td>
+            </tr>
+            <tr>
+                <th>Overall Points</th>
+                <td colspan="3" id="overallPoints"></td>
+            </tr>
+        </table>
+
+        <!-- New Table for Additional Details -->
+        <table class="details-table">
+            <caption>Additional Details</caption>
+            <thead>
+                <tr>
+                    <th>Activity</th>
+                    <th>Date</th>
+                    <th>Points</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Community Service</td>
+                    <td>2025-04-10</td>
+                    <td>10</td>
+                    <td>Completed</td>
+                </tr>
+                <tr>
+                    <td>Sports Event</td>
+                    <td>2025-03-15</td>
+                    <td>15</td>
+                    <td>Participated</td>
+                </tr>
+                <tr>
+                    <td>Workshop</td>
+                    <td>2025-02-20</td>
+                    <td>20</td>
+                    <td>Attended</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>
-    <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
+</body>
+</html>
+
+        
+    </script>
 </body>
 </html>
