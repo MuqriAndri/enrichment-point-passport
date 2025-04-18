@@ -1,18 +1,62 @@
-/* Reset some default styles */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f8fafc;
-    color: #1f2937;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Color Variables */
+    --primary-color: #1a365d;
+    --primary-gradient: #2d4a7c; /* Adding a lighter primary color for gradients and buttons */
+    --accent-color: #efbf04;
+    --text-dark: #2d3748;
+    --text-light: #718096;
+    --success-color: #48BB78;
+    --warning-color: #ED8936;
+    --danger-color: #F56565;
+    --info-color: #4299E1;
+    --background-light: #f7fafc;
+    --border-color: #e2e8f0;
+
+    /* Spacing Variables */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 2.5rem;
+
+    /* Border Radius */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-full: 9999px;
+
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Page title */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', Arial, sans-serif;
+    background: var(--background-light);
+    color: var(--text-dark);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 h1 {
-    text-align: center;
     font-size: 2.25rem;
     font-weight: 700;
     margin: 0;
+    color: var(--text-dark);
 }
 
 /* Settings page layout */
@@ -22,13 +66,13 @@ h1 {
     align-items: center;
     justify-content: center;
     min-height: 80vh;
-    padding: 2rem 1rem;
+    padding: var(--spacing-lg) var(--spacing-sm);
 }
 
 /* Settings header with fixed back button */
 .settings-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: var(--spacing-lg);
     position: relative;
 }
 
@@ -38,30 +82,31 @@ h1 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
+    gap: var(--spacing-lg);
     max-width: 1000px;
     width: 100%;
 }
 
-/* Settings cards */
 .box {
-    background-color: #fff;
-    border-radius: 12px;
-    padding: 1.5rem 2rem;
+    background-color: white;
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md) var(--spacing-lg);
     width: 300px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-fast);
+    border: 1px solid var(--border-color);
 }
 
 .box:hover {
     transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
 }
 
 .box h3 {
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-sm);
     font-size: 1.25rem;
-    color: #374151;
-    border-left: 4px solid #6366f1;
+    color: var(--primary-color);
+    border-left: 4px solid var(--primary-color);
     padding-left: 0.5rem;
     display: flex;
     align-items: center;
@@ -75,19 +120,19 @@ h1 {
 }
 
 .box li {
-    margin: 0.5rem 0;
+    margin: var(--spacing-xs) 0;
 }
 
 .box a {
     display: inline-block;
     text-decoration: none;
-    color: #4f46e5;
+    color: var(--primary-color);
     font-weight: 500;
-    transition: 0.2s ease;
+    transition: var(--transition-fast);
 }
 
 .box a:hover {
-    color: #3730a3;
+    color: var(--accent-color);
     text-decoration: underline;
 }
 
@@ -109,11 +154,11 @@ h1 {
 
     .back.fixed-left {
         position: static;
-        margin-bottom: 1rem;
+        margin-bottom: var(--spacing-sm);
     }
 
     .settings-header {
-        padding-top: 2rem;
+        padding-top: var(--spacing-lg);
     }
 }
 
@@ -121,131 +166,149 @@ h1 {
 .form-wrapper {
     max-width: 500px;
     margin: 5rem auto;
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    background-color: white;
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
 }
 
 /* Page heading for forms */
 .form-wrapper h1 {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: var(--spacing-lg);
     font-size: 2rem;
     font-weight: 700;
+    color: var(--text-dark);
 }
 
 /* Back button styling */
 .back {
     display: inline-block;
-    margin-bottom: 1.5rem;
-    color: #4f46e5;
+    margin-bottom: var(--spacing-md);
+    color: var(--primary-color);
     text-decoration: none;
     font-weight: 600;
     font-size: 1rem;
-    transition: 0.2s ease;
+    transition: var(--transition-fast);
 }
 
 .back:hover {
-    color: #3730a3;
+    color: var(--accent-color);
     text-decoration: underline;
 }
 
 /* Message for error or success */
 .form-message {
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-sm);
     font-weight: 600;
-    color: #dc2626; /* red, can be green for success */
+    color: var(--danger-color);
 }
 
 /* Form layout */
 .password-form .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-md);
 }
 
 .password-form label {
     display: block;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--spacing-xs);
 }
 
 .password-form input {
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
     font-size: 1rem;
-    transition: border-color 0.2s;
+    transition: border-color var(--transition-fast);
+    font-family: 'Montserrat', Arial, sans-serif;
 }
 
 .password-form input:focus {
-    border-color: #6366f1;
+    border-color: var(--primary-color);
     outline: none;
 }
 
-/* Submit button */
 .btn-submit {
     display: block;
     width: 100%;
-    background-color: #4f46e5;
+    background-color: var(--primary-color);
     color: white;
     font-weight: 600;
     padding: 0.75rem;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: all var(--transition-fast);
+    font-family: 'Montserrat', Arial, sans-serif;
 }
 
 .btn-submit:hover {
-    background-color: #4338ca;
+    background-color: var(--primary-gradient);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
-/* Dark Mode Styling */
+/* Dark Mode Styling*/
 body.dark {
-    background-color: #111827;
-    color: #f9fafb;
+    background-color: #0d1117;
+    color: #e6edf3;
 }
 
-body.dark .form-wrapper {
-    background-color: #1f2937;
-    color: #f9fafb;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+body.dark .form-wrapper,
+body.dark .box {
+    background-color: #161b22;
+    color: #e6edf3;
+    border-color: #30363d;
 }
 
 body.dark input,
 body.dark select {
-    background-color: #374151;
-    color: #f9fafb;
-    border: 1px solid #4b5563;
+    background-color: #1e242c;
+    color: #e6edf3;
+    border: 1px solid #30363d;
 }
 
 body.dark .btn-submit {
-    background-color: #6366f1;
+    background-color: var(--primary-color);
 }
 
 body.dark .btn-submit:hover {
-    background-color: #4f46e5;
+    background-color: var(--primary-gradient);
 }
 
 body.dark .form-message {
-    color: #f87171;
+    color: var(--danger-color);
 }
 
 body.dark .back {
-    color: #a5b4fc;
+    color: #e6edf3;
+}
+
+body.dark .box h3 {
+    color: #c9d1d9;
+    border-left-color: var(--primary-gradient);
+}
+
+body.dark .box a {
+    color: #58a6ff;
+}
+
+body.dark .box a:hover {
+    color: var(--accent-color);
 }
 
 /* Checkbox appearance improvements */
 input[type="checkbox"] {
     width: 18px;
     height: 18px;
-    accent-color: #6366f1; /* purple tone to match buttons */
+    accent-color: var(--primary-color);
     cursor: pointer;
 }
-
 
 .form-group label {
     display: flex;
@@ -253,4 +316,3 @@ input[type="checkbox"] {
     gap: 0.5rem;
     font-weight: 500;
 }
-

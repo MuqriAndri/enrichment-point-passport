@@ -23,11 +23,9 @@ if (isset($_SESSION['user_id'])) {
     <title>Enrichment Point Passport - Dashboard</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/settings.css">
-
 </head>
 
 <body class="<?php echo $isDark ? 'dark' : ''; ?>">
-
     <div class="dashboard-container">
         <!-- Top Navigation Bar -->
         <nav class="top-nav">
@@ -143,7 +141,7 @@ if (isset($_SESSION['user_id'])) {
                         </div>
                     </div>
                 </section>
-                
+
                 <!-- Quick Stats Section -->
                 <section class="quick-stats" aria-label="Overview">
                     <!-- ... rest of the content ... -->
@@ -155,7 +153,7 @@ if (isset($_SESSION['user_id'])) {
                         <div class="section-header">
                             <h3 id="categories-heading">Categories</h3>
                         </div> -->
-                        <!-- <div class="category-grid">
+                    <!-- <div class="category-grid">
                             <a href="/activities/academic" class="category-card academic">
                                 <div class="category-icon">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
