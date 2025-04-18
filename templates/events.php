@@ -4,11 +4,10 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Events</title>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <title>Enrichment Point Passport - Events</title>
         <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/events.css">
         <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
-        <script src="<?php echo BASE_URL; ?>/assets/js/events.js" defer></script> <!-- Added events.js -->
+        <script src="<?php echo BASE_URL; ?>/assets/js/events.js" defer></script>
     </head>
 
     <body>
