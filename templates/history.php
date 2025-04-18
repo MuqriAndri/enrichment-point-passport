@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/history.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
 </head>
+
 <body>
     <div class="dashboard-container">
         <nav class="top-nav">
@@ -82,115 +84,65 @@
                     <a href="<?php echo BASE_URL; ?>/history" class="tab-item active">History</a>
                 </div>
 
+                <div class="container">
+                    <header>
+                        <h1>HISTORY OVERVIEW</h1>
+                        <select id="semesterSelect">
+                            <option value="1">SEMESTER 1</option>
+                            <option value="2">SEMESTER 2</option>
+                            <option value="3">SEMESTER 3</option>
+                            <option value="4">SEMESTER 4</option>
+                            <option value="5">SEMESTER 5</option>
+                            <option value="6">SEMESTER 6</option>
+                        </select>
+                    </header>
+
+                    <!-- New Table for History Overview -->
+                    <table class="history-table">
+                        <caption>History Overview</caption>
+                        <thead>
+                            <tr>
+                                <th>Club Name</th>
+                                <th>EP Earned</th>
+                                <th>Status</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="clubName"></td>
+                                <td id="epEarned1"></td>
+                                <td id="status1"></td>
+                                <td id="role1"></td>
+                            </tr>
+                            <tr>
+                                <td id="clubName2"></td>
+                                <td id="epEarned2"></td>
+                                <td id="status2"></td>
+                                <td id="role2"></td>
+                            </tr>
+                            <tr>
+                                <td id="clubName3"></td>
+                                <td id="epEarned3"></td>
+                                <td id="status3"></td>
+                                <td id="role3"></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" style="text-align: center; font-weight: bold;">Overall Points: <span id="overallPoints"></span></td>
+                            </tr>
+                        </tfoot>
+                    </table>
 
 
-    <div class="container">
-        <header>
-            <h1>HISTORY OVERVIEW</h1>
-            <select id="semesterSelect">
-                <option value="1">SEMESTER 1</option>
-                <option value="2">SEMESTER 2</option>
-                <option value="3">SEMESTER 3</option>
-                <option value="4">SEMESTER 4</option>
-                <option value="5">SEMESTER 5</option>
-                <option value="6">SEMESTER 6</option>
-            </select>
-        </header>
-
-        <!-- New Table for History Overview -->
-        <table class="history-table">
-            <caption>History Overview</caption>
-            <thead>
-                <tr>
-                    <th>Club Name</th>
-                    <th>EP Earned</th>
-                    <th>Status</th>
-                    <th>Role</th>
-                    <th>Overall Points</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td id="clubName">Drama Club</td>
-                    <td id="epEarned1">50</td>
-                    <td id="status1">Active</td>
-                    <td id="role1">President</td>
-                    <td id="overallPoints">150</td>
-                </tr>
-                <tr>
-                    <td id="clubName2">Sports Club</td>
-                    <td id="epEarned2">30</td>
-                    <td id="status2">Inactive</td>
-                    <td id="role2">Member</td>
-                    <td id="overallPoints2">80</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <table>
-            <tr>
-                <th>Club Name</th>
-                <td id="clubName"></td>
-                <td id="clubName2"></td>
-            </tr>
-            <tr>
-                <th>EP Earned</th>
-                <td id="epEarned1"></td>
-                <td id="epEarned2"></td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td id="status1"></td>
-                <td id="status2"></td>
-            </tr>
-            <tr>
-                <th>Role</th>
-                <td id="role1"></td>
-                <td id="role2"></td>
-            </tr>
-            <tr>
-                <th>Overall Points</th>
-                <td colspan="3" id="overallPoints"></td>
-            </tr>
-        </table>
-
-        <!-- New Table for Additional Details -->
-        <table class="details-table">
-            <caption>Additional Details</caption>
-            <thead>
-                <tr>
-                    <th>Activity</th>
-                    <th>Date</th>
-                    <th>Points</th>
-                    <th>Remarks</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Community Service</td>
-                    <td>2025-04-10</td>
-                    <td>10</td>
-                    <td>Completed</td>
-                </tr>
-                <tr>
-                    <td>Sports Event</td>
-                    <td>2025-03-15</td>
-                    <td>15</td>
-                    <td>Participated</td>
-                </tr>
-                <tr>
-                    <td>Workshop</td>
-                    <td>2025-02-20</td>
-                    <td>20</td>
-                    <td>Attended</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                </div>
 </body>
+
 </html>
 
-        
-    </script>
+
+</script>
 </body>
+
 </html>
