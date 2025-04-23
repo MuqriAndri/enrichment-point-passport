@@ -13,6 +13,53 @@ if (isset($_SESSION['user_id'])) {
     $isDark = $user && $user['dark_mode'];
 }
 
+// Get recent activities data for the current user
+$activityDetails = [];
+if (isset($_SESSION['student_id'])) {
+    // Get the enrichment point repository
+    require_once 'repositories/enrichment-point-repository.php';
+    $epRepository = new EnrichmentPointRepository($ccaDB, $profilesDB);
+
+    // Get user's recent activities (limit to 2)
+    $activityDetails = $epRepository->getActivityDetails($_SESSION['student_id']);
+    $activityDetails = array_slice($activityDetails, 0, 2);
+}
+
+// Get user's joined clubs
+$joinedClubs = [];
+if (isset($_SESSION['student_id'])) {
+    require_once 'repositories/club-repository.php';
+    $clubRepo = new clubRepository($ccaDB, $profilesDB);
+
+    // Get user club memberships
+    $userMemberships = $clubRepo->getUserMemberships($_SESSION['student_id']);
+
+    // Get details for each club
+    foreach ($userMemberships as $clubId) {
+        $clubDetails = $clubRepo->getClubDetailsById($clubId);
+        if ($clubDetails) {
+            $joinedClubs[] = $clubDetails;
+        }
+    }
+}
+
+// Helper function for badges - use the same as in EP page
+function getBadgeClass($type)
+{
+    switch ($type) {
+        case 'Academic':
+            return 'academic';
+        case 'Sports':
+            return 'leadership';
+        case 'Service':
+            return 'service';
+        case 'Arts':
+            return 'professional';
+        default:
+            return 'academic';
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -251,59 +298,6 @@ if (isset($_SESSION['user_id'])) {
 
                 <!-- Dashboard Grid -->
                 <div class="dashboard-grid">
-                    <!-- <section class="activity-categories" aria-labelledby="categories-heading">
-                        <div class="section-header">
-                            <h3 id="categories-heading">Categories</h3>
-                        </div> -->
-                    <!-- <div class="category-grid">
-                            <a href="/activities/academic" class="category-card academic">
-                                <div class="category-icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                        <path d="M12 2l10 6.5v7L12 22 2 15.5v-7L12 2z"></path>
-                                    </svg>
-                                </div>
-                                <h4>Academic</h4>
-                                <p>15 points</p>
-                            </a>
-                            <a href="/activities/leadership" class="category-card leadership">
-                                <div class="category-icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="9" cy="7" r="4"></circle>
-                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                    </svg>
-                                </div>
-                                <h4>Leadership</h4>
-                                <p>10 points</p>
-                            </a>
-                            <a href="/activities/sports" class="category-card sports">
-                                <div class="category-icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-                                        <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                                        <line x1="15" y1="9" x2="15.01" y2="9"></line>
-                                    </svg>
-                                </div>
-                                <h4>Sports</h4>
-                                <p>12 points</p>
-                            </a>
-                            <a href="/activities/community" class="category-card community">
-                                <div class="category-icon">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="9" cy="7" r="4"></circle>
-                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                    </svg>
-                                </div>
-                                <h4>Community Service</h4>
-                                <p>7 points</p>
-                            </a>
-                        </div> -->
-                    <!-- </section> -->
-
                     <!-- Recent Activities -->
                     <section class="recent-activities" aria-labelledby="recent-activities-heading">
                         <div class="section-header">
@@ -311,33 +305,90 @@ if (isset($_SESSION['user_id'])) {
                             <a href="<?php echo BASE_URL; ?>/ep" class="view-all">View All</a>
                         </div>
                         <div class="activity-list">
-                            <div class="activity-item">
-                                <div class="activity-icon sports">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-                                        <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                                        <line x1="15" y1="9" x2="15.01" y2="9"></line>
-                                    </svg>
+                            <?php if (empty($activityDetails)): ?>
+                                <div class="no-data-message">
+                                    <p>No recent activities found. Start participating to earn points!</p>
                                 </div>
-                                <div class="activity-details">
-                                    <h4>Sports Carnival</h4>
-                                    <p>Completed on Jan 20, 2025</p>
+                            <?php else: ?>
+                                <?php foreach ($activityDetails as $activity): ?>
+                                    <div class="activity-item">
+                                        <div class="activity-icon <?php echo getBadgeClass($activity['type']); ?>">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                                <?php if ($activity['type'] == 'Sports'): ?>
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                    <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                                                    <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                                    <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                                                <?php elseif ($activity['type'] == 'Academic'): ?>
+                                                    <path d="M12 2l10 6.5v7L12 22 2 15.5v-7L12 2z"></path>
+                                                <?php elseif ($activity['type'] == 'Service'): ?>
+                                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                                    <circle cx="9" cy="7" r="4"></circle>
+                                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                                <?php else: ?>
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                                <?php endif; ?>
+                                            </svg>
+                                        </div>
+                                        <div class="activity-details">
+                                            <h4><?php echo htmlspecialchars($activity['activity']); ?></h4>
+                                            <p>Completed on <?php echo htmlspecialchars($activity['completion_date']); ?></p>
+                                        </div>
+                                        <span class="points-badge" aria-label="Earned <?php echo $activity['points']; ?> points">+<?php echo $activity['points']; ?> pts</span>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                    </section>
+
+                    <!-- Joined Clubs Section -->
+                    <section class="joined-clubs" aria-labelledby="joined-clubs-heading">
+                        <div class="section-header">
+                            <h3 id="joined-clubs-heading">My Clubs</h3>
+                            <a href="<?php echo BASE_URL; ?>/cca" class="view-all">View All</a>
+                        </div>
+                        <div class="club-list">
+                            <?php if (empty($joinedClubs)): ?>
+                                <div class="no-data-message">
+                                    <p>You haven't joined any clubs yet. <a href="<?php echo BASE_URL; ?>/cca">Explore clubs</a> to join!</p>
                                 </div>
-                                <span class="points-badge" aria-label="Earned 75 points">+75 pts</span>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon academic">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                        <path d="M12 2l10 6.5v7L12 22 2 15.5v-7L12 2z"></path>
-                                    </svg>
-                                </div>
-                                <div class="activity-details">
-                                    <h4>Academic Workshop</h4>
-                                    <p>Completed on Jan 15, 2025</p>
-                                </div>
-                                <span class="points-badge" aria-label="Earned 50 points">+50 pts</span>
-                            </div>
+                            <?php else: ?>
+                                <?php foreach ($joinedClubs as $club): ?>
+                                    <div class="club-item">
+                                        <div class="club-icon">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="9" cy="7" r="4"></circle>
+                                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="club-details">
+                                            <h4><?php echo htmlspecialchars($club['club_name']); ?></h4>
+                                            <p><?php echo htmlspecialchars($club['category']); ?></p>
+                                        </div>
+                                        <?php
+                                        $clubName = $club['club_name'];
+                                        $nameParts = explode(' ', $clubName);
+                                        if (end($nameParts) === 'Club') {
+                                            array_pop($nameParts);
+                                        }
+                                        $nameBase = implode(' ', $nameParts);
+                                        $clubSlug = strtolower(
+                                            str_replace(
+                                                ' ',
+                                                '-',
+                                                preg_replace('/[^\p{L}\p{N}\s-]/u', '', $nameBase)
+                                            )
+                                        );
+                                        ?>
+                                        <a href="<?php echo BASE_URL; ?>/cca/<?php echo $clubSlug; ?>" class="view-club-btn">View Club</a>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </div>
                     </section>
 
@@ -353,61 +404,41 @@ if (isset($_SESSION['user_id'])) {
                             <div role="columnheader">Fri</div>
                             <div role="columnheader">Sat</div>
                         </div>
-                        <div class="calendar-grid" role="grid">
-                        </div>
-                    </section>
-
-                    <!-- Upcoming Events -->
-                    <section class="upcoming-events" aria-labelledby="upcoming-events-heading">
-                        <div class="section-header">
-                            <h3 id="upcoming-events-heading">Upcoming Events</h3>
-                            <a href="/events" class="view-all">View All</a>
-                        </div>
-                        <div class="event-list">
-                            <div class="event-item">
-                                <div class="event-date" aria-label="February 15">
-                                    <span class="day">15</span>
-                                    <span class="month">FEB</span>
-                                </div>
-                                <div class="event-details">
-                                    <h4>Cultural Exchange Program</h4>
-                                    <p>9:00 AM - Main Hall</p>
-                                </div>
-                                <button class="register-btn" data-event-id="1" aria-label="Register for Cultural Exchange Program">
-                                    Register
-                                </button>
-                            </div>
-                            <div class="event-item">
-                                <div class="event-date" aria-label="February 22">
-                                    <span class="day">22</span>
-                                    <span class="month">FEB</span>
-                                </div>
-                                <div class="event-details">
-                                    <h4>Innovation Challenge</h4>
-                                    <p>2:00 PM - Innovation Lab</p>
-                                </div>
-                                <button class="register-btn" data-event-id="2" aria-label="Register for Innovation Challenge">
-                                    Register
-                                </button>
-                            </div>
-                            <div class="event-item">
-                                <div class="event-date" aria-label="March 1">
-                                    <span class="day">1</span>
-                                    <span class="month">MAR</span>
-                                </div>
-                                <div class="event-details">
-                                    <h4>Leadership Workshop</h4>
-                                    <p>10:00 AM - Conference Room</p>
-                                </div>
-                                <button class="register-btn" data-event-id="3" aria-label="Register for Leadership Workshop">
-                                    Register
-                                </button>
-                            </div>
+                        <div class="calendar-grid">
+                            <!-- Calendar days would go here -->
                         </div>
                     </section>
                 </div>
             </div>
         </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-icons">
+                    <div class="icon-container">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                        </svg>
+                        <span>Track Progress</span>
+                    </div>
+                    <div class="icon-container">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                        </svg>
+                        <span>Learn & Grow</span>
+                    </div>
+                    <div class="icon-container">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 15C8.7 15 6 12.3 6 9V4.5C6 3.1 7.1 2 8.5 2H15.5C16.9 2 18 3.1 18 4.5V9C18 12.3 15.3 15 12 15Z" />
+                            <path d="M20 20H4C3.4 20 3 19.6 3 19V18C3 14.7 5.7 12 9 12H15C18.3 12 21 14.7 21 18V19C21 19.6 20.6 20 20 20Z" />
+                        </svg>
+                        <span>Achieve Excellence</span>
+                    </div>
+                </div>
+                <p>Empowering students through enrichment and achievement tracking</p>
+            </div>
+        </footer>
     </div>
 
     <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>

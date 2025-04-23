@@ -41,6 +41,45 @@ class clubRepository
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
+    /**
+     * Get club details by club ID
+     * 
+     * @param int $clubId The club ID
+     * @return array|null Club details or null if not found
+     */
+    public function getClubDetailsById($clubId)
+    {
+        $sql = "SELECT 
+                c.club_id,
+                c.club_name,
+                c.category,
+                c.description,
+                c.meeting_schedule,
+                c.location,
+                c.advisor,
+                c.president,
+                c.contact_email,
+                c.membership_fee,
+                c.latitude,
+                c.longitude,
+                COUNT(DISTINCT cm.student_id) as member_count
+            FROM clubs c
+            LEFT JOIN club_members cm ON c.club_id = cm.club_id 
+                AND cm.status = 'Active'
+            WHERE c.club_id = :club_id
+            GROUP BY c.club_id, c.club_name, c.category";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':club_id', $clubId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        return null;
+    }
+
     public function getUserDetails($userId)
     {
         // Make sure we have a connection to the profiles database
@@ -125,39 +164,6 @@ class clubRepository
         $stmt->bindParam(':club_id', $clubId);
         $stmt->execute();
         return ($stmt->rowCount() > 0);
-    }
-
-    public function getClubDetailsById($clubId)
-    {
-        $sql = "SELECT 
-            c.club_id,
-            c.club_name,
-            c.category,
-            c.description,
-            c.meeting_schedule,
-            c.location,
-            c.advisor,
-            c.president,
-            c.contact_email,
-            c.membership_fee,
-            c.latitude,
-            c.longitude,
-            COUNT(DISTINCT cm.student_id) as member_count
-        FROM clubs c
-        LEFT JOIN club_members cm ON c.club_id = cm.club_id 
-            AND cm.status = 'Active'
-        WHERE c.club_id = :club_id
-        GROUP BY c.club_id, c.club_name, c.category";
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':club_id', $clubId, PDO::PARAM_INT);
-        $stmt->execute();
-
-        if ($stmt->rowCount() > 0) {
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        }
-
-        return null;
     }
 
     public function submitClubApplication($clubId, $userId, $studentId, $studentInfo)
