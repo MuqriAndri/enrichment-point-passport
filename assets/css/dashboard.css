@@ -15,6 +15,7 @@
     --background-light: #f7fafc;
     --border-color: #e2e8f0;
     --success-green: #2ea043;
+    --tab-active-bg: var(--primary-color);
 
 
     /* Spacing Variables */
@@ -438,10 +439,10 @@ body {
 }
 
 .tab-item.active {
-    background: var(--success-green);
+    background: var(--tab-active-bg);
     color: white;
     border-radius: var(--radius-md);
-}
+  }  
 
 /* Remove any underline effects */
 .tab-item::after,
@@ -1286,6 +1287,7 @@ body.dark {
     background-color: #0d1117;
     color: #e6edf3;
     --primary-color: #238636;
+    --tab-active-bg: #238636;
 }
 
 body.dark .dashboard-container,
