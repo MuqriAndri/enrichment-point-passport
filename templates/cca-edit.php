@@ -38,7 +38,7 @@ $locations = $pageData['locations'] ?? [];
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/cca-edit.css">
 </head>
 
-<body <?php if (!empty($_SESSION['dark_mode'])) echo 'data-theme="dark"'; ?>>
+<body class="<?php echo $isDark ? 'dark' : ''; ?>">
     <div class="dashboard-container">
         <!-- Top Navigation Bar -->
         <nav class="top-nav">
