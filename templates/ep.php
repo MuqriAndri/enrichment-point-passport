@@ -5,6 +5,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Dark mode logic (same as dashboard.php)
 $isDark = false;
 if (isset($_SESSION['user_id'])) {
     $stmt = $pdo->prepare("SELECT dark_mode FROM users WHERE user_id = ?");
@@ -12,7 +13,6 @@ if (isset($_SESSION['user_id'])) {
     $user = $stmt->fetch();
     $isDark = $user && $user['dark_mode'];
 }
-
 
 // Ensure we have database connections
 if (!isset($ccaDB) || !isset($profilesDB)) {
