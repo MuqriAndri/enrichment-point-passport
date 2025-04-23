@@ -18,7 +18,7 @@ define('S3_BASE_URL', 'https://enrichment-point-passport-bucket.s3.ap-southeast-
 
 // AWS Credentials
 define('AWS_ACCESS_KEY', 'AWS_ACCESS_KEY_ID');
-define('AWS_SECRET_KEY', 'AWS_SECRET_KEY_ID');
+define('AWS_SECRET_KEY', 'AWS_SECRET_ACCESS_KEY_ID');
 
 function sendResponse($success, $data, $statusCode = 200)
 {

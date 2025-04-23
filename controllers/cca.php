@@ -20,7 +20,7 @@ function uploadToS3WithSignature($sourceFile, $key) {
     // Ensure AWS credentials are defined
     if (!defined('AWS_ACCESS_KEY')) {
         define('AWS_ACCESS_KEY', 'AWS_ACCESS_KEY_ID');
-        define('AWS_SECRET_KEY', 'AWS_SECRET_KEY_ID');
+        define('AWS_SECRET_KEY', 'AWS_SECRET_ACCESS_KEY_ID');
     }
     
     try {
@@ -147,8 +147,8 @@ function uploadToS3WithTempFileSignature($sourceFile, $key) {
     
     // Ensure AWS credentials are defined
     if (!defined('AWS_ACCESS_KEY')) {
-        define('AWS_ACCESS_KEY', 'AKIA4SYAMLXWG443EJG2');
-        define('AWS_SECRET_KEY', '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');
+        define('AWS_ACCESS_KEY', 'AWS_ACCESS_KEY_ID');
+        define('AWS_SECRET_KEY', 'AWS_SECRET_ACESS_KEY_ID');
     }
     
     try {
@@ -280,8 +280,8 @@ function uploadToS3Direct($sourceFile, $key) {
     
     // Ensure AWS credentials are defined
     if (!defined('AWS_ACCESS_KEY')) {
-        define('AWS_ACCESS_KEY', 'AKIA4SYAMLXWG443EJG2');
-        define('AWS_SECRET_KEY', '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');
+        define('AWS_ACCESS_KEY', 'AWS_ACCESS_KEY_ID');
+        define('AWS_SECRET_KEY', 'AWS_SECRET_ACCESS_KEY_ID');
     }
     
     try {
@@ -745,8 +745,8 @@ function handleClubManagement($ccaDB, $profilesDB) {
                     
                     // AWS Credentials if not already defined
                     if (!defined('AWS_ACCESS_KEY')) {
-                        define('AWS_ACCESS_KEY', 'AKIA4SYAMLXWG443EJG2');
-                        define('AWS_SECRET_KEY', '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');
+                        define('AWS_ACCESS_KEY', 'AWS_ACCESS_KEY_ID');
+                        define('AWS_SECRET_KEY', 'AWS_SECRET_ACCESS_KEY_ID');
                     }
                 }
                 
