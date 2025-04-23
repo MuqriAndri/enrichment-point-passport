@@ -557,3 +557,73 @@
     width: 30px;
     height: 30px;
 }
+
+/* === DARK MODE SUPPORT === */
+body.dark {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark .tab-navigation {
+    background-color: #1f1f1f;
+    border-color: #333;
+}
+
+body.dark .tab-item {
+    color: #e0e0e0;
+}
+
+body.dark .tab-item.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+body.dark .tab-item:hover:not(.active) {
+    background: #2a2a2a;
+    color: var(--accent-color);
+}
+
+body.dark .club-card {
+    background-color: #1e1e1e;
+    border-color: #333;
+}
+
+body.dark .club-name,
+body.dark .club-info h3,
+body.dark .club-stats,
+body.dark .stat-title,
+body.dark .stat-value,
+body.dark .stat-description {
+    color: #e0e0e0;
+}
+
+body.dark .alert-success {
+    background: rgba(72, 187, 120, 0.15);
+    color: #a6f4c5;
+    border-color: #48BB78;
+}
+
+body.dark .alert-error {
+    background: rgba(245, 101, 101, 0.15);
+    color: #fca5a5;
+    border-color: #F56565;
+}
+
+body.dark .view-details-btn {
+    background: var(--accent-color);
+    color: #000;
+}
+
+body.dark .view-details-btn:hover {
+    background: #d3a903;
+}
+
+body.dark .club-overlay {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+body.dark .notification {
+    background-color: #1f1f1f;
+    color: #fff;
+    border: 1px solid #333;
+}
