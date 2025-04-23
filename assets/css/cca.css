@@ -574,7 +574,7 @@ body.dark .tab-item {
 }
 
 body.dark .tab-item.active {
-    background: var(--primary-color);
+    background: #1a365d;
     color: white;
 }
 

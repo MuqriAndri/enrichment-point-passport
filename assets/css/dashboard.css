@@ -15,7 +15,7 @@
     --background-light: #f7fafc;
     --border-color: #e2e8f0;
     --success-green: #2ea043;
-    --tab-active-bg: #238636;
+    --tab-active-bg: #1a365d;
 
 
     /* Spacing Variables */
@@ -1288,7 +1288,7 @@ body.dark {
     background-color: #0d1117;
     color: #e6edf3;
     --primary-color: #238636;
-    --tab-active-bg: #238636;
+    --tab-active-bg: #1a365d;
 }
 
 body.dark .dashboard-container,
@@ -1323,7 +1323,7 @@ body.dark .tab-item {
 }
 
 body.dark .tab-item.active {
-    background-color: #238636;
+    background-color: #1a365d;
     color: #fff;
 }
 
@@ -1392,6 +1392,6 @@ body.dark .tab-item:hover:not(.active) {
 
 /* Optional: Dark mode active tab override (if not using global --tab-active-bg) */
 body.dark .tab-item.active {
-    background-color: #22c55e; /* or your preferred dark mode active color */
+    background-color: #1a365d; /* or your preferred dark mode active color */
     color: #fff;
 }
