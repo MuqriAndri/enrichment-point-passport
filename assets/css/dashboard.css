@@ -1391,6 +1391,6 @@ body.dark .tab-item:hover:not(.active) {
 
 /* Optional: Dark mode active tab override (if not using global --tab-active-bg) */
 body.dark .tab-item.active {
-    background: var(--tab-active-bg, #22c55e); /* fallback to green if undefined */
-    color: white;
+    background-color: #22c55e; /* or your preferred dark mode active color */
+    color: #fff;
 }
