@@ -17,11 +17,10 @@ define('S3_PROFILE_PATH', 'uploads/profile');
 define('S3_BASE_URL', 'https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com');
 
 // AWS Credentials
-define('AWS_ACCESS_KEY', 'AWS_ACCESS_KEY_ID');
-define('AWS_SECRET_KEY', 'AWS_SECRET_ACCESS_KEY_ID');
+define('AWS_ACCESS_KEY', 'AKIA4SYAMLXWG443EJG2');
+define('AWS_SECRET_KEY', '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');
 
-function sendResponse($success, $data, $statusCode = 200)
-{
+function sendResponse($success, $data, $statusCode = 200) {
     http_response_code($statusCode);
     echo json_encode([
         'success' => $success,
@@ -30,13 +29,11 @@ function sendResponse($success, $data, $statusCode = 200)
     exit();
 }
 
-function logError($message, $context = [])
-{
+function logError($message, $context = []) {
     error_log("Upload Error - " . $message . " Context: " . json_encode($context));
 }
 
-function generateUniqueFilename($userId, $extension)
-{
+function generateUniqueFilename($userId, $extension) {
     // Format: userID_YYYYMMDD_HHmmss_random
     $timestamp = date('Ymd_His');
     $random = substr(md5(uniqid()), 0, 8);
@@ -52,30 +49,29 @@ function generateUniqueFilename($userId, $extension)
  * @param string $contentSha256 The SHA256 hash of the file content (or UNSIGNED-PAYLOAD)
  * @return array The headers to use in the request
  */
-function getSignedHeaders($httpVerb, $path, $contentType, $contentSha256 = 'UNSIGNED-PAYLOAD')
-{
+function getSignedHeaders($httpVerb, $path, $contentType, $contentSha256 = 'UNSIGNED-PAYLOAD') {
     $now = gmdate('Ymd\THis\Z');
     $date = substr($now, 0, 8);
 
     // Canonical request
     $canonicalRequest = "$httpVerb\n" .
-        "/$path\n" .
-        "\n" .
-        "content-type:$contentType\n" .
-        "host:" . S3_BUCKET . ".s3." . S3_REGION . ".amazonaws.com\n" .
-        "x-amz-content-sha256:$contentSha256\n" .
-        "x-amz-date:$now\n" .
-        "\n" .
-        "content-type;host;x-amz-content-sha256;x-amz-date\n" .
-        "$contentSha256";
+                        "/$path\n" .
+                        "\n" .
+                        "content-type:$contentType\n" .
+                        "host:" . S3_BUCKET . ".s3." . S3_REGION . ".amazonaws.com\n" .
+                        "x-amz-content-sha256:$contentSha256\n" .
+                        "x-amz-date:$now\n" .
+                        "\n" .
+                        "content-type;host;x-amz-content-sha256;x-amz-date\n" .
+                        "$contentSha256";
 
     $canonicalRequestHash = hash('sha256', $canonicalRequest);
 
     // String to sign
     $stringToSign = "AWS4-HMAC-SHA256\n" .
-        "$now\n" .
-        "$date/" . S3_REGION . "/s3/aws4_request\n" .
-        "$canonicalRequestHash";
+                   "$now\n" .
+                   "$date/" . S3_REGION . "/s3/aws4_request\n" .
+                   "$canonicalRequestHash";
 
     // Signing key
     $kDate = hash_hmac('sha256', $date, 'AWS4' . AWS_SECRET_KEY, true);
@@ -88,9 +84,9 @@ function getSignedHeaders($httpVerb, $path, $contentType, $contentSha256 = 'UNSI
 
     // Authorization header
     $authorizationHeader = "AWS4-HMAC-SHA256 " .
-        "Credential=" . AWS_ACCESS_KEY . "/$date/" . S3_REGION . "/s3/aws4_request, " .
-        "SignedHeaders=content-type;host;x-amz-content-sha256;x-amz-date, " .
-        "Signature=$signature";
+                          "Credential=" . AWS_ACCESS_KEY . "/$date/" . S3_REGION . "/s3/aws4_request, " .
+                          "SignedHeaders=content-type;host;x-amz-content-sha256;x-amz-date, " .
+                          "Signature=$signature";
 
     return [
         'Content-Type' => $contentType,
@@ -108,32 +104,31 @@ function getSignedHeaders($httpVerb, $path, $contentType, $contentSha256 = 'UNSI
  * @param string $key The S3 key (path in bucket)
  * @return array Result with success status and URL/message
  */
-function uploadToS3($sourceFile, $key)
-{
+function uploadToS3($sourceFile, $key) {
     logError('Attempting S3 upload with auth', ['key' => $key]);
-
+    
     try {
         // Check if path is profile and can use simplified upload
         $isProfilePath = (strpos($key, S3_PROFILE_PATH) === 0);
-
+        
         // Prepare URL and basic setup
         $url = "https://" . S3_BUCKET . ".s3." . S3_REGION . ".amazonaws.com/" . $key;
         $contentType = mime_content_type($sourceFile);
         $fileContent = file_get_contents($sourceFile);
-
+        
         // Initialize curl
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $fileContent);
-
+        
         // Get headers with AWS Signature V4 authentication
         if (!$isProfilePath) {
             // For paths outside profile uploads that need authentication
             $contentSha256 = hash('sha256', $fileContent);
             $headers = getSignedHeaders('PUT', $key, $contentType, $contentSha256);
-
+            
             // Format headers for CURL
             $curlHeaders = [];
             foreach ($headers as $name => $value) {
@@ -147,22 +142,22 @@ function uploadToS3($sourceFile, $key)
                 'x-amz-acl: public-read'
             ]);
         }
-
+        
         // Enable verbose debugging
         $verbose = fopen('php://temp', 'w+');
         curl_setopt($ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch, CURLOPT_STDERR, $verbose);
-
+        
         // Execute curl
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $error = curl_error($ch);
-
+        
         // Get verbose information
         rewind($verbose);
         $verboseLog = stream_get_contents($verbose);
         fclose($verbose);
-
+        
         // Log detailed information for debugging
         logError('S3 upload details', [
             'http_code' => $httpCode,
@@ -171,10 +166,10 @@ function uploadToS3($sourceFile, $key)
             'response' => $response,
             'is_profile_path' => $isProfilePath
         ]);
-
+        
         // Clean up
         curl_close($ch);
-
+        
         if ($httpCode >= 200 && $httpCode < 300) {
             return [
                 'success' => true,
@@ -196,29 +191,28 @@ function uploadToS3($sourceFile, $key)
 /**
  * Alternative upload method using a temp file approach with AWS signatures
  */
-function uploadToS3WithTempFile($sourceFile, $key)
-{
+function uploadToS3WithTempFile($sourceFile, $key) {
     logError('Attempting temp file S3 upload fallback', ['key' => $key]);
-
+    
     try {
         // Check if path is profile and can use simplified upload
         $isProfilePath = (strpos($key, S3_PROFILE_PATH) === 0);
-
+        
         // Prepare URL and content type
         $url = "https://" . S3_BUCKET . ".s3." . S3_REGION . ".amazonaws.com/" . $key;
         $contentType = mime_content_type($sourceFile);
-
+        
         // Initialize curl
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_PUT, true);
-
+        
         // Set headers with authentication if needed
         if (!$isProfilePath) {
             // For non-profile paths, use UNSIGNED-PAYLOAD since we're streaming from file
             $headers = getSignedHeaders('PUT', $key, $contentType, 'UNSIGNED-PAYLOAD');
-
+            
             // Format headers for CURL
             $curlHeaders = [];
             foreach ($headers as $name => $value) {
@@ -232,27 +226,27 @@ function uploadToS3WithTempFile($sourceFile, $key)
                 'x-amz-acl: public-read'
             ]);
         }
-
+        
         // Use the file directly
         $fh = fopen($sourceFile, 'r');
         curl_setopt($ch, CURLOPT_INFILE, $fh);
         curl_setopt($ch, CURLOPT_INFILESIZE, filesize($sourceFile));
-
+        
         // Enable verbose debugging
         $verbose = fopen('php://temp', 'w+');
         curl_setopt($ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch, CURLOPT_STDERR, $verbose);
-
+        
         // Execute curl
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $error = curl_error($ch);
-
+        
         // Get verbose information
         rewind($verbose);
         $verboseLog = stream_get_contents($verbose);
         fclose($verbose);
-
+        
         // Log detailed information for debugging
         logError('S3 temp file upload details', [
             'http_code' => $httpCode,
@@ -261,11 +255,11 @@ function uploadToS3WithTempFile($sourceFile, $key)
             'response' => $response,
             'is_profile_path' => $isProfilePath
         ]);
-
+        
         // Clean up
         fclose($fh);
         curl_close($ch);
-
+        
         if ($httpCode >= 200 && $httpCode < 300) {
             return [
                 'success' => true,
@@ -313,7 +307,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 try {
     // Include database connection
     require_once __DIR__ . '/../config/database.php';
-
+    
     // Make sure we have $profilesDB defined from database.php
     if (!isset($profilesDB)) {
         // Try with $pdo instead if profilesDB is not available
@@ -322,7 +316,7 @@ try {
         }
         $profilesDB = $pdo;
     }
-
+    
     // Validate file upload
     if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
         $errorCode = $_FILES['avatar']['error'] ?? 'No file uploaded';
@@ -336,7 +330,7 @@ try {
         'size' => $file['size'],
         'tmp_name' => $file['tmp_name']
     ]);
-
+    
     // Validate file type
     $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
     $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -355,15 +349,15 @@ try {
     // Generate unique S3 key for the file
     $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     $s3Key = S3_PROFILE_PATH . '/' . generateUniqueFilename($_SESSION['user_id'], $extension);
-
+    
     // Upload directly to S3
     $uploadResult = uploadToS3($file['tmp_name'], $s3Key);
-
+    
     if (!$uploadResult['success']) {
         logError('S3 upload failed', ['error' => $uploadResult['message']]);
         sendResponse(false, ['error' => 'Failed to upload to cloud storage: ' . $uploadResult['message']], 500);
     }
-
+    
     // Get the full S3 URL
     $avatarUrl = $uploadResult['url'];
 
@@ -375,7 +369,7 @@ try {
             ':profile_picture' => $avatarUrl,
             ':user_id' => $_SESSION['user_id']
         ]);
-
+        
         if (!$result) {
             logError('Database update failed', [
                 'user_id' => $_SESSION['user_id'],
@@ -399,6 +393,7 @@ try {
         'message' => 'Profile picture updated successfully',
         'avatarUrl' => $avatarUrl
     ]);
+
 } catch (Exception $e) {
     logError('Unexpected error', [
         'message' => $e->getMessage(),
