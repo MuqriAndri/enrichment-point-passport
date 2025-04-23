@@ -696,3 +696,45 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* === DARK MODE SUPPORT FOR ep.php === */
+body.dark {
+    background-color: #0d1117;
+    color: #e6edf3;
+}
+
+body.dark .card,
+body.dark .summary-item,
+body.dark .ep-table,
+body.dark .student-info,
+body.dark .progress-container,
+body.dark .chart-container {
+    background-color: #161b22;
+    color: #e6edf3;
+    border-color: #30363d;
+}
+
+body.dark .ep-table th,
+body.dark .ep-table td {
+    background-color: #161b22;
+    border-color: #30363d;
+    color: #e6edf3;
+}
+
+body.dark .status-badge.success {
+    background-color: rgba(46, 160, 67, 0.15);
+    color: #58a6ff;
+}
+
+body.dark .summary-label,
+body.dark .summary-value {
+    color: #e6edf3;
+}
+
+body.dark .summary-value.highlight {
+    color: #efbf04;
+}
+
+body.dark .progress-bar {
+    background-color: #efbf04;
+}
