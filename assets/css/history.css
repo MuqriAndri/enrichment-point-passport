@@ -22,6 +22,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     background-color: var(--background-light);
     color: var(--text-dark);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .navbar {
@@ -176,3 +177,53 @@ body {
     color: var(--primary-color);
 }
 
+/* ============================= */
+/* DARK MODE OVERRIDES FOR HISTORY PAGE */
+/* ============================= */
+body.dark {
+    background-color: #0d1117;
+    color: #e6edf3;
+}
+
+body.dark .container {
+    background-color: #161b22;
+    color: #e6edf3;
+    border-color: #30363d;
+}
+
+body.dark .menu-tabs {
+    background-color: #161b22;
+    border-color: #30363d;
+}
+
+body.dark .menu-tabs button {
+    color: #c9d1d9;
+}
+
+body.dark .menu-tabs .active {
+    background-color: #238636;
+    color: #fff;
+}
+
+body.dark .history-table,
+body.dark .details-table {
+    background-color: #161b22;
+    border-color: #30363d;
+}
+
+body.dark .history-table th,
+body.dark .history-table td,
+body.dark .details-table th,
+body.dark .details-table td {
+    border-color: #30363d;
+    color: #e6edf3;
+}
+
+body.dark .history-table caption,
+body.dark .details-table caption {
+    color: #58a6ff;
+}
+
+body.dark .points-total {
+    color: #3fb950;
+}

@@ -1,3 +1,16 @@
+<?php
+session_start();
+
+$isDark = false;
+if (isset($_SESSION['user_id'])) {
+    require_once 'config/database.php'; // if not already included
+    $stmt = $pdo->prepare("SELECT dark_mode FROM users WHERE user_id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $user = $stmt->fetch();
+    $isDark = $user && $user['dark_mode'];
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,7 +23,7 @@
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
 </head>
 
-<body>
+<body class="<?php echo $isDark ? 'dark' : ''; ?>">
     <div class="dashboard-container">
         <nav class="top-nav">
             <div class="nav-left">
