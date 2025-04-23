@@ -14,6 +14,8 @@
     --info-color: #4299E1;
     --background-light: #f7fafc;
     --border-color: #e2e8f0;
+    --success-green: #2ea043;
+
 
     /* Spacing Variables */
     --spacing-xs: 0.5rem;
@@ -436,10 +438,9 @@ body {
 }
 
 .tab-item.active {
-    background: var(--primary-color);
+    background: var(--success-green);
     color: white;
     border-radius: var(--radius-md);
-    /* Explicitly set border radius for active state */
 }
 
 /* Remove any underline effects */
