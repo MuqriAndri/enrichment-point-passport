@@ -475,3 +475,82 @@ body {
         right: -30px; /* Adjust position for smaller screens */
     }
 }
+
+/* Dark Mode Overrides */
+body.dark {
+    background-color: #0d1117;
+    color: #e6edf3;
+}
+
+body.dark .event-slide,
+body.dark .event-item-box,
+body.dark .modal-content,
+body.dark .calendar-day,
+body.dark .dashboard-grid {
+    background-color: #161b22;
+    color: #e6edf3;
+    border-color: #30363d;
+}
+
+body.dark .event-status.available {
+    background-color: #238636;
+}
+
+body.dark .event-status.upcoming {
+    background-color: #1f6feb;
+}
+
+body.dark .btn-primary,
+body.dark .btn-secondary {
+    background-color: #238636;
+    color: white;
+    border-color: transparent;
+}
+
+body.dark .btn-primary:hover,
+body.dark .btn-secondary:hover {
+    background-color: #2ea043;
+}
+
+body.dark .short-description,
+body.dark .event-item p,
+body.dark .modal-content p {
+    color: #8b949e;
+}
+
+body.dark .image-indicators .indicator {
+    background-color: #444c56;
+    border: 2px solid #0d1117;
+}
+
+body.dark .image-indicators .indicator.active {
+    background-color: #58a6ff;
+}
+
+body.dark .nav-button {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dark .nav-button:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+body.dark .calendar-day.today {
+    background-color: #238636;
+    color: white;
+    border: 1px solid #2ea043;
+}
+
+body.dark .calendar-day.event-day {
+    background-color: #1f6feb;
+}
+
+body.dark .calendar-day.event-day:hover {
+    background-color: #238636;
+}
+
+body.dark .tooltip {
+    background-color: #21262d;
+    color: #e6edf3;
+    border-color: #30363d;
+}
