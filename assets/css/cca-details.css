@@ -824,11 +824,15 @@ body.dark-mode .club-logo-large {
 }
 
 body.dark-mode .category-badge,
-body.dark-mode .member-count,
-body.dark-mode .points-info {
+body.dark-mode .club-meta .member-count,
+body.dark-mode .club-meta .points-info {
     color: #e2e8f0;
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+body.dark-mode .club-meta svg {
+    color: #e2e8f0;
 }
 
 body.dark-mode .club-about,

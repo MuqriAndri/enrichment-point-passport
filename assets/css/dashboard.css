@@ -1351,3 +1351,31 @@ body.dark .points-badge {
 body.dark .event-date {
     background-color: #1e252f;
 }
+
+body.dark .top-nav {
+    background-color: #161b22;
+    background-image: none;
+    border-bottom: 1px solid #30363d;
+}
+
+body.dark .top-nav::before,
+body.dark .top-nav::after {
+    display: none;
+}
+
+body.dark .user-name {
+    color: #c9d1d9;
+}
+
+body.dark .notification-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark .search-bar input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+body.dark .search-bar svg {
+    color: rgba(255, 255, 255, 0.6);
+}
+
