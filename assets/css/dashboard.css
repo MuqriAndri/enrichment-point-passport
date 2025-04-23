@@ -1403,16 +1403,220 @@ body.dark .tab-item.active {
     color: #fff;
 }
 
+/* Joined Clubs Section */
+.joined-clubs {
+    background-color: #fff;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.club-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.club-item {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-fast);
+}
+
+.club-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.club-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background-color: var(--primary-color);
+    color: #fff;
+    margin-right: var(--spacing-sm);
+}
+
+.club-details {
+    flex: 1;
+}
+
+.club-details h4 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.club-details p {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    color: var(--text-light);
+}
+
+.view-club-btn {
+    background-color: var(--accent-color);
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.view-club-btn:hover {
+    background-color: #d9ab00;
+}
+
+.no-data-message {
+    padding: var(--spacing-md);
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+.no-data-message a {
+    color: var(--primary-color);
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.no-data-message a:hover {
+    color: var(--primary-gradient);
+}
+
+/* Dark Mode Styles */
+.dark .joined-clubs {
+    background-color: #2d3748;
+    color: #e2e8f0;
+}
+
+.dark .club-item {
+    border-color: #4a5568;
+    background-color: #1a202c;
+}
+
+.dark .club-details h4 {
+    color: #e2e8f0;
+}
+
+.dark .club-details p {
+    color: #a0aec0;
+}
+
+.dark .view-club-btn {
+    background-color: #d69e2e;
+    color: #1a202c;
+}
+
+.dark .view-club-btn:hover {
+    background-color: #ecc94b;
+}
+
+.dark .no-data-message {
+    color: #a0aec0;
+}
+
+.dark .no-data-message a {
+    color: #90cdf4;
+}
+
+.dark .no-data-message a:hover {
+    color: #63b3ed;
+}
+
+/* Footer Styles */
+.footer {
+    margin-top: auto;
+    background-color: white;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    color: var(--text-light);
+    padding: 0 var(--spacing-md);
+}
+
+.footer-icons {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    margin-bottom: 1.5rem;
+}
+
+.icon-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--primary-color);
+    transition: transform 0.3s ease;
+}
+
+.icon-container:hover {
+    transform: translateY(-5px);
+    color: var(--accent-color);
+}
+
+.icon-container span {
+    margin-top: 0.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.footer-content p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Dark mode for footer */
+body.dark .footer {
+    background-color: #161b22;
+    border-top-color: #30363d;
+}
+
+body.dark .footer-content {
+    color: #a0aec0;
+}
+
+body.dark .icon-container {
+    color: #e6edf3;
+}
+
+body.dark .icon-container:hover {
+    color: var(--accent-color);
+}
+
 /* Mobile Burger Menu Styles */
 .burger-menu {
-    display: none; /* Hidden by default on desktop */
+    display: none;
+    /* Hidden by default on desktop */
     background: none;
     border: none;
     cursor: pointer;
     padding: 8px;
     margin-right: var(--spacing-sm);
     position: relative;
-    z-index: 1100; /* Higher than the mobile menu overlay */
+    z-index: 1100;
+    /* Higher than the mobile menu overlay */
 }
 
 .burger-line {
@@ -1592,15 +1796,17 @@ body.dark .mobile-nav-item:hover {
     .burger-menu {
         display: block;
     }
-    
+
     .tab-navigation {
-        display: none; /* Hide the main tab navigation on mobile */
+        display: none;
+        /* Hide the main tab navigation on mobile */
     }
-    
+
     .main-content {
-        margin-top: 4rem; /* Adjust for fixed navbar */
+        margin-top: 4rem;
+        /* Adjust for fixed navbar */
     }
-    
+
     .main-wrapper {
         padding: var(--spacing-sm);
     }
@@ -1608,14 +1814,40 @@ body.dark .mobile-nav-item:hover {
 
 @media screen and (max-width: 768px) {
     .nav-right .search-bar {
-        display: none; /* Hide the top search bar */
+        display: none;
+        /* Hide the top search bar */
     }
-    
+
     .nav-left h2 {
-        display: none; /* Hide the header title */
+        display: none;
+        /* Hide the header title */
     }
-    
+
     .nav-logo {
-        height: 30px; /* Make logo smaller */
+        height: 30px;
+        /* Make logo smaller */
+    }
+}
+
+/* Responsive footer */
+@media screen and (max-width: 768px) {
+    .footer-icons {
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .footer {
+        padding: 1.5rem 0;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .footer-icons {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .footer-content p {
+        font-size: 0.9rem;
     }
 }
