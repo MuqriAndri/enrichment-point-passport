@@ -192,9 +192,9 @@
     align-items: center;
     gap: 0.25rem;
     font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.8);
-    white-space: nowrap; /* Prevent the text from wrapping */
-    position: relative; /* Ensure proper positioning */
+    color: var(--text-light); /* ✅ dynamic based on theme */
+    white-space: nowrap;
+    position: relative;
 }
 
 .points-info svg {

@@ -119,7 +119,7 @@ $clubMapping = require 'config/club-mapping.php';
     </style>
 </head>
 
-<body <?php if ($isDark) echo 'class="dark-mode"'; ?>>
+<body class="<?php echo isset($_SESSION['dark_mode']) && $_SESSION['dark_mode'] ? 'dark-mode' : ''; ?>">
     <div class="dashboard-container">
         <!-- Top Navigation Bar -->
         <nav class="top-nav">
