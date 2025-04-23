@@ -1385,8 +1385,8 @@ body.dark .search-bar svg {
 
 /* Dark mode hover fix */
 body.dark .tab-item:hover:not(.active) {
-    background: rgba(255, 255, 255, 0.1); /* subtle light hover */
-    color: white;
+    background-color: rgba(255, 255, 255, 0.1); /* subtle light hover */
+    color: #fff; /* ensures visible on dark */
 }
 
 /* Optional: Dark mode active tab override (if not using global --tab-active-bg) */
