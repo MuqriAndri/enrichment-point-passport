@@ -215,6 +215,7 @@ if (isset($_SESSION['user_id'])) {
 
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/join-club.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/search.js"></script>
 </body>
 
 </html>

@@ -150,12 +150,12 @@ if (isset($_SESSION['user_id'])) {
 
 
                 </div>
-</body>
+            </div>
+        </div>
+    </div>
 
-</html>
-
-
-</script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/search.js"></script>
 </body>
 
 </html>

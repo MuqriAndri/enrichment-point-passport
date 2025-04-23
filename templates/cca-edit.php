@@ -921,6 +921,7 @@ $locations = $pageData['locations'] ?? [];
 
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/cca-edit.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/search.js"></script>
 
     <!-- Additional script to enforce date picker styling -->
     <script>

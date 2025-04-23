@@ -605,6 +605,7 @@ $clubMapping = require 'config/club-mapping.php';
     <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/join-club.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/gallery-modal.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/search.js"></script>
 
     <script>
         // Activity details modal functionality
