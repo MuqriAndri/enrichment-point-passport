@@ -5,7 +5,6 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Dark mode detection logic
 $isDark = false;
 if (isset($_SESSION['user_id'])) {
     $stmt = $pdo->prepare("SELECT dark_mode FROM users WHERE user_id = ?");
@@ -120,7 +119,7 @@ $clubMapping = require 'config/club-mapping.php';
     </style>
 </head>
 
-<body <?php if (isset($_SESSION['dark_mode']) && $_SESSION['dark_mode']) echo 'class="dark-mode"'; ?>>
+<body <?php if ($isDark) echo 'class="dark-mode"'; ?>>
     <div class="dashboard-container">
         <!-- Top Navigation Bar -->
         <nav class="top-nav">
