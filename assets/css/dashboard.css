@@ -1395,3 +1395,220 @@ body.dark .tab-item.active {
     background-color: #1a365d; /* or your preferred dark mode active color */
     color: #fff;
 }
+
+/* Mobile Burger Menu Styles */
+.burger-menu {
+    display: none; /* Hidden by default on desktop */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    margin-right: var(--spacing-sm);
+    position: relative;
+    z-index: 1100; /* Higher than the mobile menu overlay */
+}
+
+.burger-line {
+    display: block;
+    width: 24px;
+    height: 2px;
+    margin: 5px 0;
+    background-color: white;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+/* Active state for burger menu */
+.burger-menu.active .burger-line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.burger-menu.active .burger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.burger-menu.active .burger-line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+    display: flex;
+}
+
+.mobile-menu-overlay.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+.mobile-menu-content {
+    width: 280px;
+    height: 100%;
+    background-color: white;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-menu-overlay.active .mobile-menu-content {
+    transform: translateX(0);
+}
+
+.mobile-menu-header {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.mobile-menu-header .user-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.mobile-menu-header .user-details h3 {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.mobile-menu-header .user-details p {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin: 0;
+}
+
+.mobile-search {
+    padding: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+}
+
+.mobile-search input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+    font-size: 0.9rem;
+}
+
+.mobile-search button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0 12px;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    cursor: pointer;
+}
+
+.mobile-nav {
+    flex: 1;
+    padding: var(--spacing-sm) 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.mobile-nav-item.active {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--primary-color);
+}
+
+.mobile-nav-item:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.mobile-nav-item svg {
+    color: var(--text-light);
+}
+
+.mobile-nav-item.active svg {
+    color: var(--primary-color);
+}
+
+.mobile-menu-footer {
+    border-top: 1px solid var(--border-color);
+    padding-top: var(--spacing-sm);
+}
+
+/* Dark mode styles for mobile menu */
+body.dark .mobile-menu-content {
+    background-color: #161b22;
+    color: #e6edf3;
+}
+
+body.dark .mobile-menu-header,
+body.dark .mobile-search,
+body.dark .mobile-menu-footer {
+    border-color: #30363d;
+}
+
+body.dark .mobile-search input {
+    background-color: #0d1117;
+    border-color: #30363d;
+    color: #e6edf3;
+}
+
+body.dark .mobile-nav-item {
+    color: #c9d1d9;
+}
+
+body.dark .mobile-nav-item.active {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #58a6ff;
+}
+
+body.dark .mobile-nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Media Queries for Responsive Design */
+@media screen and (max-width: 992px) {
+    .burger-menu {
+        display: block;
+    }
+    
+    .tab-navigation {
+        display: none; /* Hide the main tab navigation on mobile */
+    }
+    
+    .main-content {
+        margin-top: 4rem; /* Adjust for fixed navbar */
+    }
+    
+    .main-wrapper {
+        padding: var(--spacing-sm);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .nav-right .search-bar {
+        display: none; /* Hide the top search bar */
+    }
+    
+    .nav-left h2 {
+        display: none; /* Hide the header title */
+    }
+    
+    .nav-logo {
+        height: 30px; /* Make logo smaller */
+    }
+}
