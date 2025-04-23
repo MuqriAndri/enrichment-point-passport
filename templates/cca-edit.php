@@ -5,6 +5,16 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+$isDark = false;
+if (isset($_SESSION['user_id'])) {
+    $stmt = $pdo->prepare("SELECT dark_mode FROM users WHERE user_id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $user = $stmt->fetch();
+    $isDark = $user && $user['dark_mode'];
+    $_SESSION['dark_mode'] = $isDark;
+}
+
+
 // Make sure we have club details
 if (!isset($pageData['details']) || !isset($pageData['is_officer']) || !$pageData['is_officer']) {
     header("Location: " . BASE_URL . "/cca");
@@ -28,7 +38,7 @@ $locations = $pageData['locations'] ?? [];
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/cca-edit.css">
 </head>
 
-<body>
+<body <?php if (!empty($_SESSION['dark_mode'])) echo 'data-theme="dark"'; ?>>
     <div class="dashboard-container">
         <!-- Top Navigation Bar -->
         <nav class="top-nav">

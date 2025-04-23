@@ -1104,8 +1104,8 @@ input[type="datetime-local"] {
 }
 
 .time-input {
-    /* Remove spinner buttons for number inputs */
-    -moz-appearance: textfield; /* Firefox */
+    -moz-appearance: textfield; /* Removes spinners in Firefox */
+    appearance: textfield;       /* Future-proofing for modern browsers */
 }
 
 .time-input::-webkit-outer-spin-button,
@@ -1235,4 +1235,96 @@ input[type="datetime-local"] {
 .highlight-fields {
     animation: highlight-pulse 1.5s ease;
     border-color: var(--primary-color) !important;
-} 
+}
+
+/* Dark Mode Styles */
+[data-theme="dark"] .edit-form,
+[data-theme="dark"] .gallery-upload,
+[data-theme="dark"] .map-container,
+[data-theme="dark"] .location-item,
+[data-theme="dark"] .preview-info,
+[data-theme="dark"] .gallery-preview {
+    background-color: #1a202c;
+    border-color: #2d3748;
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .edit-form-input,
+[data-theme="dark"] .edit-form-textarea,
+[data-theme="dark"] .edit-form-select,
+[data-theme="dark"] .date-select,
+[data-theme="dark"] .time-select,
+[data-theme="dark"] .time-input,
+[data-theme="dark"] select.edit-form-input {
+    background-color: #2d3748;
+    color: #edf2f7;
+    border-color: #4a5568;
+}
+
+[data-theme="dark"] .edit-form-label,
+[data-theme="dark"] .form-hint,
+[data-theme="dark"] .gallery-upload-text,
+[data-theme="dark"] .gallery-upload-hint,
+[data-theme="dark"] .location-details h4,
+[data-theme="dark"] .location-details p {
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .activity-item {
+    background-color: #2d3748;
+    border-left-color: var(--primary-color);
+}
+
+[data-theme="dark"] .activity-title,
+[data-theme="dark"] .activity-meta-item,
+[data-theme="dark"] .activity-description {
+    color: #edf2f7;
+}
+
+[data-theme="dark"] .activity-meta-item svg,
+[data-theme="dark"] .gallery-upload svg {
+    color: #edf2f7;
+}
+
+[data-theme="dark"] .gallery-item-action {
+    background-color: #4a5568;
+    color: #f56565;
+}
+
+[data-theme="dark"] .gallery-item-action:hover {
+    background-color: #f56565;
+    color: white;
+}
+
+[data-theme="dark"] .submit-btn,
+[data-theme="dark"] .secondary-btn {
+    background-color: #4a5568;
+    color: #f7fafc;
+}
+
+[data-theme="dark"] .secondary-btn {
+    border-color: #a0aec0;
+}
+
+[data-theme="dark"] .secondary-btn:hover {
+    background-color: #2d3748;
+}
+
+[data-theme="dark"] .geolocation-status.success {
+    background-color: rgba(72, 187, 120, 0.1);
+    color: #48bb78;
+}
+
+[data-theme="dark"] .geolocation-status.error {
+    background-color: rgba(245, 101, 101, 0.1);
+    color: #f56565;
+}
+
+[data-theme="dark"] .geolocation-status.loading {
+    background-color: rgba(66, 153, 225, 0.1);
+    color: #63b3ed;
+}
+
+[data-theme="dark"] #location-map {
+    filter: brightness(0.9);
+}
