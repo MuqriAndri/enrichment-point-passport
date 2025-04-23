@@ -5,6 +5,15 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Dark mode detection logic
+$isDark = false;
+if (isset($_SESSION['user_id'])) {
+    $stmt = $pdo->prepare("SELECT dark_mode FROM users WHERE user_id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $user = $stmt->fetch();
+    $isDark = $user && $user['dark_mode'];
+}
+
 // Extract club information from the $pageData array
 $clubDetails = $pageData['details'] ?? [];
 $isMember = $pageData['isMember'] ?? false;
@@ -111,7 +120,7 @@ $clubMapping = require 'config/club-mapping.php';
     </style>
 </head>
 
-<body>
+<body class="<?php echo $isDark ? 'dark' : ''; ?>">
     <div class="dashboard-container">
         <!-- Top Navigation Bar -->
         <nav class="top-nav">

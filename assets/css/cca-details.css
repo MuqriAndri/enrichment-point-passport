@@ -799,3 +799,137 @@
         min-width: 40px;
     }
 }
+
+body.dark-mode {
+    background-color: #1a202c;
+    color: #edf2f7;
+}
+
+body.dark-mode .club-detail-header {
+    background-color: #2d3748;
+    background-image: none;
+    color: #edf2f7;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .club-detail-header::before,
+body.dark-mode .club-detail-header::after {
+    display: none;
+}
+
+body.dark-mode .club-logo-large {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+body.dark-mode .category-badge,
+body.dark-mode .member-count,
+body.dark-mode .points-info {
+    color: #e2e8f0;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .club-about,
+body.dark-mode .club-events,
+body.dark-mode .club-activities,
+body.dark-mode .club-achievements,
+body.dark-mode .club-gallery {
+    background: #2d3748;
+    color: #edf2f7;
+    border-color: #4a5568;
+}
+
+body.dark-mode .section-header h2 {
+    color: #e2e8f0;
+}
+
+body.dark-mode .detail-item p,
+body.dark-mode .detail-item strong,
+body.dark-mode .location-link {
+    color: #cbd5e0;
+}
+
+body.dark-mode .location-link:hover {
+    color: #63b3ed;
+}
+
+body.dark-mode .club-event-item {
+    background: #4a5568;
+    border-color: #718096;
+}
+
+body.dark-mode .club-event-item:hover {
+    background: #2d3748;
+}
+
+body.dark-mode .event-date {
+    background: #1a202c;
+    border-color: #4a5568;
+}
+
+body.dark-mode .event-date .day {
+    color: #f6e05e;
+}
+
+body.dark-mode .event-meta span {
+    color: #a0aec0;
+}
+
+body.dark-mode .activities-list li,
+body.dark-mode .achievements-list li {
+    background-color: #4a5568;
+    color: #edf2f7;
+}
+
+body.dark-mode .activities-list li:hover,
+body.dark-mode .achievements-list li:hover {
+    background-color: #2d3748;
+}
+
+body.dark-mode .gallery-item {
+    border-color: #4a5568;
+}
+
+body.dark-mode .gallery-item-overlay {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+body.dark-mode .gallery-modal-content {
+    background-color: #2d3748;
+    color: #edf2f7;
+}
+
+body.dark-mode #modal-image-description,
+body.dark-mode #modal-image-title {
+    color: #e2e8f0;
+}
+
+body.dark-mode .gallery-read-more {
+    background-color: #1a365d;
+}
+
+body.dark-mode .gallery-read-more:hover {
+    background-color: #2d4a7c;
+}
+
+body.dark-mode .alert-success {
+    background-color: rgba(72, 187, 120, 0.15);
+    color: #9ae6b4;
+    border-color: rgba(72, 187, 120, 0.3);
+}
+
+body.dark-mode .alert-error {
+    background-color: rgba(245, 101, 101, 0.15);
+    color: #feb2b2;
+    border-color: rgba(245, 101, 101, 0.3);
+}
+
+body.dark-mode .no-events,
+body.dark-mode .no-activities,
+body.dark-mode .no-achievements,
+body.dark-mode .no-images {
+    background: #4a5568;
+    color: #e2e8f0;
+}
