@@ -835,18 +835,21 @@ body.dark-mode .club-meta svg {
     color: #e2e8f0;
 }
 
-body.dark-mode .club-about,
-body.dark-mode .club-events,
-body.dark-mode .club-activities,
-body.dark-mode .club-achievements,
-body.dark-mode .club-gallery {
-    background: #2d3748;
-    color: #edf2f7;
-    border-color: #4a5568;
+body.dark .club-about,
+body.dark .club-events,
+body.dark .club-activities,
+body.dark .club-achievements,
+body.dark .club-gallery {
+    background-color: #161b22;
+    color: #e6edf3;
+    border-color: #30363d;
 }
 
-body.dark-mode .section-header h2 {
-    color: #e2e8f0;
+body.dark .section-header h2,
+body.dark .about-content p,
+body.dark .detail-item strong,
+body.dark .detail-item p {
+    color: #e6edf3;
 }
 
 body.dark-mode .detail-item p,
@@ -930,10 +933,10 @@ body.dark-mode .alert-error {
     border-color: rgba(245, 101, 101, 0.3);
 }
 
-body.dark-mode .no-events,
-body.dark-mode .no-activities,
-body.dark-mode .no-achievements,
-body.dark-mode .no-images {
-    background: #4a5568;
-    color: #e2e8f0;
+body.dark .no-events,
+body.dark .no-activities,
+body.dark .no-achievements,
+body.dark .no-images {
+    background-color: #21262d;
+    color: #c9d1d9;
 }
