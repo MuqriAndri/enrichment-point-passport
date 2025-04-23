@@ -124,7 +124,7 @@ $clubMapping = require 'config/club-mapping.php';
         <!-- Top Navigation Bar -->
         <nav class="top-nav">
             <div class="nav-left">
-                <img src="<?php echo BASE_URL; ?>/assets/images/logo/politeknik-brunei-logo.png" alt="PB Logo" class="nav-logo">
+                <img src="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/logo/politeknik-brunei-logo.png" alt="PB Logo" class="nav-logo">
                 <h2>Enrichment Point Passport</h2>
             </div>
             <div class="nav-right">

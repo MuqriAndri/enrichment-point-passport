@@ -15,7 +15,7 @@
         <a href="<?php echo BASE_URL; ?>/contact">Contact</a>
     </nav>
     <div class="error-container">
-        <img src="<?php echo BASE_URL; ?>/assets/images/logo/politeknik-brunei-logo.png" alt="Politeknik Brunei Logo" class="logo">
+        <img src="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/logo/politeknik-brunei-logo.png" alt="Politeknik Brunei Logo" class="logo">
         <div class="error-content">
             <h1 class="error-code">404</h1>
             <h2 class="error-title">Page Not Found</h2>

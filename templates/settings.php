@@ -5,18 +5,20 @@ include '../config.php'; // Adjust if needed for BASE_URL
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Settings</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/settings.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
 </head>
+
 <body>
     <div class="dashboard-container">
         <!-- Top Navigation Bar -->
         <nav class="top-nav">
             <div class="nav-left">
-                <img src="<?php echo BASE_URL; ?>/assets/images/logo/politeknik-brunei-logo.png" alt="PB Logo" class="nav-logo">
+                <img src="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/logo/politeknik-brunei-logo.png" alt="PB Logo" class="nav-logo">
                 <h2>Enrichment Point Passport</h2>
             </div>
             <div class="nav-right">
@@ -70,9 +72,9 @@ include '../config.php'; // Adjust if needed for BASE_URL
 
                 <!-- Settings Section -->
                 <div class="settings-page">
-                <div class="settings-header">
-                    <h1>Settings</h1>
-                </div>
+                    <div class="settings-header">
+                        <h1>Settings</h1>
+                    </div>
 
 
 
@@ -113,4 +115,5 @@ include '../config.php'; // Adjust if needed for BASE_URL
     <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
 </body>
+
 </html>

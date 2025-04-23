@@ -118,6 +118,45 @@
     margin-top: 20px;
 }
 
+/* Top form actions (for autofill button) */
+.form-top-actions {
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    margin-top: 0;
+}
+
+.autofill-btn {
+    padding: 8px 12px;
+    background-color: #1a365d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.autofill-btn:hover {
+    background-color: #0f2441;
+}
+
+.autofill-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(26, 54, 93, 0.2);
+}
+
+.autofill-btn:before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 11 12 14 22 4'%3E%3C/polyline%3E%3Cpath d='M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    margin-right: 6px;
+}
+
 .cancel-application-btn,
 .submit-application-btn {
     padding: 10px 16px;

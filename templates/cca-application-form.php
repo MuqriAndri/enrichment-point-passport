@@ -11,6 +11,10 @@
                 <input type="hidden" name="operation" value="join">
                 <input type="hidden" name="club_id" id="applicationClubId" value="<?php echo htmlspecialchars($clubId); ?>">
 
+                <div class="form-actions form-top-actions">
+                    <button type="button" class="autofill-btn" id="autofillButton">Autofill My Information</button>
+                </div>
+
                 <div class="form-group">
                     <label for="full_name">Full Name</label>
                     <input type="text" name="full_name" id="full_name" required>
@@ -66,5 +70,18 @@
         </div>
     </div>
 </div>
+
+<!-- Pass session data to JavaScript -->
+<script>
+    window.sessionUserData = {
+        full_name: "<?php echo isset($_SESSION['full_name']) ? htmlspecialchars($_SESSION['full_name']) : ''; ?>",
+        student_id: "<?php echo isset($_SESSION['student_id']) ? htmlspecialchars($_SESSION['student_id']) : ''; ?>",
+        user_email: "<?php echo isset($_SESSION['user_email']) ? htmlspecialchars($_SESSION['user_email']) : ''; ?>",
+        school: "<?php echo isset($_SESSION['school']) ? htmlspecialchars($_SESSION['school']) : ''; ?>",
+        programme: "<?php echo isset($_SESSION['programme']) ? htmlspecialchars($_SESSION['programme']) : ''; ?>",
+        group_code: "<?php echo isset($_SESSION['group_code']) ? htmlspecialchars($_SESSION['group_code']) : ''; ?>",
+        intake: "<?php echo isset($_SESSION['intake']) ? htmlspecialchars($_SESSION['intake']) : ''; ?>"
+    };
+</script>
 
 <script src="<?php echo BASE_URL; ?>/assets/js/join-club.js"></script>

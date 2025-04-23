@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Club Join: Initializing');
     initializeJoinButtons();
     initializeApplicationModal();
+    initializeAutofillButton();
     
     // Join Club Button Handler
     const joinButton = document.querySelector('form.join-btn');
@@ -148,37 +149,7 @@ function showApplicationModal(clubId, clubName) {
         // Reset form first
         form.reset();
         
-        // Try to pre-fill form fields from PHP session values
-        if (typeof window.sessionUserData !== 'undefined') {
-            const userData = window.sessionUserData;
-            
-            const fields = {
-                'full_name': userData.full_name,
-                'student_id': userData.student_id,
-                'student_email': userData.user_email,
-                'school': userData.school,
-                'course': userData.programme,
-                'group_code': userData.group_code,
-                'intake': userData.intake
-            };
-            
-            // Populate fields
-            for (const [fieldId, value] of Object.entries(fields)) {
-                if (value) {
-                    const field = form.querySelector(`#${fieldId}`);
-                    if (field) {
-                        if (field.tagName === 'SELECT') {
-                            // For select elements, find and select the matching option
-                            const option = Array.from(field.options).find(opt => opt.value === value);
-                            if (option) option.selected = true;
-                        } else {
-                            // For text inputs
-                            field.value = value;
-                        }
-                    }
-                }
-            }
-        }
+        // Removed automatic form filling - now only happens when autofill button is clicked
     }
     
     // Show the modal
@@ -327,4 +298,79 @@ function showNotification(message, type = 'success') {
             notification.remove();
         }, 300);
     }, 3000);
+}
+
+/**
+ * Initialize autofill button functionality
+ */
+function initializeAutofillButton() {
+    const autofillButton = document.getElementById('autofillButton');
+    if (!autofillButton) {
+        console.log('Club Join: Autofill button not found');
+        return;
+    }
+    
+    console.log('Club Join: Initializing autofill button');
+    
+    autofillButton.addEventListener('click', function() {
+        console.log('Club Join: Autofill button clicked');
+        autofillFormFromSession();
+    });
+}
+
+/**
+ * Autofill form with session data
+ */
+function autofillFormFromSession() {
+    const form = document.getElementById('clubApplicationForm');
+    if (!form) {
+        console.error('Club Join: Form not found for autofill');
+        return;
+    }
+    
+    // Check if session data is available
+    if (typeof window.sessionUserData === 'undefined' || !window.sessionUserData) {
+        console.error('Club Join: No session data available for autofill');
+        alert('Unable to autofill form. No user data available.');
+        return;
+    }
+    
+    // Get user data
+    const userData = window.sessionUserData;
+    
+    // Define field mappings
+    const fields = {
+        'full_name': userData.full_name,
+        'student_id': userData.student_id,
+        'student_email': userData.user_email,
+        'school': userData.school,
+        'course': userData.programme,
+        'group_code': userData.group_code,
+        'intake': userData.intake
+    };
+    
+    // Populate fields
+    for (const [fieldId, value] of Object.entries(fields)) {
+        if (value) {
+            const field = form.querySelector(`#${fieldId}`);
+            if (field) {
+                if (field.tagName === 'SELECT') {
+                    // For select elements, find and select the matching option
+                    const option = Array.from(field.options).find(opt => opt.value === value);
+                    if (option) option.selected = true;
+                } else {
+                    // For text inputs
+                    field.value = value;
+                }
+            }
+        }
+    }
+    
+    // Show confirmation
+    const focusField = form.querySelector('#phone_number');
+    if (focusField) {
+        focusField.focus();
+    }
+    
+    console.log('Club Join: Form autofilled successfully');
 }
