@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeCalendar();
     initializeProgressCircle();
     handleEventRegistration();
+    initializeMobileMenu();
 });
 
 function initializeCalendar() {
@@ -238,4 +239,64 @@ function updateRegistrationButton(button) {
     button.classList.add('registered');
     button.setAttribute('aria-label', 'Already registered for this event');
     console.log('Dashboard: Updated registration button');
+}
+
+// Mobile Burger Menu Functionality
+function initializeMobileMenu() {
+    console.log('Dashboard: Initializing mobile menu');
+    const burgerMenu = document.querySelector('.burger-menu');
+    const mobileOverlay = document.querySelector('.mobile-menu-overlay');
+    
+    if (!burgerMenu || !mobileOverlay) {
+        console.log('Dashboard: Mobile menu elements not found');
+        return;
+    }
+    
+    // Toggle menu when burger is clicked
+    burgerMenu.addEventListener('click', function() {
+        burgerMenu.classList.toggle('active');
+        mobileOverlay.classList.toggle('active');
+        
+        // Update aria-expanded attribute
+        const isExpanded = burgerMenu.classList.contains('active');
+        burgerMenu.setAttribute('aria-expanded', isExpanded);
+        
+        // Prevent body scrolling when menu is open
+        document.body.style.overflow = isExpanded ? 'hidden' : '';
+        
+        console.log(`Dashboard: Mobile menu ${isExpanded ? 'opened' : 'closed'}`);
+    });
+    
+    // Close menu when clicking outside
+    mobileOverlay.addEventListener('click', function(e) {
+        if (e.target === mobileOverlay) {
+            burgerMenu.classList.remove('active');
+            mobileOverlay.classList.remove('active');
+            burgerMenu.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+            console.log('Dashboard: Mobile menu closed by overlay click');
+        }
+    });
+    
+    // Initialize the mobile search functionality
+    const mobileSearch = document.querySelector('.mobile-search');
+    if (mobileSearch) {
+        mobileSearch.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const searchValue = mobileSearch.querySelector('input').value;
+            console.log(`Dashboard: Mobile search for: ${searchValue}`);
+            // Implement actual search functionality here
+        });
+    }
+    
+    // Handle Escape key to close the menu
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && mobileOverlay.classList.contains('active')) {
+            burgerMenu.classList.remove('active');
+            mobileOverlay.classList.remove('active');
+            burgerMenu.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+            console.log('Dashboard: Mobile menu closed by Escape key');
+        }
+    });
 }
