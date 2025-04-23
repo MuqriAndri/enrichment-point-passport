@@ -1285,6 +1285,7 @@ body {
 body.dark {
     background-color: #0d1117;
     color: #e6edf3;
+    --primary-color: #238636;
 }
 
 body.dark .dashboard-container,
