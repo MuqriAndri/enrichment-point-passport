@@ -1405,11 +1405,10 @@ body.dark .tab-item.active {
 
 /* Joined Clubs Section */
 .joined-clubs {
-    background-color: #fff;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    padding: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
 }
 
 .club-list {
