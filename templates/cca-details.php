@@ -118,6 +118,8 @@ $clubMapping = require 'config/club-mapping.php';
         }
     </style>
 </head>
+<?php var_dump($_SESSION['user_id'], $isDark); ?>
+
 
 <body class="<?php echo $isDark ? 'dark' : ''; ?>">
     <div class="dashboard-container">
