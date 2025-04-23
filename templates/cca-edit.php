@@ -136,24 +136,26 @@ $locations = $pageData['locations'] ?? [];
                         <?php
                         // Get club slug and handle URL construction properly
                         $clubSlug = $pageData['clubSlug'] ?? '';
-                        
+
                         // If we have a direct slug from pageData, use it
                         if (!empty($clubSlug)) {
                             $clubUrl = BASE_URL . "/cca/" . $clubSlug;
-                        } 
+                        }
                         // Otherwise try to get it from the mapping
                         else if (isset($clubDetails['club_id'])) {
                             // Fallback to direct URL using club_id if no mapping is available
                             $clubUrl = BASE_URL . "/cca?club_id=" . $clubDetails['club_id'];
-                            
+
                             // If we have the club mapping data, use the nice URL format
-                            if (isset($pageData['clubMapping']) && 
-                                isset($clubDetails['category']) && 
-                                isset($clubDetails['club_name'])) {
-                                
+                            if (
+                                isset($pageData['clubMapping']) &&
+                                isset($clubDetails['category']) &&
+                                isset($clubDetails['club_name'])
+                            ) {
+
                                 $category = strtolower($clubDetails['category']);
                                 $clubName = $clubDetails['club_name'];
-                                
+
                                 if (isset($pageData['clubMapping'][$category][$clubName])) {
                                     $clubNameSlug = $pageData['clubMapping'][$category][$clubName];
                                     $clubUrl = BASE_URL . "/cca/" . $clubNameSlug;
@@ -229,7 +231,7 @@ $locations = $pageData['locations'] ?? [];
                     <button class="edit-tab" data-tab="activities">Activities</button>
                     <button class="edit-tab" data-tab="locations">Locations</button>
                 </div>
-                
+
                 <!-- Tab Panels -->
                 <div id="info-panel" class="edit-panel active">
                     <div class="edit-form">
@@ -239,7 +241,7 @@ $locations = $pageData['locations'] ?? [];
                             <input type="hidden" name="club_id" value="<?php echo $clubDetails['club_id']; ?>">
                             <input type="hidden" name="operation" value="update_info">
                             <input type="hidden" name="redirect_to_details" value="1">
-                            
+
                             <!-- Read-only fields -->
                             <div class="edit-form-row">
                                 <div class="edit-form-group">
@@ -251,14 +253,14 @@ $locations = $pageData['locations'] ?? [];
                                     <input type="text" class="edit-form-input" value="<?php echo htmlspecialchars($clubDetails['category'] ?? ''); ?>" readonly disabled>
                                 </div>
                             </div>
-                            
+
                             <!-- Editable fields -->
                             <div class="edit-form-group">
                                 <label class="edit-form-label" for="description">Description</label>
                                 <textarea id="description" name="description" class="edit-form-textarea" rows="5"><?php echo htmlspecialchars($clubDetails['description'] ?? ''); ?></textarea>
                                 <div class="form-hint">Provide a detailed description of your club, its goals, and activities.</div>
                             </div>
-                            
+
                             <div class="edit-form-row">
                                 <div class="edit-form-group">
                                     <label class="edit-form-label" for="advisor">Club Advisor</label>
@@ -269,7 +271,7 @@ $locations = $pageData['locations'] ?? [];
                                     <input type="text" id="president" name="president" class="edit-form-input" value="<?php echo htmlspecialchars($clubDetails['president'] ?? ''); ?>">
                                 </div>
                             </div>
-                            
+
                             <div class="edit-form-row">
                                 <div class="edit-form-group">
                                     <label class="edit-form-label" for="contact_email">Contact Email</label>
@@ -281,13 +283,13 @@ $locations = $pageData['locations'] ?? [];
                                     <div class="form-hint">Example: $5/semester, Free, etc.</div>
                                 </div>
                             </div>
-                            
+
                             <div class="edit-form-group">
                                 <label class="edit-form-label" for="meeting_schedule">Meeting Schedule</label>
                                 <input type="text" id="meeting_schedule" name="meeting_schedule" class="edit-form-input" value="<?php echo htmlspecialchars($clubDetails['meeting_schedule'] ?? ''); ?>">
                                 <div class="form-hint">Example: Every Monday, 2–4 p.m.; Bi-weekly on Fridays, etc.</div>
                             </div>
-                            
+
                             <button type="submit" class="submit-btn primary-btn" onclick="this.form.submit()">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
@@ -299,18 +301,19 @@ $locations = $pageData['locations'] ?? [];
                         </form>
                     </div>
                 </div>
-                
+
                 <div id="gallery-panel" class="edit-panel">
                     <div class="edit-form">
                         <h2>Club Gallery</h2>
-                        
+
                         <!-- Gallery Upload Form -->
                         <form method="POST" action="<?php echo BASE_URL; ?>/cca" enctype="multipart/form-data" class="gallery-upload-form">
                             <input type="hidden" name="action" value="cca_manage">
                             <input type="hidden" name="club_id" value="<?php echo $clubDetails['club_id']; ?>">
                             <input type="hidden" name="operation" value="add_gallery">
                             <input type="hidden" name="redirect_to_details" value="1">
-                            
+                            <input type="hidden" name="s3_upload" value="1">
+
                             <div class="gallery-upload" id="gallery-upload-area">
                                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                     <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path>
@@ -321,9 +324,9 @@ $locations = $pageData['locations'] ?? [];
                                 <div class="gallery-upload-hint">Supported formats: JPEG, PNG, GIF. Max size: 5MB</div>
                                 <input type="file" name="gallery_image" id="gallery-upload-input" accept="image/*" class="hidden-input">
                             </div>
-                            
+
                             <div id="gallery-upload-preview" class="gallery-preview" style="display: none;"></div>
-                            
+
                             <div id="image-details-fields" style="display: none; margin-top: 1rem; padding: 1rem; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 5px;">
                                 <h3 style="margin-top: 0; color: var(--primary-color);">Image Details</h3>
                                 <div class="edit-form-group">
@@ -337,7 +340,7 @@ $locations = $pageData['locations'] ?? [];
                                     <div class="form-hint">This description will be displayed when users click "Read More"</div>
                                 </div>
                             </div>
-                            
+
                             <div class="upload-actions">
                                 <button type="submit" class="submit-btn primary-btn" onclick="this.form.submit()">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -349,18 +352,33 @@ $locations = $pageData['locations'] ?? [];
                                 </button>
                             </div>
                         </form>
-                        
+
                         <!-- Gallery Display -->
                         <div class="gallery-section">
                             <h3>Current Gallery Images</h3>
-                            
+
                             <?php if (empty($gallery)): ?>
                                 <div class="no-items-message">No gallery images have been added yet.</div>
                             <?php else: ?>
                                 <div class="gallery-grid">
                                     <?php foreach ($gallery as $image): ?>
                                         <div class="gallery-item">
-                                            <img src="<?php echo BASE_URL; ?>/assets/images/<?php echo htmlspecialchars($image['image_path']); ?>" alt="<?php echo htmlspecialchars($image['image_title'] ?? 'Gallery image'); ?>">
+                                            <?php
+                                            // Determine if this is an S3 URL or local path
+                                            $imagePath = $image['image_path'];
+                                            $imageUrl = '';
+
+                                            if (strpos($imagePath, 'http') === 0) {
+                                                // This is already a full URL (S3)
+                                                $imageUrl = $imagePath;
+                                                error_log("Edit view - Using direct S3 URL: " . $imageUrl);
+                                            } else {
+                                                // This is a local path, prepend base URL
+                                                $imageUrl = BASE_URL . '/assets/images/' . $imagePath;
+                                                error_log("Edit view - Using local path: " . $imageUrl);
+                                            }
+                                            ?>
+                                            <img src="<?php echo htmlspecialchars($imageUrl); ?>" alt="<?php echo htmlspecialchars($image['image_title'] ?? 'Gallery image'); ?>">
                                             <div class="gallery-item-overlay">
                                                 <?php if (!empty($image['image_title'])): ?>
                                                     <h4 class="gallery-item-title"><?php echo htmlspecialchars($image['image_title']); ?></h4>
@@ -388,23 +406,23 @@ $locations = $pageData['locations'] ?? [];
                         </div>
                     </div>
                 </div>
-                
+
                 <div id="activities-panel" class="edit-panel">
                     <div class="edit-form">
                         <h2>Club Activities</h2>
-                        
+
                         <!-- Add Activity Form -->
                         <form method="POST" action="<?php echo BASE_URL; ?>/cca" id="add-activity-form">
                             <input type="hidden" name="action" value="cca_manage">
                             <input type="hidden" name="club_id" value="<?php echo $clubDetails['club_id']; ?>">
                             <input type="hidden" name="operation" value="add_activity">
                             <input type="hidden" name="redirect_to_details" value="1">
-                            
+
                             <div class="edit-form-group">
                                 <label class="edit-form-label" for="activity-title">Activity Title</label>
                                 <input type="text" id="activity-title" name="title" class="edit-form-input" required>
                             </div>
-                            
+
                             <div class="edit-form-group">
                                 <label class="edit-form-label" for="activity-type">Activity Type</label>
                                 <select id="activity-type" name="activity_type" class="edit-form-input" required>
@@ -417,7 +435,7 @@ $locations = $pageData['locations'] ?? [];
                                 </select>
                                 <div class="form-hint">Select the type of activity</div>
                             </div>
-                            
+
                             <!-- Activity Date/Time Selectors Section -->
                             <div class="edit-form-row">
                                 <div class="edit-form-group">
@@ -495,17 +513,17 @@ $locations = $pageData['locations'] ?? [];
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="edit-form-group">
                                 <label class="edit-form-label" for="activity-location">Location</label>
                                 <input type="text" id="activity-location" name="location" class="edit-form-input">
                             </div>
-                            
+
                             <div class="edit-form-group">
                                 <label class="edit-form-label" for="activity-description">Description</label>
                                 <textarea id="activity-description" name="description" class="edit-form-textarea" rows="4"></textarea>
                             </div>
-                            
+
                             <div class="edit-form-row">
                                 <div class="edit-form-group">
                                     <label class="edit-form-label" for="activity-points">Enrichment Points</label>
@@ -513,7 +531,7 @@ $locations = $pageData['locations'] ?? [];
                                     <div class="form-hint">Number of enrichment points awarded for participation</div>
                                 </div>
                             </div>
-                            
+
                             <button type="submit" class="submit-btn primary-btn" onclick="this.form.submit()">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -523,11 +541,11 @@ $locations = $pageData['locations'] ?? [];
                                 Add Activity
                             </button>
                         </form>
-                        
+
                         <!-- Activities List -->
                         <div class="activity-section">
                             <h3>Club Activities</h3>
-                            
+
                             <?php if (empty($activities)): ?>
                                 <div class="no-items-message">No activities have been added yet.</div>
                             <?php else: ?>
@@ -568,17 +586,17 @@ $locations = $pageData['locations'] ?? [];
                                                         <circle cx="12" cy="12" r="10"></circle>
                                                         <polyline points="12 6 12 12 16 14"></polyline>
                                                     </svg>
-                                                    <?php echo date('g:i A', strtotime($activity['start_datetime'])); ?> - 
+                                                    <?php echo date('g:i A', strtotime($activity['start_datetime'])); ?> -
                                                     <?php echo date('g:i A', strtotime($activity['end_datetime'])); ?>
                                                 </span>
                                                 <?php if (!empty($activity['location'])): ?>
-                                                <span class="activity-meta-item">
-                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                                        <circle cx="12" cy="10" r="3"></circle>
-                                                    </svg>
-                                                    <?php echo htmlspecialchars($activity['location']); ?>
-                                                </span>
+                                                    <span class="activity-meta-item">
+                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                                            <circle cx="12" cy="10" r="3"></circle>
+                                                        </svg>
+                                                        <?php echo htmlspecialchars($activity['location']); ?>
+                                                    </span>
                                                 <?php endif; ?>
                                                 <span class="activity-meta-item">
                                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -588,7 +606,7 @@ $locations = $pageData['locations'] ?? [];
                                                 </span>
                                             </div>
                                             <?php if (!empty($activity['description'])): ?>
-                                            <p class="activity-description"><?php echo htmlspecialchars($activity['description']); ?></p>
+                                                <p class="activity-description"><?php echo htmlspecialchars($activity['description']); ?></p>
                                             <?php endif; ?>
                                         </div>
                                     <?php endforeach; ?>
@@ -597,7 +615,7 @@ $locations = $pageData['locations'] ?? [];
                         </div>
                     </div>
                 </div>
-                
+
                 <div id="locations-panel" class="edit-panel">
                     <div class="edit-form">
                         <h2>Club Location</h2>
@@ -606,34 +624,34 @@ $locations = $pageData['locations'] ?? [];
                             <input type="hidden" name="club_id" value="<?php echo $clubDetails['club_id']; ?>">
                             <input type="hidden" name="operation" value="update_location">
                             <input type="hidden" name="redirect_to_details" value="1">
-                            
+
                             <div class="edit-form-group">
                                 <label class="edit-form-label" for="location">Meeting Location</label>
                                 <input type="text" id="location" name="location" class="edit-form-input" value="<?php echo htmlspecialchars($clubDetails['location'] ?? ''); ?>">
                                 <div class="form-hint">Enter the primary meeting location of the club (e.g., building name, room number)</div>
                             </div>
-                            
+
                             <div class="edit-form-group">
                                 <label class="edit-form-label" for="location-search">Search Location</label>
                                 <input type="text" id="location-search" class="edit-form-input" placeholder="Search for a location...">
                                 <div class="form-hint">Type an address or place name to find it on the map</div>
                             </div>
-                            
+
                             <div class="map-container">
                                 <div id="location-map"></div>
                                 <div class="map-instructions">
                                     <p>
                                         <strong>Set your club location:</strong>
-                                        <ul>
-                                            <li>Click on the map to place the marker at your club's meeting location</li>
-                                            <li>Drag the marker to fine-tune the position</li>
-                                            <li>Use the "Use My Current Location" button if you're at your club location</li>
-                                            <li>Manually enter coordinates if you have specific latitude/longitude values</li>
-                                        </ul>
+                                    <ul>
+                                        <li>Click on the map to place the marker at your club's meeting location</li>
+                                        <li>Drag the marker to fine-tune the position</li>
+                                        <li>Use the "Use My Current Location" button if you're at your club location</li>
+                                        <li>Manually enter coordinates if you have specific latitude/longitude values</li>
+                                    </ul>
                                     </p>
                                 </div>
                             </div>
-                            
+
                             <div class="edit-form-row">
                                 <div class="edit-form-group">
                                     <label class="edit-form-label" for="latitude">Latitude</label>
@@ -655,7 +673,7 @@ $locations = $pageData['locations'] ?? [];
                                 </button>
                                 <div id="geolocation-status" class="geolocation-status"></div>
                             </div>
-                            
+
                             <button type="submit" class="submit-btn primary-btn" onclick="this.form.submit()">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
@@ -666,27 +684,27 @@ $locations = $pageData['locations'] ?? [];
                             </button>
                         </form>
                     </div>
-                    
+
                     <?php if (!empty($locations)): ?>
-                    <div class="additional-locations">
-                        <h3>Additional Meeting Locations</h3>
-                        <div class="locations-list">
-                            <?php foreach ($locations as $loc): ?>
-                                <div class="location-item">
-                                    <div class="location-details">
-                                        <h4><?php echo htmlspecialchars($loc['location_name']); ?></h4>
-                                        <p><?php echo htmlspecialchars($loc['address']); ?></p>
+                        <div class="additional-locations">
+                            <h3>Additional Meeting Locations</h3>
+                            <div class="locations-list">
+                                <?php foreach ($locations as $loc): ?>
+                                    <div class="location-item">
+                                        <div class="location-details">
+                                            <h4><?php echo htmlspecialchars($loc['location_name']); ?></h4>
+                                            <p><?php echo htmlspecialchars($loc['address']); ?></p>
+                                        </div>
                                     </div>
-                                </div>
-                            <?php endforeach; ?>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
-                    </div>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- Map Scripts -->
     <script>
         let map;
@@ -694,47 +712,53 @@ $locations = $pageData['locations'] ?? [];
         let geocoder;
         let searchBox;
         const statusElement = document.getElementById('geolocation-status');
-        
+
         // Initialize the map
         function initMap() {
             // Default to PB location if no coordinates are set
             const lat = parseFloat(document.getElementById('latitude').value) || 4.890534;
             const lng = parseFloat(document.getElementById('longitude').value) || 114.940826;
-            
+
             const mapOptions = {
-                center: { lat, lng },
+                center: {
+                    lat,
+                    lng
+                },
                 zoom: 15,
             };
-            
+
             map = new google.maps.Map(document.getElementById('location-map'), mapOptions);
-            
+
             // Add a marker at the current position
             marker = new google.maps.Marker({
-                position: { lat, lng },
+                position: {
+                    lat,
+                    lng
+                },
                 map: map,
                 draggable: true,
                 title: 'Club Meeting Location'
             });
-            
+
             // Initialize geocoder
             geocoder = new google.maps.Geocoder();
-            
+
             // Setup search box
             const locationSearch = document.getElementById('location-search');
             if (locationSearch) {
                 // Create autocomplete
                 const autocomplete = new google.maps.places.Autocomplete(locationSearch);
                 autocomplete.bindTo('bounds', map);
-                
+
                 // Listen for place selection
                 autocomplete.addListener('place_changed', function() {
                     const place = autocomplete.getPlace();
-                    
+
                     if (!place.geometry || !place.geometry.location) {
                         showStatus('error', 'No location details available for this search');
                         return;
                     }
-                    
+
                     // If the place has a geometry, present it on the map
                     if (place.geometry.viewport) {
                         map.fitBounds(place.geometry.viewport);
@@ -742,88 +766,92 @@ $locations = $pageData['locations'] ?? [];
                         map.setCenter(place.geometry.location);
                         map.setZoom(17);
                     }
-                    
+
                     // Set marker position to the selected place
                     marker.setPosition(place.geometry.location);
-                    
+
                     // Update lat/lng fields
                     document.getElementById('latitude').value = place.geometry.location.lat().toFixed(6);
                     document.getElementById('longitude').value = place.geometry.location.lng().toFixed(6);
-                    
+
                     // Update location name field
                     if (place.name) {
                         document.getElementById('location').value = place.name;
                     }
-                    
+
                     showStatus('success', 'Location found: ' + place.name);
                 });
             }
-            
+
             // Update coordinates when marker is dragged
             google.maps.event.addListener(marker, 'dragend', function() {
                 const position = marker.getPosition();
                 document.getElementById('latitude').value = position.lat().toFixed(6);
                 document.getElementById('longitude').value = position.lng().toFixed(6);
-                
+
                 // Reverse geocode to get address
-                geocoder.geocode({ 'location': position }, function(results, status) {
+                geocoder.geocode({
+                    'location': position
+                }, function(results, status) {
                     if (status === 'OK' && results[0]) {
                         document.getElementById('location').value = results[0].formatted_address;
                     }
                 });
             });
-            
+
             // Allow clicking on map to move marker
             google.maps.event.addListener(map, 'click', function(event) {
                 marker.setPosition(event.latLng);
                 document.getElementById('latitude').value = event.latLng.lat().toFixed(6);
                 document.getElementById('longitude').value = event.latLng.lng().toFixed(6);
-                
+
                 // Reverse geocode to get address
-                geocoder.geocode({ 'location': event.latLng }, function(results, status) {
+                geocoder.geocode({
+                    'location': event.latLng
+                }, function(results, status) {
                     if (status === 'OK' && results[0]) {
                         document.getElementById('location').value = results[0].formatted_address;
                     }
                 });
             });
-            
+
             // Setup geolocation button
             setupGeolocationButton();
         }
-        
+
         function setupGeolocationButton() {
             const geoButton = document.getElementById('use-current-location');
             if (!geoButton) return;
-            
+
             geoButton.addEventListener('click', function() {
                 // Check if geolocation is supported
                 if (!navigator.geolocation) {
                     showStatus('error', 'Geolocation is not supported by your browser');
                     return;
                 }
-                
+
                 // Show loading status
                 showStatus('loading', 'Getting your location...');
-                
+
                 // Get current position
                 navigator.geolocation.getCurrentPosition(
                     // Success callback
                     function(position) {
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
-                        
+
                         // Update map and marker
                         const newLatLng = new google.maps.LatLng(lat, lng);
                         marker.setPosition(newLatLng);
                         map.setCenter(newLatLng);
-                        
+
                         // Update form fields
                         document.getElementById('latitude').value = lat.toFixed(6);
                         document.getElementById('longitude').value = lng.toFixed(6);
-                        
+
                         // Show success message
                         showStatus('success', 'Location updated successfully');
-                        
+
                         // Clear status after a few seconds
                         setTimeout(function() {
                             statusElement.style.display = 'none';
@@ -833,8 +861,8 @@ $locations = $pageData['locations'] ?? [];
                     // Error callback
                     function(error) {
                         let errorMessage = 'Unable to retrieve your location';
-                        
-                        switch(error.code) {
+
+                        switch (error.code) {
                             case error.PERMISSION_DENIED:
                                 errorMessage = 'Location access denied. Please check your browser permissions.';
                                 break;
@@ -845,7 +873,7 @@ $locations = $pageData['locations'] ?? [];
                                 errorMessage = 'Location request timed out. Please try again.';
                                 break;
                         }
-                        
+
                         showStatus('error', errorMessage);
                     },
                     // Options
@@ -857,14 +885,14 @@ $locations = $pageData['locations'] ?? [];
                 );
             });
         }
-        
+
         function showStatus(type, message) {
             if (!statusElement) return;
-            
+
             // Clear previous classes and set new one
             statusElement.className = 'geolocation-status';
             statusElement.classList.add(type);
-            
+
             // Set message content
             if (type === 'loading') {
                 statusElement.innerHTML = `
@@ -874,10 +902,10 @@ $locations = $pageData['locations'] ?? [];
             } else {
                 statusElement.textContent = message;
             }
-            
+
             // Show the status
             statusElement.style.display = 'block';
-            
+
             // Auto-hide error messages after 8 seconds
             if (type === 'error') {
                 setTimeout(function() {
@@ -887,13 +915,13 @@ $locations = $pageData['locations'] ?? [];
             }
         }
     </script>
-    
+
     <!-- Load Google Maps API with Places library -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXXh-Lwbrw-UKAC9YsrBq09vyKNmG0Lzo&libraries=places&callback=initMap" async defer></script>
-    
+
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/cca-edit.js"></script>
-    
+
     <!-- Additional script to enforce date picker styling -->
     <script>
         // Custom script to enforce calendar icon styling
@@ -931,7 +959,7 @@ $locations = $pageData['locations'] ?? [];
                 }
             `;
             document.head.appendChild(styleFixForDatetime);
-            
+
             // Direct manipulation of inputs for stronger enforcement
             const datetimeInputs = document.querySelectorAll('input[type="datetime-local"]');
             datetimeInputs.forEach(input => {
@@ -940,10 +968,14 @@ $locations = $pageData['locations'] ?? [];
                     input.style.colorScheme = 'light';
                     input.style.backgroundColor = 'white';
                 });
-                
-                observer.observe(input, { attributes: true, attributeFilter: ['style'] });
+
+                observer.observe(input, {
+                    attributes: true,
+                    attributeFilter: ['style']
+                });
             });
         });
     </script>
 </body>
-</html> 
+
+</html>

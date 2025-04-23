@@ -167,7 +167,7 @@ async function handleAvatarUpload(file) {
         showLoadingState();
 
         const baseUrl = '/enrichment-point-passport';
-        console.log('Profile: Sending avatar to server');
+        console.log('Profile: Sending avatar to server for S3 upload');
         const response = await fetch(`${baseUrl}/controllers/upload-profile-picture.php`, {
             method: 'POST',
             body: formData
@@ -176,13 +176,17 @@ async function handleAvatarUpload(file) {
         const result = await response.json();
 
         if (result.success) {
-            console.log('Profile: Avatar updated successfully');
+            console.log('Profile: Avatar updated successfully to S3');
             updateAvatarPreview(result.data.avatarUrl);
-            if (typeof showNotification === 'function') {
-                showNotification(result.data.message || 'Profile picture updated successfully');
-            } else {
-                showProfileNotification(result.data.message || 'Profile picture updated successfully');
-            }
+            
+            // Ensure notification is shown with a delay to make it more visible
+            setTimeout(() => {
+                if (typeof showNotification === 'function') {
+                    showNotification(result.data.message || 'Profile picture updated successfully');
+                } else {
+                    showProfileNotification(result.data.message || 'Profile picture updated successfully');
+                }
+            }, 300);
 
             // Update navigation avatar if it exists
             const navAvatar = document.querySelector('.nav-right .user-avatar img');
@@ -190,7 +194,7 @@ async function handleAvatarUpload(file) {
                 navAvatar.src = result.data.avatarUrl;
             }
         } else {
-            console.log('Profile: Failed to upload avatar:', result.data.error);
+            console.log('Profile: Failed to upload avatar to S3:', result.data.error);
             throw new Error(result.data.error || 'Failed to upload profile picture');
         }
     } catch (error) {
@@ -206,7 +210,7 @@ async function handleAvatarUpload(file) {
 }
 
 function updateAvatarPreview(url) {
-    console.log('Profile: Updating avatar preview');
+    console.log('Profile: Updating avatar preview with S3 URL:', url);
     const avatar = document.querySelector('.profile-avatar');
     if (!avatar) return;
 
@@ -221,7 +225,61 @@ function updateAvatarPreview(url) {
         avatar.appendChild(img);
     }
 
-    img.src = `${url}?t=${new Date().getTime()}`;
+    // Create a temporary image to preload and ensure proper dimensions
+    const tempImg = new Image();
+    tempImg.onload = () => {
+        // Set the image source after we've loaded it to verify dimensions
+        if (url.includes('amazonaws.com')) {
+            img.src = url;
+        } else {
+            img.src = `${url}?t=${new Date().getTime()}`;
+        }
+        
+        // Apply CSS to ensure the image fits properly in its container
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '100%';
+        img.style.width = 'auto';
+        img.style.height = 'auto';
+        img.style.objectFit = 'cover';
+        
+        // Also add these styles to the avatar container
+        if (avatar) {
+            avatar.style.overflow = 'visible'; // Ensure overflow is visible to show the upload button
+            avatar.style.display = 'flex';
+            avatar.style.alignItems = 'center';
+            avatar.style.justifyContent = 'center';
+        }
+        
+        // Make sure upload button is visible and positioned correctly
+        const uploadBtn = document.querySelector('.avatar-upload-btn');
+        if (uploadBtn) {
+            uploadBtn.style.zIndex = '10';
+            uploadBtn.style.visibility = 'visible';
+        }
+        
+        // Show a notification again after image is loaded
+        setTimeout(() => {
+            if (typeof showNotification === 'function') {
+                showNotification('Profile picture updated successfully');
+            } else {
+                showProfileNotification('Profile picture updated successfully');
+            }
+        }, 500);
+    };
+    
+    // Handle loading errors
+    tempImg.onerror = () => {
+        console.error('Profile: Error loading image from URL:', url);
+        if (typeof showNotification === 'function') {
+            showNotification('Image loaded but there was a display error. Please refresh the page.', 'warning');
+        } else {
+            showProfileNotification('Image loaded but there was a display error. Please refresh the page.', 'warning');
+        }
+    };
+    
+    // Start loading the image
+    tempImg.src = url.includes('amazonaws.com') ? url : `${url}?t=${new Date().getTime()}`;
+    
     img.alt = 'Profile Picture';
 }
 
@@ -309,6 +367,12 @@ function updateFieldStatus(field, isValid, errorMessage) {
 function showProfileNotification(message, type = 'success') {
     console.log(`Profile: Showing notification: ${message} (${type})`);
     
+    // Remove any existing notifications
+    const existingNotification = document.querySelector('.profile-notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
     // Create notification element
     const notificationElement = document.createElement('div');
     notificationElement.className = `profile-notification ${type}`;
@@ -317,7 +381,7 @@ function showProfileNotification(message, type = 'success') {
     // Add to document
     document.body.appendChild(notificationElement);
     
-    // Show with animation
+    // Show with animation after a tiny delay to allow for DOM rendering
     setTimeout(() => {
         notificationElement.classList.add('show');
     }, 10);
@@ -328,7 +392,7 @@ function showProfileNotification(message, type = 'success') {
         setTimeout(() => {
             notificationElement.remove();
         }, 300);
-    }, 3000);
+    }, 4000);
 }
 
 // Add the missing loading state functions

@@ -1,4 +1,355 @@
 <?php
+/**
+ * Upload a file to S3 using AWS Signature V4 authentication
+ * 
+ * @param string $sourceFile Path to local file
+ * @param string $key The S3 key (path in bucket)
+ * @return array Result with success status and URL/message
+ */
+function uploadToS3WithSignature($sourceFile, $key) {
+    error_log('Attempting S3 upload with auth signature for: ' . $key);
+    
+    // Ensure S3 constants are defined
+    if (!defined('S3_BUCKET')) {
+        define('S3_BUCKET', 'enrichment-point-passport-bucket');
+        define('S3_REGION', 'ap-southeast-1');
+        define('S3_PROFILE_PATH', 'uploads/profile');
+        define('S3_BASE_URL', 'https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com');
+    }
+    
+    // Ensure AWS credentials are defined
+    if (!defined('AWS_ACCESS_KEY')) {
+        define('AWS_ACCESS_KEY', 'AWS_ACCESS_KEY_ID');
+        define('AWS_SECRET_KEY', 'AWS_SECRET_KEY_ID');
+    }
+    
+    try {
+        // Prepare URL and basic setup
+        $url = "https://" . S3_BUCKET . ".s3." . S3_REGION . ".amazonaws.com/" . $key;
+        $contentType = mime_content_type($sourceFile);
+        $fileContent = file_get_contents($sourceFile);
+        
+        // Generate AWS Signature V4
+        $now = gmdate('Ymd\THis\Z');
+        $date = substr($now, 0, 8);
+        $contentSha256 = hash('sha256', $fileContent);
+        
+        // Canonical Request
+        $canonicalRequest = "PUT\n" .
+                           "/$key\n" .
+                           "\n" .
+                           "content-type:$contentType\n" .
+                           "host:" . S3_BUCKET . ".s3." . S3_REGION . ".amazonaws.com\n" .
+                           "x-amz-content-sha256:$contentSha256\n" .
+                           "x-amz-date:$now\n" .
+                           "\n" .
+                           "content-type;host;x-amz-content-sha256;x-amz-date\n" .
+                           "$contentSha256";
+
+        $canonicalRequestHash = hash('sha256', $canonicalRequest);
+
+        // String to Sign
+        $stringToSign = "AWS4-HMAC-SHA256\n" .
+                       "$now\n" .
+                       "$date/" . S3_REGION . "/s3/aws4_request\n" .
+                       "$canonicalRequestHash";
+
+        // Signing Key
+        $kDate = hash_hmac('sha256', $date, 'AWS4' . AWS_SECRET_KEY, true);
+        $kRegion = hash_hmac('sha256', S3_REGION, $kDate, true);
+        $kService = hash_hmac('sha256', 's3', $kRegion, true);
+        $kSigning = hash_hmac('sha256', 'aws4_request', $kService, true);
+
+        // Signature
+        $signature = hash_hmac('sha256', $stringToSign, $kSigning);
+
+        // Authorization Header
+        $authorizationHeader = "AWS4-HMAC-SHA256 " .
+                              "Credential=" . AWS_ACCESS_KEY . "/$date/" . S3_REGION . "/s3/aws4_request, " .
+                              "SignedHeaders=content-type;host;x-amz-content-sha256;x-amz-date, " .
+                              "Signature=$signature";
+        
+        // Initialize curl
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fileContent);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Disable SSL verification for testing
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); // Disable SSL host verification for testing
+        
+        // Set headers with authentication
+        $curlHeaders = [
+            'Content-Type: ' . $contentType,
+            'Authorization: ' . $authorizationHeader,
+            'x-amz-date: ' . $now,
+            'x-amz-content-sha256: ' . $contentSha256,
+            'x-amz-acl: public-read'
+        ];
+        
+        error_log("S3 request headers: " . print_r($curlHeaders, true));
+        
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $curlHeaders);
+        
+        // Enable verbose debugging
+        $verbose = fopen('php://temp', 'w+');
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+        curl_setopt($ch, CURLOPT_STDERR, $verbose);
+        
+        // Execute curl
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        
+        // Get verbose information
+        rewind($verbose);
+        $verboseLog = stream_get_contents($verbose);
+        fclose($verbose);
+        
+        // Log detailed information for debugging
+        error_log('S3 upload details: HTTP Code: ' . $httpCode . ', Error: ' . $error);
+        
+        // Clean up
+        curl_close($ch);
+        
+        if ($httpCode >= 200 && $httpCode < 300) {
+            return [
+                'success' => true,
+                'url' => S3_BASE_URL . '/' . $key
+            ];
+        } else {
+            // Try alternate method with temp file
+            error_log('S3 upload failed, trying with temp file approach');
+            return uploadToS3WithTempFileSignature($sourceFile, $key);
+        }
+    } catch (Exception $e) {
+        error_log('S3 upload exception: ' . $e->getMessage());
+        return [
+            'success' => false,
+            'message' => 'Exception during S3 upload: ' . $e->getMessage()
+        ];
+    }
+}
+
+/**
+ * Alternative upload method using a temp file approach with AWS signatures
+ */
+function uploadToS3WithTempFileSignature($sourceFile, $key) {
+    error_log('Attempting temp file S3 upload fallback for: ' . $key);
+    
+    // Ensure S3 constants are defined
+    if (!defined('S3_BUCKET')) {
+        define('S3_BUCKET', 'enrichment-point-passport-bucket');
+        define('S3_REGION', 'ap-southeast-1');
+        define('S3_PROFILE_PATH', 'uploads/profile');
+        define('S3_BASE_URL', 'https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com');
+    }
+    
+    // Ensure AWS credentials are defined
+    if (!defined('AWS_ACCESS_KEY')) {
+        define('AWS_ACCESS_KEY', 'AKIA4SYAMLXWG443EJG2');
+        define('AWS_SECRET_KEY', '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');
+    }
+    
+    try {
+        // Prepare URL and content type
+        $url = "https://" . S3_BUCKET . ".s3." . S3_REGION . ".amazonaws.com/" . $key;
+        $contentType = mime_content_type($sourceFile);
+        
+        // Generate AWS Signature V4 with UNSIGNED-PAYLOAD
+        $now = gmdate('Ymd\THis\Z');
+        $date = substr($now, 0, 8);
+        
+        // Canonical Request with UNSIGNED-PAYLOAD
+        $canonicalRequest = "PUT\n" .
+                           "/$key\n" .
+                           "\n" .
+                           "content-type:$contentType\n" .
+                           "host:" . S3_BUCKET . ".s3." . S3_REGION . ".amazonaws.com\n" .
+                           "x-amz-content-sha256:UNSIGNED-PAYLOAD\n" .
+                           "x-amz-date:$now\n" .
+                           "\n" .
+                           "content-type;host;x-amz-content-sha256;x-amz-date\n" .
+                           "UNSIGNED-PAYLOAD";
+
+        $canonicalRequestHash = hash('sha256', $canonicalRequest);
+
+        // String to Sign
+        $stringToSign = "AWS4-HMAC-SHA256\n" .
+                       "$now\n" .
+                       "$date/" . S3_REGION . "/s3/aws4_request\n" .
+                       "$canonicalRequestHash";
+
+        // Signing Key
+        $kDate = hash_hmac('sha256', $date, 'AWS4' . AWS_SECRET_KEY, true);
+        $kRegion = hash_hmac('sha256', S3_REGION, $kDate, true);
+        $kService = hash_hmac('sha256', 's3', $kRegion, true);
+        $kSigning = hash_hmac('sha256', 'aws4_request', $kService, true);
+
+        // Signature
+        $signature = hash_hmac('sha256', $stringToSign, $kSigning);
+
+        // Authorization Header
+        $authorizationHeader = "AWS4-HMAC-SHA256 " .
+                              "Credential=" . AWS_ACCESS_KEY . "/$date/" . S3_REGION . "/s3/aws4_request, " .
+                              "SignedHeaders=content-type;host;x-amz-content-sha256;x-amz-date, " .
+                              "Signature=$signature";
+        
+        // Initialize curl
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_PUT, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Disable SSL verification for testing
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); // Disable SSL host verification for testing
+        
+        // Set headers with authentication
+        $curlHeaders = [
+            'Content-Type: ' . $contentType,
+            'Authorization: ' . $authorizationHeader,
+            'x-amz-date: ' . $now,
+            'x-amz-content-sha256: UNSIGNED-PAYLOAD',
+            'x-amz-acl: public-read'
+        ];
+        
+        error_log("S3 request headers (temp file): " . print_r($curlHeaders, true));
+        
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $curlHeaders);
+        
+        // Use the file directly
+        $fh = fopen($sourceFile, 'r');
+        curl_setopt($ch, CURLOPT_INFILE, $fh);
+        curl_setopt($ch, CURLOPT_INFILESIZE, filesize($sourceFile));
+        
+        // Enable verbose debugging
+        $verbose = fopen('php://temp', 'w+');
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+        curl_setopt($ch, CURLOPT_STDERR, $verbose);
+        
+        // Execute curl
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        
+        // Get verbose information
+        rewind($verbose);
+        $verboseLog = stream_get_contents($verbose);
+        fclose($verbose);
+        
+        // Log detailed information for debugging
+        error_log('S3 temp file upload details: HTTP Code: ' . $httpCode . ', Error: ' . $error);
+        
+        // Clean up
+        fclose($fh);
+        curl_close($ch);
+        
+        if ($httpCode >= 200 && $httpCode < 300) {
+            return [
+                'success' => true,
+                'url' => S3_BASE_URL . '/' . $key
+            ];
+        } else {
+            return [
+                'success' => false,
+                'message' => 'Failed to upload to S3: HTTP ' . $httpCode . ' - ' . $error
+            ];
+        }
+    } catch (Exception $e) {
+        error_log('S3 temp file upload exception: ' . $e->getMessage());
+        return [
+            'success' => false,
+            'message' => 'Exception during S3 temp file upload: ' . $e->getMessage()
+        ];
+    }
+}
+
+/**
+ * Simplified direct upload for testing
+ * Uploads a file directly to S3 without signature, useful for debugging
+ */
+function uploadToS3Direct($sourceFile, $key) {
+    error_log('Attempting direct S3 upload for: ' . $key);
+    
+    // Ensure S3 constants are defined
+    if (!defined('S3_BUCKET')) {
+        define('S3_BUCKET', 'enrichment-point-passport-bucket');
+        define('S3_REGION', 'ap-southeast-1');
+        define('S3_PROFILE_PATH', 'uploads/profile');
+        define('S3_BASE_URL', 'https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com');
+    }
+    
+    // Ensure AWS credentials are defined
+    if (!defined('AWS_ACCESS_KEY')) {
+        define('AWS_ACCESS_KEY', 'AKIA4SYAMLXWG443EJG2');
+        define('AWS_SECRET_KEY', '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');
+    }
+    
+    try {
+        // Prepare URL and basic setup
+        $url = "https://" . S3_BUCKET . ".s3." . S3_REGION . ".amazonaws.com/" . $key;
+        $contentType = mime_content_type($sourceFile);
+        $fileContent = file_get_contents($sourceFile);
+        
+        // Initialize curl
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fileContent);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        
+        // Set simple headers without complex AWS authentication
+        $curlHeaders = [
+            'Content-Type: ' . $contentType,
+            'x-amz-acl: public-read'
+        ];
+        
+        error_log("S3 direct upload headers: " . print_r($curlHeaders, true));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $curlHeaders);
+        
+        // Enable verbose debugging
+        $verbose = fopen('php://temp', 'w+');
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+        curl_setopt($ch, CURLOPT_STDERR, $verbose);
+        
+        // Execute curl
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        
+        // Get verbose information
+        rewind($verbose);
+        $verboseLog = stream_get_contents($verbose);
+        fclose($verbose);
+        
+        // Log detailed information for debugging
+        error_log('S3 direct upload details: HTTP Code: ' . $httpCode . ', Error: ' . $error);
+        error_log('S3 direct upload verbose log: ' . $verboseLog);
+        
+        // Clean up
+        curl_close($ch);
+        
+        if ($httpCode >= 200 && $httpCode < 300) {
+            return [
+                'success' => true,
+                'url' => S3_BASE_URL . '/' . $key
+            ];
+        } else {
+            return [
+                'success' => false,
+                'message' => 'Failed to upload to S3: HTTP ' . $httpCode . ' - ' . $error
+            ];
+        }
+    } catch (Exception $e) {
+        error_log('S3 direct upload exception: ' . $e->getMessage());
+        return [
+            'success' => false,
+            'message' => 'Exception during S3 direct upload: ' . $e->getMessage()
+        ];
+    }
+}
+
 function handleClubAction($ccaDB, $profilesDB) {
     // Enable error logging
     error_reporting(E_ALL);
@@ -382,69 +733,176 @@ function handleClubManagement($ccaDB, $profilesDB) {
                     break;
                 }
 
-                // Create base directories if they don't exist
-                $baseImagePath = __DIR__ . '/../assets/images';
-                $galleryDir = $baseImagePath . '/gallery';
-                $clubsDir = $galleryDir . '/clubs';
+                // Always use S3 upload instead of checking POST parameter
+                $isS3Upload = true; // Force S3 upload
                 
-                // Create directory structure if it doesn't exist
-                foreach ([$galleryDir, $clubsDir] as $dir) {
-                    if (!file_exists($dir)) {
-                        if (!mkdir($dir, 0777, true)) {
-                            error_log("Failed to create directory: " . $dir);
-                            $_SESSION['error'] = 'Failed to create upload directory.';
-                            break 2;
-                        }
+                // S3 Configuration - moved outside if statement
+                if (!defined('S3_BUCKET')) {
+                    define('S3_BUCKET', 'enrichment-point-passport-bucket');
+                    define('S3_REGION', 'ap-southeast-1');
+                    define('S3_PROFILE_PATH', 'uploads/profile');
+                    define('S3_BASE_URL', 'https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com');
+                    
+                    // AWS Credentials if not already defined
+                    if (!defined('AWS_ACCESS_KEY')) {
+                        define('AWS_ACCESS_KEY', 'AKIA4SYAMLXWG443EJG2');
+                        define('AWS_SECRET_KEY', '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');
                     }
                 }
                 
-                // Load club mapping
-                $clubMapping = require_once __DIR__ . '/../config/club-mapping.php';
-                
-                // Get club slug
-                $clubSlug = '';
-                foreach ($clubMapping as $category => $clubs) {
-                    foreach ($clubs as $name => $slug) {
-                        if (strcasecmp($name, $clubDetails['club_name']) === 0) {
-                            $clubSlug = $slug;
-                            break 2;
+                if ($isS3Upload) {
+                    // Load club mapping
+                    $clubMapping = require_once __DIR__ . '/../config/club-mapping.php';
+                    
+                    // Get club slug - ensure we handle club_name lookups properly
+                    $clubSlug = '';
+                    $clubName = isset($clubDetails['club_name']) ? trim($clubDetails['club_name']) : '';
+                    
+                    error_log("Searching for club slug for club name: " . $clubName);
+                    error_log("Club mapping: " . print_r($clubMapping, true));
+                    
+                    // Check if direct mapping exists (exact match)
+                    $foundDirectMapping = false;
+                    foreach ($clubMapping as $category => $clubs) {
+                        if (isset($clubs[$clubName])) {
+                            $clubSlug = $clubs[$clubName];
+                            $foundDirectMapping = true;
+                            error_log("Found direct mapping for club: " . $clubName . " -> " . $clubSlug);
+                            break;
                         }
                     }
-                }
-                
-                if (empty($clubSlug)) {
-                    error_log("Could not find club slug for: " . $clubDetails['club_name']);
-                    $_SESSION['error'] = 'Failed to determine club directory.';
-                    break;
-                }
-                
-                // Create club-specific directory
-                $clubSpecificDir = 'gallery/clubs/' . $clubSlug;
-                $uploadDir = $baseImagePath . '/' . $clubSpecificDir;
-                
-                if (!file_exists($uploadDir)) {
-                    if (!mkdir($uploadDir, 0777, true)) {
-                        error_log("Failed to create club specific directory: " . $uploadDir);
-                        $_SESSION['error'] = 'Failed to create club directory.';
+                    
+                    // If no direct mapping, try case-insensitive search
+                    if (!$foundDirectMapping) {
+                        foreach ($clubMapping as $category => $clubs) {
+                            foreach ($clubs as $name => $slug) {
+                                if (strcasecmp($name, $clubName) === 0) {
+                                    $clubSlug = $slug;
+                                    error_log("Found case-insensitive mapping for club: " . $clubName . " -> " . $clubSlug);
+                                    break 2;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (empty($clubSlug)) {
+                        error_log("Could not find club slug for: " . $clubDetails['club_name']);
+                        // Fallback to a safe default
+                        $clubSlug = 'unknown-club-' . $clubId;
+                        error_log("Using fallback slug: " . $clubSlug);
+                    }
+                    
+                    // Generate a unique filename
+                    $extension = strtolower(pathinfo($_FILES['gallery_image']['name'], PATHINFO_EXTENSION));
+                    $newFilename = uniqid('gallery_') . '.' . $extension;
+                    
+                    // Use the gallery/clubs/club_name path
+                    $s3Key = 'gallery/clubs/' . $clubSlug . '/' . $newFilename;
+                    
+                    // Log the S3 key for debugging
+                    error_log("Attempting to upload to S3 path: " . $s3Key);
+                    
+                    // Try SDK upload if available (preferred method)
+                    $sdkUploadResult = false;
+                    $uploadResult = ['success' => false, 'message' => 'No upload method attempted'];
+                    
+                    // Try with AWS credentials (advanced method)
+                    try {
+                        // Prepare the policy document
+                        $expiration = date('Y-m-d\TH:i:s\Z', time() + 3600);
+                        $policy = base64_encode(json_encode([
+                            'expiration' => $expiration,
+                            'conditions' => [
+                                ['bucket' => S3_BUCKET],
+                                ['key' => $s3Key],
+                                ['acl' => 'public-read'],
+                                ['content-type' => $fileType],
+                                ['content-length-range', 0, 5242880], // 5MB max
+                            ]
+                        ]));
+                        
+                        // Create signature
+                        $signature = base64_encode(hash_hmac('sha1', $policy, AWS_SECRET_KEY, true));
+                        
+                        // Prepare form data
+                        $postFields = [
+                            'key' => $s3Key,
+                            'acl' => 'public-read',
+                            'policy' => $policy,
+                            'signature' => $signature,
+                            'AWSAccessKeyId' => AWS_ACCESS_KEY,
+                            'Content-Type' => $fileType,
+                            'file' => new CURLFile($fileTmp, $fileType, basename($fileTmp))
+                        ];
+                        
+                        // Upload using POST
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_URL, 'https://' . S3_BUCKET . '.s3.' . S3_REGION . '.amazonaws.com/');
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($ch, CURLOPT_POST, true);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+                        
+                        // Execute and get response
+                        $response = curl_exec($ch);
+                        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                        curl_close($ch);
+                        
+                        error_log("S3 POST policy upload result: " . $httpCode . " - " . $response);
+                        
+                        if ($httpCode >= 200 && $httpCode < 300) {
+                            $uploadResult = [
+                                'success' => true,
+                                'url' => S3_BASE_URL . '/' . $s3Key
+                            ];
+                        } else {
+                            // Fall back to direct upload to profile path
+                            error_log("POST policy upload failed with HTTP " . $httpCode . ". Falling back to profile path.");
+                            $uploadResult = uploadToS3Direct($fileTmp, 'uploads/profile/' . $newFilename);
+                            
+                            // If fallback succeeded, update the key
+                            if ($uploadResult['success']) {
+                                $s3Key = 'uploads/profile/' . $newFilename;
+                            }
+                        }
+                    } catch (Exception $e) {
+                        error_log("Exception during policy upload: " . $e->getMessage());
+                        
+                        // Fall back to direct upload to profile path
+                        $uploadResult = uploadToS3Direct($fileTmp, 'uploads/profile/' . $newFilename);
+                        
+                        // If fallback succeeded, update the key
+                        if ($uploadResult['success']) {
+                            $s3Key = 'uploads/profile/' . $newFilename;
+                        }
+                    }
+                    
+                    if (!$uploadResult['success']) {
+                        error_log("Failed to upload to S3: " . ($uploadResult['message'] ?? 'Unknown error'));
+                        $_SESSION['error'] = 'Failed to upload image to cloud storage: ' . ($uploadResult['message'] ?? 'Unknown error');
                         break;
                     }
-                }
-                
-                // Generate a unique filename
-                $extension = strtolower(pathinfo($_FILES['gallery_image']['name'], PATHINFO_EXTENSION));
-                $newFilename = uniqid('gallery_') . '.' . $extension;
-                $uploadPath = $uploadDir . '/' . $newFilename;
-                
-                // Move the uploaded file
-                if (move_uploaded_file($fileTmp, $uploadPath)) {
+                    
+                    // Get the full S3 URL
+                    $imagePath = $uploadResult['url'];
+                    
+                    // Make sure we store the full URL, not a relative path
+                    if (strpos($imagePath, 'http') !== 0) {
+                        $imagePath = S3_BASE_URL . '/' . $s3Key;
+                        error_log("Corrected S3 URL to: " . $imagePath);
+                    }
+                    
+                    $imageTitle = isset($_POST['image_title']) ? $_POST['image_title'] : null;
+                    $imageDescription = isset($_POST['image_description']) ? $_POST['image_description'] : null;
+                    
+                    // Add debug logs
+                    error_log("S3 upload successful. Storing in database with URL: " . $imagePath);
+                    
                     try {
-                        // Save to database with relative path
-                        $imagePath = $clubSpecificDir . '/' . $newFilename;
-                        $imageTitle = isset($_POST['image_title']) ? $_POST['image_title'] : null;
-                        $imageDescription = isset($_POST['image_description']) ? $_POST['image_description'] : null;
-                        
-                        $sql = "INSERT INTO club_gallery (club_id, image_path, image_title, image_description, created_at) 
-                                VALUES (:club_id, :image_path, :image_title, :image_description, NOW())";
+                        // Save to database with the full S3 URL
+                        $sql = "INSERT INTO club_gallery (club_id, image_path, image_title, image_description, created_at, storage_type) 
+                                VALUES (:club_id, :image_path, :image_title, :image_description, NOW(), 's3')";
                         $stmt = $ccaDB->prepare($sql);
                         $stmt->bindParam(':club_id', $clubId);
                         $stmt->bindParam(':image_path', $imagePath);
@@ -452,24 +910,128 @@ function handleClubManagement($ccaDB, $profilesDB) {
                         $stmt->bindParam(':image_description', $imageDescription);
                         $stmt->execute();
                         
+                        $newImageId = $ccaDB->lastInsertId();
+                        error_log("Image added to database with ID: " . $newImageId . " and path: " . $imagePath);
+                        
+                        // If this is an AJAX request
+                        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                            header('Content-Type: application/json');
+                            echo json_encode([
+                                'success' => true,
+                                'message' => 'Image added to gallery successfully.',
+                                'image_url' => $imagePath,
+                                'image_title' => $imageTitle,
+                                'image_id' => $newImageId
+                            ]);
+                            exit;
+                        }
+                        
                         $_SESSION['success'] = 'Image added to gallery successfully.';
                     } catch (PDOException $e) {
                         error_log("Error adding gallery image to database: " . $e->getMessage());
-                        $_SESSION['error'] = 'Failed to save image to database. Please try again.';
-                        // Delete the uploaded file if database insert fails
-                        if (file_exists($uploadPath)) {
-                            unlink($uploadPath);
-                        }
+                        $_SESSION['error'] = 'Failed to save image to database.';
                     }
                 } else {
-                    $uploadError = error_get_last();
-                    error_log("Failed to move uploaded file. Error: " . json_encode($uploadError));
-                    $_SESSION['error'] = 'Failed to upload image. Please try again.';
+                    // Legacy local file upload logic
+                    error_log("WARNING: Using local file upload instead of S3. This should not happen!");
+                    
+                    // Create base directories if they don't exist
+                    $baseImagePath = __DIR__ . '/../assets/images';
+                    $galleryDir = $baseImagePath . '/gallery';
+                    $clubsDir = $galleryDir . '/clubs';
+                    
+                    // Create directory structure if it doesn't exist
+                    foreach ([$galleryDir, $clubsDir] as $dir) {
+                        if (!file_exists($dir)) {
+                            if (!mkdir($dir, 0777, true)) {
+                                error_log("Failed to create directory: " . $dir);
+                                $_SESSION['error'] = 'Failed to create upload directory.';
+                                break 2;
+                            }
+                        }
+                    }
+                    
+                    // Load club mapping
+                    $clubMapping = require_once __DIR__ . '/../config/club-mapping.php';
+                    
+                    // Get club slug
+                    $clubSlug = '';
+                    foreach ($clubMapping as $category => $clubs) {
+                        foreach ($clubs as $name => $slug) {
+                            if (strcasecmp($name, $clubDetails['club_name']) === 0) {
+                                $clubSlug = $slug;
+                                break 2;
+                            }
+                        }
+                    }
+                    
+                    if (empty($clubSlug)) {
+                        error_log("Could not find club slug for: " . $clubDetails['club_name']);
+                        $_SESSION['error'] = 'Failed to determine club directory.';
+                        break;
+                    }
+                    
+                    // Create club-specific directory
+                    $clubSpecificDir = 'gallery/clubs/' . $clubSlug;
+                    $uploadDir = $baseImagePath . '/' . $clubSpecificDir;
+                    
+                    if (!file_exists($uploadDir)) {
+                        if (!mkdir($uploadDir, 0777, true)) {
+                            error_log("Failed to create club specific directory: " . $uploadDir);
+                            $_SESSION['error'] = 'Failed to create club directory.';
+                            break;
+                        }
+                    }
+                    
+                    // Generate a unique filename
+                    $extension = strtolower(pathinfo($_FILES['gallery_image']['name'], PATHINFO_EXTENSION));
+                    $newFilename = uniqid('gallery_') . '.' . $extension;
+                    $uploadPath = $uploadDir . '/' . $newFilename;
+                    
+                    // Move the uploaded file
+                    if (move_uploaded_file($fileTmp, $uploadPath)) {
+                        try {
+                            // Save to database with relative path
+                            $imagePath = $clubSpecificDir . '/' . $newFilename;
+                            $imageTitle = isset($_POST['image_title']) ? $_POST['image_title'] : null;
+                            $imageDescription = isset($_POST['image_description']) ? $_POST['image_description'] : null;
+                            
+                            $sql = "INSERT INTO club_gallery (club_id, image_path, image_title, image_description, created_at, storage_type) 
+                                    VALUES (:club_id, :image_path, :image_title, :image_description, NOW(), 'local')";
+                            $stmt = $ccaDB->prepare($sql);
+                            $stmt->bindParam(':club_id', $clubId);
+                            $stmt->bindParam(':image_path', $imagePath);
+                            $stmt->bindParam(':image_title', $imageTitle);
+                            $stmt->bindParam(':image_description', $imageDescription);
+                            $stmt->execute();
+                            
+                            // If this is an AJAX request
+                            if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                                header('Content-Type: application/json');
+                                echo json_encode([
+                                    'success' => true,
+                                    'message' => 'Image added to gallery successfully.',
+                                    'image_url' => BASE_URL . '/assets/images/' . $imagePath,
+                                    'image_title' => $imageTitle,
+                                    'image_id' => $ccaDB->lastInsertId()
+                                ]);
+                                exit;
+                            }
+                            
+                            $_SESSION['success'] = 'Image added to gallery successfully.';
+                        } catch (PDOException $e) {
+                            error_log("Error adding gallery image to database: " . $e->getMessage());
+                            $_SESSION['error'] = 'Failed to save image to database.';
+                        }
+                    } else {
+                        error_log("Failed to move uploaded file to: " . $uploadPath);
+                        $_SESSION['error'] = 'Failed to store uploaded image.';
+                    }
                 }
             } else {
                 $errorCode = isset($_FILES['gallery_image']) ? $_FILES['gallery_image']['error'] : 'No file uploaded';
-                error_log("Gallery upload error: " . $errorCode);
-                $_SESSION['error'] = 'No image selected or upload error occurred.';
+                error_log("Gallery image upload error code: " . $errorCode);
+                $_SESSION['error'] = 'No valid image file uploaded.';
             }
             break;
             

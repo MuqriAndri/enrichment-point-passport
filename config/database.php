@@ -6,6 +6,11 @@ define('DB_PASS', 'epadminpb');
 define('DB_PROFILES', 'profiles');
 define('DB_CCA', 'cca');
 
+define('AWS_ACCESS_KEY_ID', 'AKIA4SYAMLXWG443EJG2');
+define('AWS_SECRET_ACCESS_KEY_ID', 'tTsOrY1XG1m2CAZNmOJcu0TbAOj+0QcbFUyWWoyv');
+define('AWS_REGION', 'ap-southeast-1');
+define('AWS_BUCKET', 'enrichment-point-passport-bucket');
+
 // Improved error logging
 function logDatabaseError($message, $exception = null) {
     $errorInfo = $exception ? ' Error: ' . $exception->getMessage() : '';

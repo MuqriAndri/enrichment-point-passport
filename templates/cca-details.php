@@ -40,21 +40,25 @@ $clubMapping = require 'config/club-mapping.php';
             border: 1px solid transparent;
             border-radius: 4px;
         }
+
         .alert-success {
             color: #155724;
             background-color: #d4edda;
             border-color: #c3e6cb;
         }
+
         .alert-error {
             color: #721c24;
             background-color: #f8d7da;
             border-color: #f5c6cb;
         }
+
         .alert-info {
             color: #0c5460;
             background-color: #d1ecf1;
             border-color: #bee5eb;
         }
+
         .status-badge {
             display: inline-block;
             font-size: 0.75rem;
@@ -65,23 +69,28 @@ $clubMapping = require 'config/club-mapping.php';
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+
         .status-badge.ongoing {
             background-color: #4caf50;
             color: white;
         }
+
         .status-badge.planned {
             background-color: #2196f3;
             color: white;
         }
+
         .activities-list li {
             transition: all 0.2s ease;
             cursor: pointer;
             padding: 8px 12px;
             border-radius: 8px;
         }
+
         .activities-list li:hover {
             background-color: rgba(0, 0, 0, 0.05);
         }
+
         .activity-modal {
             display: none;
             position: fixed;
@@ -93,6 +102,7 @@ $clubMapping = require 'config/club-mapping.php';
             background-color: rgba(0, 0, 0, 0.5);
             animation: fadeIn 0.3s;
         }
+
         .activity-modal-content {
             position: relative;
             background-color: #fff;
@@ -104,6 +114,7 @@ $clubMapping = require 'config/club-mapping.php';
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             animation: slideIn 0.3s;
         }
+
         .activity-close {
             position: absolute;
             top: 15px;
@@ -113,6 +124,7 @@ $clubMapping = require 'config/club-mapping.php';
             cursor: pointer;
             color: #aaa;
         }
+
         .activity-close:hover {
             color: #555;
         }
@@ -281,18 +293,18 @@ $clubMapping = require 'config/club-mapping.php';
                             </div>
                         </div>
                         <div class="club-actions">
-                            <?php 
+                            <?php
                             // Check if the user is an officer (president or vice president) of this club
                             $isClubOfficer = false;
                             if (isset($_SESSION['user_id']) && isset($clubDetails['club_id'])) {
                                 // Check if user is an officer
                                 $isClubOfficer = isset($pageData['is_officer']) ? $pageData['is_officer'] : false;
                             }
-                            
+
                             // Get the club slug for the management URL
                             $clubSlug = '';
                             $clubName = $clubDetails['club_name'] ?? '';
-                            
+
                             foreach ($clubMapping as $category => $clubs) {
                                 foreach ($clubs as $name => $slug) {
                                     if ($name === $clubName) {
@@ -301,18 +313,18 @@ $clubMapping = require 'config/club-mapping.php';
                                     }
                                 }
                             }
-                            
+
                             // Show edit button only to club officers
-                            if ($isClubOfficer && !empty($clubSlug)): 
+                            if ($isClubOfficer && !empty($clubSlug)):
                             ?>
-                            <a href="<?php echo BASE_URL; ?>/cca/<?php echo $clubSlug; ?>-management" class="edit-btn">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-                                </svg>
-                                Manage Club
-                            </a>
+                                <a href="<?php echo BASE_URL; ?>/cca/<?php echo $clubSlug; ?>-management" class="edit-btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                    </svg>
+                                    Manage Club
+                                </a>
                             <?php endif; ?>
-                            
+
                             <form method="POST" action="<?php echo BASE_URL; ?>/cca">
                                 <input type="hidden" name="action" value="cca">
                                 <input type="hidden" name="club_id" value="<?php echo $clubDetails['club_id'] ?? ''; ?>">
@@ -369,15 +381,15 @@ $clubMapping = require 'config/club-mapping.php';
                                     <div>
                                         <strong>Location</strong>
                                         <p>
-                                            <?php 
+                                            <?php
                                             $location = htmlspecialchars($clubDetails['location'] ?? 'Not specified');
                                             $lat = $clubDetails['latitude'] ?? 4.8856000;
                                             $lng = $clubDetails['longitude'] ?? 114.9370000;
-                                            
+
                                             // Get the club's slug from the club mapping
                                             $clubSlug = '';
                                             $clubName = $clubDetails['club_name'] ?? '';
-                                            
+
                                             foreach ($clubMapping as $category => $clubs) {
                                                 foreach ($clubs as $name => $slug) {
                                                     if ($name === $clubName) {
@@ -386,7 +398,7 @@ $clubMapping = require 'config/club-mapping.php';
                                                     }
                                                 }
                                             }
-                                            
+
                                             if ($location != 'Not specified') {
                                                 echo '<a href="' . BASE_URL . '/' . $clubSlug . '-location?club_id=' . $clubDetails['club_id'] . '&location=' . urlencode($location) . '&lat=' . $lat . '&lng=' . $lng . '" class="location-link">' . $location . '</a>';
                                             } else {
@@ -486,12 +498,12 @@ $clubMapping = require 'config/club-mapping.php';
                             <h2>Activities</h2>
                         </div>
                         <div class="activities-content">
-                            <?php 
+                            <?php
                             // Debug
                             error_log("Activities data in template: " . print_r($activities, true));
                             error_log("Activities count in template: " . count($activities));
                             ?>
-                            
+
                             <?php if (isset($activities) && is_array($activities) && count($activities) > 0): ?>
                                 <ul class="activities-list">
                                     <?php foreach ($activities as $activity): ?>
@@ -500,14 +512,14 @@ $clubMapping = require 'config/club-mapping.php';
                                                 <polyline points="9 11 12 14 22 4"></polyline>
                                                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                                             </svg>
-                                            <?php 
-                                                if (is_array($activity)) {
-                                                    echo htmlspecialchars($activity['title'] ?? 'Unnamed Activity');
-                                                    $status = strtolower($activity['status'] ?? 'planned');
-                                                    echo '<span class="status-badge ' . $status . '">' . ucfirst($status) . '</span>';
-                                                } else {
-                                                    echo htmlspecialchars($activity);
-                                                }
+                                            <?php
+                                            if (is_array($activity)) {
+                                                echo htmlspecialchars($activity['title'] ?? 'Unnamed Activity');
+                                                $status = strtolower($activity['status'] ?? 'planned');
+                                                echo '<span class="status-badge ' . $status . '">' . ucfirst($status) . '</span>';
+                                            } else {
+                                                echo htmlspecialchars($activity);
+                                            }
                                             ?>
                                         </li>
                                     <?php endforeach; ?>
@@ -553,7 +565,7 @@ $clubMapping = require 'config/club-mapping.php';
                                 <div class="gallery-grid">
                                     <?php foreach ($gallery as $image): ?>
                                         <div class="gallery-item">
-                                            <img src="<?php echo BASE_URL; ?>/assets/images/<?php echo htmlspecialchars($image['image_path']); ?>" alt="<?php echo htmlspecialchars($image['image_title'] ?? $clubDetails['club_name'] . ' image'); ?>">
+                                            <img src="<?php echo htmlspecialchars($image['image_path']); ?>" alt="<?php echo htmlspecialchars($image['image_title'] ?? $clubDetails['club_name'] . ' image'); ?>">
                                             <?php if (!empty($image['image_title']) || !empty($image['image_description'])): ?>
                                                 <div class="gallery-item-overlay" data-description="<?php echo htmlspecialchars($image['image_description'] ?? ''); ?>">
                                                     <?php if (!empty($image['image_title'])): ?>
@@ -565,7 +577,7 @@ $clubMapping = require 'config/club-mapping.php';
                                         </div>
                                     <?php endforeach; ?>
                                 </div>
-                                
+
                                 <!-- Image Modal -->
                                 <div id="gallery-modal" class="gallery-modal">
                                     <div class="gallery-modal-content">
@@ -593,7 +605,7 @@ $clubMapping = require 'config/club-mapping.php';
     <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/join-club.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/gallery-modal.js"></script>
-    
+
     <script>
         // Activity details modal functionality
         const activityModal = document.getElementById('activity-modal');
@@ -603,18 +615,18 @@ $clubMapping = require 'config/club-mapping.php';
         const activityCloseBtn = document.getElementById('activity-close-btn');
         const activityClose = document.querySelector('.activity-close');
         const activityViewLink = document.getElementById('activity-view-link');
-        
+
         function viewActivityDetails(activity) {
             // Set the activity details in the modal
             activityTitle.textContent = activity.title || 'Activity Details';
-            
+
             // Create status badge
             const status = (activity.status || 'planned').toLowerCase();
             activityStatus.innerHTML = `<span class="status-badge ${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>`;
-            
+
             // Set description or placeholder
             activityDescription.textContent = 'Click "View Details" to see complete information about this activity.';
-            
+
             // Set the view details link
             if (activity.id && activity.id > 0) {
                 activityViewLink.href = `<?php echo BASE_URL; ?>/cca/activities/${activity.id}`;
@@ -622,21 +634,21 @@ $clubMapping = require 'config/club-mapping.php';
             } else {
                 activityViewLink.style.display = 'none';
             }
-            
+
             // Show the modal
             activityModal.style.display = 'block';
         }
-        
+
         // Close modal when clicking the close button
         activityCloseBtn.addEventListener('click', function() {
             activityModal.style.display = 'none';
         });
-        
+
         // Close modal when clicking the X
         activityClose.addEventListener('click', function() {
             activityModal.style.display = 'none';
         });
-        
+
         // Close modal when clicking outside
         window.addEventListener('click', function(event) {
             if (event.target === activityModal) {
@@ -654,7 +666,7 @@ $clubMapping = require 'config/club-mapping.php';
             <h3 id="activity-title">Activity Details</h3>
             <div id="activity-status" style="margin-bottom: 15px;"></div>
             <p id="activity-description">Loading activity details...</p>
-            
+
             <div id="activity-actions" style="margin-top: 20px; text-align: right;">
                 <button id="activity-close-btn" class="secondary-btn">Close</button>
                 <a id="activity-view-link" href="#" class="primary-btn" style="display: inline-block; margin-left: 10px;">View Details</a>
