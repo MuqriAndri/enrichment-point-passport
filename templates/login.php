@@ -13,7 +13,7 @@ session_start();
 
 <body>
     <nav class="nav">
-        <a href="<?php echo BASE_URL; ?>">PB Website</a>
+        <a href="https://pb.edu.bn" target="_blank" rel="noopener noreferrer">PB Website</a>
         <a href="<?php echo BASE_URL; ?>/about">About</a>
         <a href="<?php echo BASE_URL; ?>/contact">Contact</a>
     </nav>

@@ -4,14 +4,117 @@ if (!defined('BASE_URL')) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Contact Us</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, height=device-height">
+    <title>Contact Us - Enrichment Point Passport</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/settings.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/contact.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
-    <a class="back" href="<?php echo BASE_URL; ?>/settings">&#8592;</a>
-    <h1>Contact Us</h1>
-    <p>Send us a message or feedback.</p>
+    <nav class="nav">
+        <a href="<?php echo BASE_URL; ?>">PB Website</a>
+        <a href="<?php echo BASE_URL; ?>/about">About</a>
+        <a href="<?php echo BASE_URL; ?>/contact">Contact</a>
+    </nav>
+
+    <div class="main-container">
+        <img src="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/logo/politeknik-brunei-logo.png" alt="Politeknik Brunei Logo" class="logo">
+
+        <div class="content-wrapper">
+            <h1 class="page-title">Contact Us</h1>
+
+            <div class="contact-content">
+                <p class="intro-text">Have questions, feedback, or need assistance with the Enrichment Point Passport platform? We're here to help! Reach out using any of the methods below.</p>
+
+                <div class="contact-section">
+                    <h3><i class="fas fa-envelope"></i> Email Us</h3>
+                    <p>For general inquiries or technical support:</p>
+                    <p>Tel: +673 2234630 / 2234650</p>
+                    <p>Fax: 2234469 / 2234449</p>
+                    <a href="mailto:contact@pb.edu.bn" class="contact-link">contact@pb.edu.bn</a>
+                </div>
+
+                <div class="contact-section">
+                    <h3><i class="fas fa-comment-alt"></i> Send a Message</h3>
+                    <form class="contact-form">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Your Email</label>
+                            <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" placeholder="Enter message subject" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="5" placeholder="Type your message here..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-submit">Send Message</button>
+                    </form>
+                </div>
+
+                <div class="contact-section">
+                    <h3><i class="fas fa-map-marker-alt"></i> Find Us</h3>
+                    <p>Politeknik Brunei Campus</p>
+                    <p>Block 2E, Ong Sum Ping</p>
+                    <p>Condominium, Jalan Ong Sum Ping</p>
+                    <p>Bandar Seri Begawan, BA1311</p>
+                    <p>Brunei Darussalam</p>
+                </div>
+
+                <div class="contact-section">
+                    <h3><i class="fas fa-clock"></i> Operating Hours</h3>
+                    <p>Monday - Saturday: 8:00 AM - 4:30 PM</p>
+                    <p>Friday: 8:00 AM - 12:00 PM, 2:00 PM - 4:30 PM</p>
+                    <p>Sunday: Closed</p>
+                </div>
+
+                <div class="button-container">
+                    <a href="<?php echo BASE_URL; ?>" class="back-button">Return to Homepage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-icons">
+                <div class="icon-container">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                    </svg>
+                    <span>Track Progress</span>
+                </div>
+                <div class="icon-container">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                    </svg>
+                    <span>Learn & Grow</span>
+                </div>
+                <div class="icon-container">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 15C8.7 15 6 12.3 6 9V4.5C6 3.1 7.1 2 8.5 2H15.5C16.9 2 18 3.1 18 4.5V9C18 12.3 15.3 15 12 15Z" />
+                        <path d="M20 20H4C3.4 20 3 19.6 3 19V18C3 14.7 5.7 12 9 12H15C18.3 12 21 14.7 21 18V19C21 19.6 20.6 20 20 20Z" />
+                    </svg>
+                    <span>Achieve Excellence</span>
+                </div>
+            </div>
+            <p>Empowering students through enrichment and achievement tracking</p>
+        </div>
+    </footer>
 </body>
+
 </html>
