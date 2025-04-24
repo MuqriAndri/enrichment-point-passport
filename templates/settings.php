@@ -1,6 +1,7 @@
 <?php
 session_start();
 include '../config.php'; // Adjust if needed for BASE_URL
+$_SESSION['dark_mode'] = true;
 ?>
 
 <!DOCTYPE html>
