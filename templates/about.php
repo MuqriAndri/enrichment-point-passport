@@ -5,6 +5,7 @@ if (!defined('BASE_URL')) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, height=device-height">
@@ -13,32 +14,33 @@ if (!defined('BASE_URL')) {
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/about.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
     <nav class="nav">
-        <a href="<?php echo BASE_URL; ?>">PB Website</a>
+        <a href="https://pb.edu.bn" target="_blank" rel="noopener noreferrer">PB Website</a>
         <a href="<?php echo BASE_URL; ?>/about">About</a>
         <a href="<?php echo BASE_URL; ?>/contact">Contact</a>
     </nav>
 
     <div class="main-container">
         <img src="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/logo/politeknik-brunei-logo.png" alt="Politeknik Brunei Logo" class="logo">
-        
+
         <div class="content-wrapper">
             <h1 class="page-title">About Us</h1>
-            
+
             <div class="about-content">
                 <p>Enrichment Point Passport is a student-made project that helps make CCAs more exciting and easy to track! From checking in to events with your location to viewing your enrichment points in one place — this platform is built to help students stay involved and keep things simple for everyone.</p>
-                
+
                 <div class="about-section">
                     <h3><i class="fas fa-eye"></i> Vision</h3>
                     <p>To become a leading digital solution that empowers students and institutions through seamless, transparent, and technology-driven co-curricular engagement.</p>
                 </div>
-                
+
                 <div class="about-section">
                     <h3><i class="fas fa-bullseye"></i> Our Mission</h3>
                     <p>Modernize and simplify the tracking of student participation in co-curricular activities (CCAs) through smart automation.</p>
                 </div>
-                
+
                 <div class="about-section">
                     <h3><i class="fas fa-lightbulb"></i> Key Features</h3>
                     <ul>
@@ -48,12 +50,12 @@ if (!defined('BASE_URL')) {
                         <li><i class="fas fa-chart-line"></i> Personal participation insights</li>
                     </ul>
                 </div>
-                
+
                 <div class="about-section">
                     <h3><i class="fas fa-users"></i> Our Team</h3>
                     <p>Enrichment Point Passport was developed as a final year project by students at Politeknik Brunei, combining technical innovation with real campus needs.</p>
                 </div>
-                
+
                 <div class="button-container">
                     <a href="<?php echo BASE_URL; ?>" class="back-button">Return to Homepage</a>
                 </div>
@@ -88,4 +90,5 @@ if (!defined('BASE_URL')) {
         </div>
     </footer>
 </body>
+
 </html>
