@@ -1,6 +1,5 @@
 <?php
 session_start();
-var_dump($_SESSION['dark_mode']);
 
 if (!defined('BASE_URL')) {
     define('BASE_URL', '/enrichment-point-passport');
