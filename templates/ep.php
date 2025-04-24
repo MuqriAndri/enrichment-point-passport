@@ -27,9 +27,12 @@ require_once 'controllers/enrichment-point-handler.php';
 // Get EP data with error handling
 try {
     $epData = getEnrichmentPointData($ccaDB, $profilesDB, $_SESSION['student_id']);
-    
+
     // Extract all variables for easier access in the template
     extract($epData);
+
+    // Debug the targetExceeded variable
+    error_log("After extract - Target Exceeded: " . ($targetExceeded ? 'true' : 'false') . ", Total EP: $totalEP, Target EP: $targetEP");
 } catch (Exception $e) {
     error_log("EP Template: Error getting EP data: " . $e->getMessage());
     $totalEP = 0;
@@ -107,7 +110,7 @@ try {
                             <a href="<?php echo BASE_URL; ?>/settings" class="dropdown-item" role="menuitem">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <circle cx="12" cy="12" r="3"></circle>
-                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                                 </svg>
                                 Settings
                             </a>
@@ -126,9 +129,9 @@ try {
             </div>
         </nav>
 
-        
 
-<div class="mobile-menu-overlay">
+
+        <div class="mobile-menu-overlay">
             <div class="mobile-menu-content">
                 <div class="mobile-menu-header">
                     <div class="user-info">
@@ -208,7 +211,7 @@ try {
                     <a href="<?php echo BASE_URL; ?>/settings" class="mobile-nav-item">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                         </svg>
                         Settings
                     </a>
@@ -240,21 +243,31 @@ try {
                         <div class="welcome-content">
                             <h1>Welcome, <?php echo explode(' ', $_SESSION['full_name'])[0]; ?>!</h1>
                             <p>Track your enrichment points progress across your academic timeline.</p>
-                            <a href="<?php echo BASE_URL; ?>/events" class="primary-btn">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 5l7 7-7 7M5 12h14"></path>
-                                </svg>
-                                Explore Activities
-                            </a>
+                            <?php if (!$targetExceeded): ?>
+                                <a href="<?php echo BASE_URL; ?>/events" class="primary-btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 5l7 7-7 7M5 12h14"></path>
+                                    </svg>
+                                    Explore Activities
+                                </a>
+                            <?php else: ?>
+                                <div class="target-achieved-message">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                    Congratulations! You've reached your EP target.
+                                </div>
+                            <?php endif; ?>
                         </div>
                         <div class="points-overview">
                             <div class="circular-progress" role="progressbar" aria-valuenow="<?php echo $completionPercentage; ?>" aria-valuemin="0" aria-valuemax="100">
                                 <svg viewBox="0 0 36 36" class="circular-chart">
                                     <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                         fill="none" stroke="#eee" stroke-width="2.5" />
-                                    <path class="progress-circle"
+                                    <path class="progress-circle <?php echo $targetExceeded ? 'exceeded' : ''; ?>"
                                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                        fill="none" stroke="#c0a43d" stroke-width="2.5" stroke-dasharray="<?php echo $completionPercentage; ?>, 100" />
+                                        fill="none" stroke="<?php echo $targetExceeded ? '#28a745' : '#c0a43d'; ?>" stroke-width="2.5" stroke-dasharray="<?php echo $completionPercentage; ?>, 100" />
                                 </svg>
                                 <div class="percentage">
                                     <span class="points"><?php echo $totalEP; ?></span>
@@ -263,7 +276,14 @@ try {
                             </div>
                             <div class="points-info">
                                 <h3>Total Points</h3>
-                                <p><span class="percentage-text"><?php echo $completionPercentage; ?></span>% of target achieved</p>
+                                <p>
+                                    <?php if ($targetExceeded): ?>
+                                        <span class="percentage-text">100</span>% of target achieved
+                                        <span class="target-exceeded">(+<?php echo $totalEP - $targetEP; ?> points)</span>
+                                    <?php else: ?>
+                                        <span class="percentage-text"><?php echo $completionPercentage; ?></span>% of target achieved
+                                    <?php endif; ?>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -306,7 +326,13 @@ try {
                                         <td><?php echo htmlspecialchars($semester['semester']); ?></td>
                                         <td><?php echo htmlspecialchars($semester['points_earned']); ?></td>
                                         <td><?php echo htmlspecialchars($cumulativeEP[$semester['semester']]); ?></td>
-                                        <td><span class="status-badge success">Within Limit</span></td>
+                                        <td>
+                                            <?php if ($cumulativeEP[$semester['semester']] >= $targetEP): ?>
+                                                <span class="status-badge success">Target Reached</span>
+                                            <?php else: ?>
+                                                <span class="status-badge success">Within Limit</span>
+                                            <?php endif; ?>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -314,34 +340,39 @@ try {
                     </div>
 
                     <!-- EP Summary -->
-                    <!-- EP Summary -->
                     <div class="card">
                         <div class="card-header">
                             <h3>EP Summary</h3>
                         </div>
-                        <div class="summary-content">
+                        <div class="ep-summary">
                             <div class="summary-item">
-                                <span class="summary-label">Total EP Earned</span>
-                                <span class="summary-value highlight"><?php echo $totalEP; ?></span>
+                                <span class="label">Total EP Earned</span>
+                                <span class="value highlight"><?php echo $totalEP; ?></span>
                             </div>
                             <div class="summary-item">
-                                <span class="summary-label">EP Limit</span>
-                                <span class="summary-value"><?php echo $targetEP; ?></span>
+                                <span class="label">EP Limit</span>
+                                <span class="value"><?php echo $targetEP; ?></span>
                             </div>
                             <div class="summary-item">
-                                <span class="summary-label">Remaining EP</span>
-                                <span class="summary-value"><?php echo $remainingEP; ?></span>
+                                <span class="label">Remaining EP</span>
+                                <?php if ($targetExceeded): ?>
+                                    <span class="value success">Target Achieved</span>
+                                <?php else: ?>
+                                    <span class="value"><?php echo $remainingEP; ?></span>
+                                <?php endif; ?>
                             </div>
                             <div class="summary-item">
-                                <span class="summary-label">Completion Status</span>
-                                <span class="summary-value"><?php echo $completionPercentage; ?>%</span>
+                                <span class="label">Completion Status</span>
+                                <?php if ($targetExceeded): ?>
+                                    <span class="value success">100%</span>
+                                <?php else: ?>
+                                    <span class="value"><?php echo $completionPercentage; ?>%</span>
+                                <?php endif; ?>
                             </div>
-                            <div class="summary-item">
-                                <span class="summary-label">Progress</span>
-                                <div style="width: 100%;">
-                                    <div class="progress-container">
-                                        <div class="progress-bar" style="width: <?php echo $completionPercentage; ?>%"></div>
-                                    </div>
+                            <div class="progress-bar-container">
+                                <span class="label">Progress</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill <?php echo $targetExceeded ? 'exceeded' : ''; ?>" style="width: <?php echo $completionPercentage; ?>%"></div>
                                 </div>
                             </div>
                         </div>
@@ -482,6 +513,37 @@ try {
     <script src="<?php echo BASE_URL; ?>/assets/js/search.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/burger.js"></script>
     
+    <!-- Mobile Optimization Script -->
+    <script>
+        // Handle table responsiveness
+        document.addEventListener('DOMContentLoaded', function() {
+            // Make tables horizontally scrollable on small screens
+            const tables = document.querySelectorAll('.ep-table');
+
+            tables.forEach(table => {
+                const wrapper = document.createElement('div');
+                wrapper.style.overflowX = 'auto';
+                wrapper.style.width = '100%';
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            });
+
+            // Fix tab navigation scroll position
+            const activeTab = document.querySelector('.tab-item.active');
+            const tabNav = document.querySelector('.tab-navigation');
+
+            if (activeTab && tabNav && window.innerWidth < 768) {
+                setTimeout(() => {
+                    const tabWidth = activeTab.offsetWidth;
+                    const tabLeft = activeTab.offsetLeft;
+                    const containerWidth = tabNav.offsetWidth;
+
+                    // Center the active tab
+                    tabNav.scrollLeft = tabLeft - (containerWidth / 2) + (tabWidth / 2);
+                }, 100);
+            }
+        });
+    </script>
     <!-- Mobile Optimization Script -->
     <script>
         // Handle table responsiveness

@@ -638,6 +638,32 @@ body {
     font-size: 0.9rem;
 }
 
+.target-achieved-message {
+    display: flex;
+    align-items: center;
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+.target-achieved-message svg {
+    margin-right: 8px;
+}
+
+.target-exceeded {
+    color: #28a745;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.value.success {
+    color: #28a745;
+    font-weight: bold;
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
     .dashboard-grid {

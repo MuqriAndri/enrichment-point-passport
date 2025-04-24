@@ -31,8 +31,15 @@ function getEnrichmentPointData($ccaDB, $profilesDB, $studentId)
         
         // 2. Calculate basic metrics
         $targetEP = 64;
-        $completionPercentage = $totalEP > 0 ? round(($totalEP / $targetEP) * 100) : 0;
-        $remainingEP = $targetEP - $totalEP;
+        
+        // Check if target is exceeded
+        $targetExceeded = $totalEP > $targetEP;
+        
+        // Cap completion percentage at 100% for display purposes
+        $completionPercentage = min(100, $totalEP > 0 ? round(($totalEP / $targetEP) * 100) : 0);
+        
+        // Ensure remaining EP is never negative
+        $remainingEP = max(0, $targetEP - $totalEP);
         
         // 3. Get EP by semester
         $epPerSemester = $epRepository->getEPBySemester($studentId);
@@ -69,6 +76,7 @@ function getEnrichmentPointData($ccaDB, $profilesDB, $studentId)
             'targetEP' => $targetEP,
             'completionPercentage' => $completionPercentage,
             'remainingEP' => $remainingEP,
+            'targetExceeded' => $targetExceeded,
             'epPerSemester' => $epPerSemester,
             'cumulativeEP' => $cumulativeEP,
             'activityDetails' => $activityDetails,
