@@ -11,7 +11,7 @@ session_start();
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/login.css">
 </head>
 
-<body class="<?php echo isset($_SESSION['dark_mode']) && $_SESSION['dark_mode'] ? 'dark' : ''; ?>">
+<body>
     <nav class="nav">
         <a href="https://pb.edu.bn" target="_blank" rel="noopener noreferrer">PB Website</a>
         <a href="<?php echo BASE_URL; ?>/about">About</a>
