@@ -345,3 +345,39 @@ body.dark .intro-text {
 body.dark .contact-link {
     color: #58a6ff;
 }
+
+/* Add dark background for the main card */
+body.dark .content-wrapper {
+    background: #0f172a; /* very dark navy */
+    color: #e6edf3;
+}
+
+/* Contact section paragraphs */
+body.dark .contact-section p {
+    color: #d1d5db;
+}
+
+/* Back button and submit button dark mode */
+body.dark .btn-submit,
+body.dark .back-button {
+    background-color: #2d4a7c;
+    color: #ffffff;
+    border: none;
+}
+
+body.dark .btn-submit:hover,
+body.dark .back-button:hover {
+    background-color: #1a365d;
+    box-shadow: 0 5px 15px rgba(74, 108, 178, 0.3);
+}
+
+/* Footer dark style */
+body.dark .footer {
+    background-color: #1e293b;
+    color: #94a3b8;
+    border-top: 1px solid #334155;
+}
+
+body.dark .footer .icon-container {
+    color: #e2e8f0;
+}
