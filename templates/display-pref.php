@@ -28,7 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_display'])) {
 // Load preferences for the current user
 $stmt = $pdo->prepare("SELECT dark_mode FROM users WHERE user_id = ?");
 $stmt->execute([$_SESSION['user_id']]);
+$_SESSION['dark_mode'] = $dark_mode;
 $pref = $stmt->fetch();
+$_SESSION['dark_mode'] = $pref && $pref['dark_mode'] ? true : false;
 
 // Determine if dark mode is enabled
 $isDark = $pref && $pref['dark_mode'];
