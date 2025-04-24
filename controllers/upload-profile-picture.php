@@ -40,6 +40,15 @@ function generateUniqueFilename($userId, $extension) {
     return sprintf('profile_%s_%s_%s.%s', $userId, $timestamp, $random, $extension);
 }
 
+/**
+ * Sign S3 request with AWS Signature V4
+ * 
+ * @param string $httpVerb The HTTP method (GET, PUT, etc.)
+ * @param string $path The S3 path
+ * @param string $contentType The content type of the file
+ * @param string $contentSha256 The SHA256 hash of the file content (or UNSIGNED-PAYLOAD)
+ * @return array The headers to use in the request
+ */
 function getSignedHeaders($httpVerb, $path, $contentType, $contentSha256 = 'UNSIGNED-PAYLOAD') {
     $now = gmdate('Ymd\THis\Z');
     $date = substr($now, 0, 8);

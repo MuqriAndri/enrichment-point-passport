@@ -238,13 +238,15 @@ try {
                 </div>
 
                 <!-- Quick Stats Section -->
-                <div class="target-achieved-message">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                    Congratulations! You've reached your EP target.
-                </div>
+                <?php if ($targetExceeded): ?>
+                    <div class="target-achieved-message">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        Congratulations! You've reached your EP target.
+                    </div>
+                <?php endif; ?>
                 <!--
                 <section class="quick-stats" aria-label="Overview">
                     <div class="welcome-card">
@@ -318,7 +320,7 @@ try {
                     <!-- EP Progress by Semester -->
                     <div class="card">
                         <div class="card-header">
-                            <h3>EP Progress by Semester</h3>
+                            <h3>EP Progress by Current Semester</h3>
                         </div>
                         <table class="ep-table">
                             <thead>
@@ -334,7 +336,7 @@ try {
                                     <tr>
                                         <td><?php echo htmlspecialchars($semester['semester']); ?></td>
                                         <td><?php echo htmlspecialchars($semester['points_earned']); ?></td>
-                                        <td><?php echo htmlspecialchars($cumulativeEP[$semester['semester']]); ?></td>
+                                        <!-- <td><?php echo htmlspecialchars($cumulativeEP[$semester['semester']]); ?></td>
                                         <td>
                                             <?php if ($cumulativeEP[$semester['semester']] >= $targetEP): ?>
                                                 <span class="status-badge success">Target Reached</span>
@@ -381,7 +383,7 @@ try {
                             <div class="progress-bar-container">
                                 <span class="label">Progress</span>
                                 <div class="progress-bar">
-                                    <div class="progress-fill <?php echo $targetExceeded ? 'exceeded' : ''; ?>" style="width: <?php echo $completionPercentage; ?>%"></div>
+                                    <div class="progress-fill <?php echo $targetExceeded ? 'exceeded' : ''; ?>" style="width: <?php echo min(100, $completionPercentage); ?>%"></div>
                                 </div>
                             </div>
                         </div>

@@ -268,9 +268,9 @@ if (isset($_SESSION['user_id']) && isset($pdo)) {
                                     "location" => "Politeknik Brunei Conference Hall",
                                     "enrichment_points" => 15,
                                     "images" => [
-                                        "event-d-1.jpg",
-                                        "event-d-2.jpg",
-                                        "event-d-3.jpg"
+                                        "event-a-1.jpg",
+                                        "event-b-2.jpg",
+                                        "event-c-3.jpg"
                                     ]
                                 ],
                                 [
@@ -281,9 +281,9 @@ if (isset($_SESSION['user_id']) && isset($pdo)) {
                                     "location" => "SICT Building, Politeknik Brunei",
                                     "enrichment_points" => 30,
                                     "images" => [
-                                        "event-e-1.jpg",
-                                        "event-e-2.jpg",
-                                        "event-e-3.jpg"
+                                        "event-c-1.jpg",
+                                        "event-a-2.jpg",
+                                        "event-b-3.jpg"
                                     ]
                                 ]
                             ];

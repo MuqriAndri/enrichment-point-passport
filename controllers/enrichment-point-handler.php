@@ -30,7 +30,7 @@ function getEnrichmentPointData($ccaDB, $profilesDB, $studentId)
         error_log("Total EP for student $studentId: $totalEP");
         
         // 2. Calculate basic metrics
-        $targetEP = 64;
+        $targetEP = 64; // Keep target at 64 EP
         
         // Check if target is exceeded
         $targetExceeded = $totalEP > $targetEP;
@@ -41,25 +41,30 @@ function getEnrichmentPointData($ccaDB, $profilesDB, $studentId)
         // Ensure remaining EP is never negative
         $remainingEP = max(0, $targetEP - $totalEP);
         
-        // 3. Get EP by semester
+        // 3. Get EP by semester (get all semesters, not just current)
         $epPerSemester = $epRepository->getEPBySemester($studentId);
         error_log("EP Per Semester count: " . count($epPerSemester));
         
-        // If no data found, use basic distribution with numeric semesters
-        if (empty($epPerSemester)) {
-            error_log("No semester data found, using fallback distribution");
-            $epPerSemester = [
-                ['semester' => '1st Semester 2024', 'points_earned' => round($totalEP * 0.6)],
-                ['semester' => '2nd Semester 2024', 'points_earned' => round($totalEP * 0.4)]
-            ];
-        }
-        
-        // 4. Calculate cumulative totals
+        // 4. Calculate cumulative totals based on actual data
         $cumulativeEP = [];
         $runningTotal = 0;
+        
+        // Calculate cumulative EP from semester data
         foreach ($epPerSemester as $semester) {
             $runningTotal += $semester['points_earned'];
             $cumulativeEP[$semester['semester']] = $runningTotal;
+        }
+        
+        // If the final calculated EP doesn't match the total EP from the user profile,
+        // adjust the most recent semester to match
+        if (!empty($epPerSemester) && $runningTotal != $totalEP) {
+            $lastSemesterKey = count($epPerSemester) - 1;
+            $lastSemester = $epPerSemester[$lastSemesterKey]['semester'];
+            $diff = $totalEP - $runningTotal;
+            
+            // Update both the points_earned and cumulative values
+            $epPerSemester[$lastSemesterKey]['points_earned'] += $diff;
+            $cumulativeEP[$lastSemester] = $totalEP;
         }
         
         // 5. Get activity details - using the repository

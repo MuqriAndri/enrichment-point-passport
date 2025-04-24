@@ -29,6 +29,7 @@ class EnrichmentPointRepository
     public function getEPBySemester($studentId)
     {
         try {
+            // Get all semester data without filtering
             $sql = "SELECT 
                     semester,
                     SUM(points) as points_earned
@@ -60,6 +61,27 @@ class EnrichmentPointRepository
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             error_log("getEPBySemester count: " . count($result));
+            
+            // If no data found, add a zero entry for current semester
+            if (empty($result)) {
+                $currentMonth = date('n');
+                $currentYear = date('Y');
+                
+                if ($currentMonth >= 1 && $currentMonth <= 6) {
+                    $currentSemester = '1st Semester ' . $currentYear;
+                } else {
+                    $currentSemester = '2nd Semester ' . $currentYear;
+                }
+                
+                return [
+                    [
+                        'semester' => $currentSemester,
+                        'points_earned' => 0
+                    ]
+                ];
+            }
+            
+            // Return all semester data - don't filter to current semester
             return $result;
         } catch (PDOException $e) {
             error_log("getEPBySemester error: " . $e->getMessage());
