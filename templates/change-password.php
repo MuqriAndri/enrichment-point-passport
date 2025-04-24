@@ -1,6 +1,13 @@
 <?php
 session_start();
 
+// Optional: Toggle dark mode from this page
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_dark_mode'])) {
+    $_SESSION['dark_mode'] = isset($_POST['dark_mode']);
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
+
 if (!defined('BASE_URL')) {
     define('BASE_URL', '/enrichment-point-passport');
 }
@@ -47,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     <title>Change Password</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/settings.css">
 </head>
-<body>
+<body class="<?php echo isset($_SESSION['dark_mode']) && $_SESSION['dark_mode'] ? 'dark' : ''; ?>">
     <div class="form-wrapper">
         <a class="back" href="<?php echo BASE_URL; ?>/settings">&#8592; Back to Settings</a>
         <h1>Change Password</h1>
@@ -72,6 +79,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
                 <input type="password" name="confirm_password" id="confirm_password" required>
             </div>
 
+            <div class="form-group">
+                <label>
+                <input type="checkbox" name="dark_mode" <?php echo isset($_SESSION['dark_mode']) && $_SESSION['dark_mode'] ? 'checked' : ''; ?>>
+                Enable Dark Mode
+                </label>
+            </div>
+            <button type="submit" name="toggle_dark_mode" class="btn-submit">Save Theme</button>
             <button type="submit" name="change_password" class="btn-submit">Change Password</button>
         </form>
     </div>
