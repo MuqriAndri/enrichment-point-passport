@@ -336,7 +336,7 @@ try {
                                     <tr>
                                         <td><?php echo htmlspecialchars($semester['semester']); ?></td>
                                         <td><?php echo htmlspecialchars($semester['points_earned']); ?></td>
-                                        <!-- <td><?php echo htmlspecialchars($cumulativeEP[$semester['semester']]); ?></td>
+                                        <td><?php echo htmlspecialchars($cumulativeEP[$semester['semester']]); ?></td>
                                         <td>
                                             <?php if ($cumulativeEP[$semester['semester']] >= $targetEP): ?>
                                                 <span class="status-badge success">Target Reached</span>
