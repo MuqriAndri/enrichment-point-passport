@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: " . BASE_URL);
+    exit();
+}
 
 $isDark = false;
 if (isset($_SESSION['user_id'])) {
@@ -8,6 +12,24 @@ if (isset($_SESSION['user_id'])) {
     $stmt->execute([$_SESSION['user_id']]);
     $user = $stmt->fetch();
     $isDark = $user && $user['dark_mode'];
+}
+
+// Load the controller
+require_once 'controllers/history-handler.php';
+
+// Get history data with error handling
+try {
+    // Default to first semester if not specified
+    $selectedSemester = isset($_GET['semester']) ? $_GET['semester'] : '1';
+    $historyData = getHistoryData($ccaDB, $profilesDB, $_SESSION['student_id'], $selectedSemester);
+    
+    // Extract all variables for easier access in the template
+    extract($historyData);
+} catch (Exception $e) {
+    error_log("History Template: Error getting history data: " . $e->getMessage());
+    $overallPoints = 0;
+    $clubHistory = [];
+    $selectedSemester = '1';
 }
 ?>
 
@@ -206,16 +228,16 @@ if (isset($_SESSION['user_id'])) {
                     <header>
                         <h1>HISTORY OVERVIEW</h1>
                         <select id="semesterSelect">
-                            <option value="1">SEMESTER 1</option>
-                            <option value="2">SEMESTER 2</option>
-                            <option value="3">SEMESTER 3</option>
-                            <option value="4">SEMESTER 4</option>
-                            <option value="5">SEMESTER 5</option>
-                            <option value="6">SEMESTER 6</option>
+                            <option value="1" <?php echo $selectedSemester == '1' ? 'selected' : ''; ?>>SEMESTER 1</option>
+                            <option value="2" <?php echo $selectedSemester == '2' ? 'selected' : ''; ?>>SEMESTER 2</option>
+                            <option value="3" <?php echo $selectedSemester == '3' ? 'selected' : ''; ?>>SEMESTER 3</option>
+                            <option value="4" <?php echo $selectedSemester == '4' ? 'selected' : ''; ?>>SEMESTER 4</option>
+                            <option value="5" <?php echo $selectedSemester == '5' ? 'selected' : ''; ?>>SEMESTER 5</option>
+                            <option value="6" <?php echo $selectedSemester == '6' ? 'selected' : ''; ?>>SEMESTER 6</option>
                         </select>
                     </header>
 
-                    <!-- New Table for History Overview -->
+                    <!-- Table for History Overview -->
                     <table class="history-table">
                         <caption>History Overview</caption>
                         <thead>
@@ -227,33 +249,45 @@ if (isset($_SESSION['user_id'])) {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td id="clubName"></td>
-                                <td id="epEarned1"></td>
-                                <td id="status1"></td>
-                                <td id="role1"></td>
-                            </tr>
-                            <tr>
-                                <td id="clubName2"></td>
-                                <td id="epEarned2"></td>
-                                <td id="status2"></td>
-                                <td id="role2"></td>
-                            </tr>
-                            <tr>
-                                <td id="clubName3"></td>
-                                <td id="epEarned3"></td>
-                                <td id="status3"></td>
-                                <td id="role3"></td>
-                            </tr>
+                            <?php if (empty($clubHistory)): ?>
+                                <tr>
+                                    <td colspan="4" class="no-data">No club history available for this semester</td>
+                                </tr>
+                            <?php else: ?>
+                                <?php 
+                                // Display up to 3 rows from the club history
+                                $count = 0;
+                                foreach ($clubHistory as $club): 
+                                    if ($count >= 3) break;
+                                ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($club['club_name'] ?? 'N/A'); ?></td>
+                                    <td><?php echo htmlspecialchars($club['ep_earned'] ?? '0'); ?></td>
+                                    <td><?php echo htmlspecialchars($club['status'] ?? 'Inactive'); ?></td>
+                                    <td><?php echo htmlspecialchars($club['role'] ?? 'Member'); ?></td>
+                                </tr>
+                                <?php 
+                                    $count++;
+                                endforeach; 
+                                
+                                // Add empty rows if less than 3 clubs
+                                for ($i = $count; $i < 3; $i++): 
+                                ?>
+                                <tr>
+                                    <td>-</td>
+                                    <td>0</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                                <?php endfor; ?>
+                            <?php endif; ?>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="4" style="text-align: center; font-weight: bold;">Overall Points: <span id="overallPoints"></span></td>
+                                <td colspan="4" style="text-align: center; font-weight: bold;">Overall Points: <?php echo htmlspecialchars($overallPoints); ?></td>
                             </tr>
                         </tfoot>
                     </table>
-
-
                 </div>
             </div>
         </div>
@@ -290,7 +324,13 @@ if (isset($_SESSION['user_id'])) {
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/search.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/burger.js"></script>
-
+    <script>
+        // Handle semester change event
+        document.getElementById('semesterSelect').addEventListener('change', function() {
+            const semester = this.value;
+            window.location.href = '<?php echo BASE_URL; ?>/history?semester=' + semester;
+        });
+    </script>
 </body>
 
 </html>

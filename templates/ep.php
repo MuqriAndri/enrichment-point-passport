@@ -238,6 +238,14 @@ try {
                 </div>
 
                 <!-- Quick Stats Section -->
+                <div class="target-achieved-message">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    Congratulations! You've reached your EP target.
+                </div>
+                <!--
                 <section class="quick-stats" aria-label="Overview">
                     <div class="welcome-card">
                         <div class="welcome-content">
@@ -288,6 +296,7 @@ try {
                         </div>
                     </div>
                 </section>
+                -->
 
                 <!-- Student Info -->
                 <div class="student-info">
@@ -447,35 +456,37 @@ try {
                     </div>
 
                     <!-- Recommendations -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Recommendations</h3>
+                    <?php if (!$targetExceeded): ?>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Recommendations</h3>
+                            </div>
+                            <div class="summary-content">
+                                <div class="summary-item">
+                                    <span class="summary-label">Current EP Status</span>
+                                    <span class="summary-value"><?php echo $totalEP; ?>/<?php echo $targetEP; ?> Points</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">Needed for Completion</span>
+                                    <span class="summary-value"><?php echo $remainingEP; ?> more points</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">Suggested Activities</span>
+                                </div>
+                                <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
+                                    <li>International Experience (Study Abroad) - 20 points</li>
+                                    <li>Academic Conference - 8 points</li>
+                                    <li>Academic Publication - 10 points</li>
+                                    <li>Community Service - 5 points</li>
+                                </ul>
+                                <div style="margin-top: 1rem;">
+                                    <a href="<?php echo BASE_URL; ?>/events" class="primary-btn" style="background: var(--primary-color); display: block; text-align: center;">
+                                        View All Available Activities
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="summary-content">
-                            <div class="summary-item">
-                                <span class="summary-label">Current EP Status</span>
-                                <span class="summary-value"><?php echo $totalEP; ?>/<?php echo $targetEP; ?> Points</span>
-                            </div>
-                            <div class="summary-item">
-                                <span class="summary-label">Needed for Completion</span>
-                                <span class="summary-value"><?php echo $remainingEP; ?> more points</span>
-                            </div>
-                            <div class="summary-item">
-                                <span class="summary-label">Suggested Activities</span>
-                            </div>
-                            <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
-                                <li>International Experience (Study Abroad) - 20 points</li>
-                                <li>Academic Conference - 8 points</li>
-                                <li>Academic Publication - 10 points</li>
-                                <li>Community Service - 5 points</li>
-                            </ul>
-                            <div style="margin-top: 1rem;">
-                                <a href="<?php echo BASE_URL; ?>/events" class="primary-btn" style="background: var(--primary-color); display: block; text-align: center;">
-                                    View All Available Activities
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -512,7 +523,7 @@ try {
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/search.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/burger.js"></script>
-    
+
     <!-- Mobile Optimization Script -->
     <script>
         // Handle table responsiveness
@@ -550,7 +561,7 @@ try {
         document.addEventListener('DOMContentLoaded', function() {
             // Make tables horizontally scrollable on small screens
             const tables = document.querySelectorAll('.ep-table');
-            
+
             tables.forEach(table => {
                 const wrapper = document.createElement('div');
                 wrapper.style.overflowX = 'auto';
@@ -558,17 +569,17 @@ try {
                 table.parentNode.insertBefore(wrapper, table);
                 wrapper.appendChild(table);
             });
-            
+
             // Fix tab navigation scroll position
             const activeTab = document.querySelector('.tab-item.active');
             const tabNav = document.querySelector('.tab-navigation');
-            
+
             if (activeTab && tabNav && window.innerWidth < 768) {
                 setTimeout(() => {
                     const tabWidth = activeTab.offsetWidth;
                     const tabLeft = activeTab.offsetLeft;
                     const containerWidth = tabNav.offsetWidth;
-                    
+
                     // Center the active tab
                     tabNav.scrollLeft = tabLeft - (containerWidth / 2) + (tabWidth / 2);
                 }, 100);
@@ -576,4 +587,5 @@ try {
         });
     </script>
 </body>
+
 </html>

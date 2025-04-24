@@ -646,6 +646,7 @@ body {
     padding: 10px 15px;
     border-radius: 6px;
     margin-top: 10px;
+    margin-bottom: 10px;
     font-weight: 500;
 }
 
@@ -654,7 +655,7 @@ body {
 }
 
 .target-exceeded {
-    color: #28a745;
+    color: #efbf04;
     font-weight: bold;
     margin-left: 5px;
 }

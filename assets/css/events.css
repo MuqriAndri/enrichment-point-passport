@@ -60,7 +60,6 @@ body {
     flex-direction: column;
     max-height: 100vh;
     overflow-y: auto;
-    overflow-x: hidden;
     position: relative;
 }
 
@@ -68,7 +67,7 @@ body {
     flex: 1;
     padding: var(--spacing-lg);
     margin-top: 4rem;
-    /* Account for fixed header */
+    overflow-x: visible; /* Allow horizontal overflow */
 }
 
 .main-wrapper {
@@ -76,59 +75,238 @@ body {
     margin: 0 auto;
     width: 100%;
     padding: var(--spacing-lg);
+    overflow: visible; /* Allow content overflow */
 }
 
-/* Grid Layout */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-lg);
-    height: auto;
-    max-height: calc(100vh - 200px);
-    overflow-y: auto;
+/* Container & Headings */
+.container {
+    position: relative;
+    max-width: 100vw; /* Full viewport width */
+    margin: 0 auto;
+    padding: 0;
+    overflow: visible; /* Allow overflow */
+    width: 100%;
 }
 
-/* Event Slider Styles */
+h1 {
+    font-size: 1.75rem;
+    margin-bottom: var(--spacing-xl);
+    color: var(--primary-color);
+    padding: 0 var(--spacing-md);
+}
+
+/* New Carousel Styles - Glide-like with overflow */
 .event-slider {
+    position: relative;
     display: flex;
-    flex-wrap: wrap; /* Allow wrapping for better layout */
-    gap: var(--spacing-md); /* Add spacing between event boxes */
-    padding: var(--spacing-md);
-    justify-content: center; /* Center the event boxes */
+    justify-content: center;
+    padding: var(--spacing-xl) 0;
+    margin: var(--spacing-xl) 0;
+    min-height: 400px;
+    overflow: visible;
+    width: 100%;
 }
 
 .event-slide {
-    flex: 0 0 300px;
+    position: absolute;
+    width: 320px;
     background: white;
-    border: 1px solid var(--border-color); /* Keep a subtle border */
-    border-radius: var(--radius-md); /* Rounded corners for a modern look */
-    box-shadow: var(--shadow-md); /* Add a soft shadow for better visibility */
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
     padding: var(--spacing-md);
-    transition: none; /* Remove hover scaling effect */
-    margin-bottom: var(--spacing-md); /* Add spacing between event boxes */
+    transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transform: scale(0.8) translateX(0);
 }
 
-.event-slide:hover {
-    transform: none; /* Disable hover scaling effect */
+/* Slide positioning classes - with wider spacing for overflow */
+.event-slide.active {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+    z-index: 10;
+    pointer-events: auto;
+    cursor: default;
+    box-shadow: var(--shadow-lg);
+}
+
+.event-slide.prev {
+    opacity: 0.8;
+    transform: scale(0.85) translateX(-90%);
+    z-index: 5;
+    pointer-events: auto;
+}
+
+.event-slide.next {
+    opacity: 0.8;
+    transform: scale(0.85) translateX(90%);
+    z-index: 5;
+    pointer-events: auto;
+}
+
+.event-slide.far-prev {
+    opacity: 0.6;
+    transform: scale(0.7) translateX(-180%);
+    z-index: 1;
+}
+
+.event-slide.far-next {
+    opacity: 0.6;
+    transform: scale(0.7) translateX(180%);
+    z-index: 1;
+}
+
+/* Shine effect */
+.shine-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Carousel Navigation - improved for looping */
+.carousel-nav {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin: 0 auto var(--spacing-xl);
+    z-index: 20;
+    width: 100%;
+    max-width: 200px;
+}
+
+.carousel-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+    opacity: 1;
+}
+
+.carousel-btn:hover {
+    background-color: var(--accent-color);
+    transform: scale(1.1);
+}
+
+/* Remove disabled states for continuous loop */
+.carousel-btn:disabled {
+    background-color: var(--primary-color);
+    cursor: pointer;
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Event slide content styles */
+.event-slide h2 {
+    font-size: 1.3rem;
+    margin-bottom: var(--spacing-xs);
+    color: var(--primary-color);
+}
+
+.event-status {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-sm);
+    color: white;
+}
+
+.event-status.available {
+    background-color: var(--success-color);
+}
+
+.event-status.upcoming {
+    background-color: var(--info-color);
 }
 
 .short-description {
     color: var(--text-light);
     margin-bottom: var(--spacing-sm);
+    font-size: 0.9rem;
+    line-height: 1.4;
 }
 
-.full-description {
-    margin-top: var(--spacing-sm);
-    display: none;
+/* Image container styles */
+.image-box {
+    width: 100%;
+    height: 180px;
+    margin-bottom: var(--spacing-sm);
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    position: relative;
 }
 
+.image-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.event-slide:hover .image-container img {
+    transform: scale(1.05);
+}
+
+/* Image indicators */
+.image-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: var(--spacing-xs);
+}
+
+.indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.indicator.active {
+    background-color: var(--primary-color);
+    transform: scale(1.3);
+}
+
+/* Button styles */
 .btn {
     display: inline-block;
     padding: var(--spacing-xs) var(--spacing-sm);
     border: none;
     border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: background-color var(--transition-fast);
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    text-align: center;
 }
 
 .btn-primary {
@@ -137,7 +315,7 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: #142a4a; /* Adjusted to a darker shade */
+    background-color: var(--accent-color);
 }
 
 .btn-secondary {
@@ -146,165 +324,17 @@ body {
 }
 
 .btn-secondary:hover {
-    background-color: #718096; /* Adjusted to a darker shade */
+    background-color: var(--accent-color);
 }
 
-/* Added styles for event-item-box */
-.event-item-box {
-    margin-bottom: var(--spacing-lg);
-    padding: var(--spacing-md);
-    background: white;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
+.learn-more-btn {
+    width: 100%;
+    margin-top: var(--spacing-sm);
 }
 
-/* Added styles for event-item */
-.event-item {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-}
-
-.event-item h2 {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-}
-
-.event-item p {
-    color: var(--text-light);
-    margin: 0;
-}
-
-.event-item .btn {
-    align-self: flex-start;
-}
-
-/* Styles for swipeable image container */
-.image-container {
-    width: 200px; /* Set width for a square shape */
-    height: 200px; /* Set height equal to width for a square shape */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; /* Ensure images don't overflow */
-    background-color: var(--background-light); /* Background color for empty space */
-    border: none; /* Remove border for the container */
-    border-radius: var(--radius-md); /* Rounded corners */
-    box-shadow: none; /* Remove shadow */
-    position: relative; /* Allow positioning of arrows outside */
-    margin: 0 auto; /* Center the image box horizontally */
-    user-select: none; /* Disable text selection */
-    -webkit-user-drag: none; /* Disable dragging in WebKit browsers */
-}
-
-.image-container img {
-    width: 100%; /* Ensure the image fills the container width */
-    height: 100%; /* Ensure the image fills the container height */
-    object-fit: cover; /* Ensure the image fills the container without distortion */
-    display: block; /* Ensure the image is treated as a block element */
-    margin: auto; /* Center the image vertically and horizontally */
-    border: none; /* Remove the border for the image */
-    user-select: none; /* Disable text selection */
-    -webkit-user-drag: none; /* Disable dragging in WebKit browsers */
-    pointer-events: none; /* Prevent pointer events on the image */
-}
-
-/* Styles for image indicators below the image container */
-.image-indicators {
-    display: flex;
-    justify-content: center;
-    gap: var(--spacing-xs);
-    margin-top: var(--spacing-sm); /* Add spacing below the image container */
-    position: relative; /* Ensure proper positioning */
-    z-index: 10; /* Ensure visibility above other elements */
-}
-
-.indicator {
-    width: 14px; /* Slightly larger for visibility */
-    height: 14px;
-    background-color: rgba(0, 0, 0, 0.6); /* Darker background for visibility */
-    border: 2px solid white; /* White border for contrast */
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color var(--transition-fast), transform var(--transition-fast);
-}
-
-.indicator.active {
-    background-color: var(--primary-color); /* Highlight active indicator */
-    transform: scale(1.3); /* Slightly enlarge active indicator */
-}
-
-/* Styles for event image border */
-.event-image {
-    display: none; /* Hide all images by default */
-    width: 100%; /* Ensure all images take up the full width of the container */
-    height: 300px; /* Set a fixed height for consistency */
-    object-fit: cover; /* Ensure images maintain their aspect ratio and fill the container */
-    border-radius: var(--radius-md); /* Rounded corners */
-    box-shadow: var(--shadow-sm); /* Add shadow for better visibility */
-}
-
-.event-image:first-child {
-    display: block; /* Show the first image initially */
-}
-
-/* Styles for smaller "Learn More" button */
-.small-btn {
-    font-size: 0.875rem;
-    padding: var(--spacing-xs) var(--spacing-xs);
-}
-
-/* Styles for image box with a larger size */
-.image-box {
-    border: none; /* Remove border for the image box */
-    border-radius: var(--radius-md); /* Rounded corners */
-    padding: 0; /* Remove padding */
-    background-color: transparent; /* Remove background color */
-    box-shadow: none; /* Remove shadow */
-    overflow: hidden;
-    width: 320px; /* Adjust width to match the container */
-    height: 200px; /* Adjust height to match the container */
-    margin: 0 auto; /* Center the image box */
-    position: relative; /* Ensure it stays above other elements */
-    z-index: 1; /* Ensure visibility */
-}
-
-/* Styles for navigation buttons */
-.image-slider {
-    position: relative;
-}
-
+/* Hide the image navigation buttons */
 .nav-button {
-    position: absolute;
-    top: 50%; /* Center vertically */
-    transform: translateY(-50%); /* Adjust for centering */
-    background-color: rgba(0, 0, 0, 0.7); /* Darker semi-transparent background */
-    color: white;
-    border: none;
-    border-radius: var(--radius-full);
-    width: 40px; /* Larger size for better visibility */
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 10;
-    box-shadow: var(--shadow-md); /* Add shadow for better visibility */
-}
-
-.nav-button.left {
-    left: -50px; /* Position outside the left edge of the image box */
-}
-
-.nav-button.right {
-    right: -50px; /* Position outside the right edge of the image box */
-}
-
-.nav-button:hover {
-    background-color: rgba(0, 0, 0, 0.9); /* Darker background on hover */
-    transform: translateY(-50%) scale(1.1); /* Slightly enlarge on hover */
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    display: none;
 }
 
 /* Modal Styles */
@@ -328,229 +358,146 @@ body {
     box-shadow: var(--shadow-lg);
     max-width: 500px;
     width: 90%;
-    text-align: left; /* Align text to the left for better readability */
+    position: relative;
 }
 
 .modal-content p {
-    margin-bottom: var(--spacing-md); /* Add spacing between details */
-}
-
-#modal-register-btn {
-    margin-top: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
 }
 
 .close-btn {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 15px;
+    right: 15px;
     font-size: 1.5rem;
     cursor: pointer;
     color: var(--text-light);
-    transition: color var(--transition-fast);
 }
 
-.close-btn:hover {
-    color: var(--text-dark);
+#modal-register-btn {
+    width: 100%;
+    padding: var(--spacing-sm);
+    margin-top: var(--spacing-md);
 }
 
-/* Styles for event status */
-.event-status {
-    display: inline-block;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    border-radius: var(--radius-sm);
-    margin-bottom: var(--spacing-sm);
-    color: white;
-}
-
-.event-status.available {
-    background-color: var(--success-color); /* Green for available events */
-}
-
-.event-status.upcoming {
-    background-color: var(--info-color); /* Blue for upcoming events */
-}
-
-/* Calendar Styles */
+/* Calendar Styles (simplified) */
 .calendar-container {
-    margin-top: 2rem;
-    text-align: center;
+    margin-top: var(--spacing-xl);
+    padding: 0 var(--spacing-md);
 }
 
-#calendar {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 0.5rem;
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-.calendar-day {
-    padding: 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    background-color: var(--background-light);
-    text-align: center;
-    font-size: 0.875rem;
-    position: relative;
-}
-
-.calendar-day.today {
-    background-color: var(--accent-color);
-    color: white;
-    font-weight: bold;
-}
-
-.calendar-day.event-day {
-    background-color: var(--success-color); /* Highlight event days with a green background */
-    color: white;
-    font-weight: bold;
-    position: relative;
-    cursor: pointer; /* Add a pointer cursor for interactivity */
-}
-
-.calendar-day.event-day:hover {
-    background-color: var(--accent-color); /* Change color on hover for better visibility */
-}
-
-.calendar-day span {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    font-size: 0.75rem;
-    color: white;
-    background-color: var(--primary-color);
-    border-radius: 50%;
-    padding: 0.25rem;
-}
-
-/* Tooltip Styles */
-.tooltip {
-    display: none;
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: var(--primary-color);
-    color: white;
-    padding: 0.5rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.75rem;
-    white-space: nowrap;
-    z-index: 100;
-    box-shadow: var(--shadow-md);
-}
-
-/* Ensure responsiveness */
+/* Responsive Styles */
 @media (max-width: 768px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-
     .event-slide {
-        flex: 0 0 100%;
+        width: 280px;
     }
-
-    .image-container {
-        width: 120px; /* Smaller size for mobile view */
-        height: 120px; /* Square shape for mobile view */
+    
+    .event-slide.prev {
+        transform: scale(0.8) translateX(-80%);
+        opacity: 0.7;
     }
-
+    
+    .event-slide.next {
+        transform: scale(0.8) translateX(80%);
+        opacity: 0.7;
+    }
+    
+    .event-slide.far-prev,
+    .event-slide.far-next {
+        opacity: 0;
+        pointer-events: none;
+    }
+    
     .image-box {
-        width: 140px; /* Adjust width for mobile view */
-        height: 140px; /* Adjust height for mobile view */
+        height: 150px;
     }
-
-    .nav-button {
-        width: 30px; /* Smaller size for arrows on mobile */
-        height: 30px;
+    
+    .carousel-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
     }
-
-    .nav-button.left {
-        left: -30px; /* Adjust position for smaller screens */
-    }
-
-    .nav-button.right {
-        right: -30px; /* Adjust position for smaller screens */
+    
+    h1 {
+        font-size: 1.5rem;
+        text-align: center;
     }
 }
 
-/* Dark Mode Overrides */
+/* Dark Mode Styles */
 body.dark {
-    background-color: #0d1117;
-    color: #e6edf3;
+    background-color: #121212;
+    color: #e0e0e0;
 }
 
-body.dark .event-slide,
-body.dark .event-item-box,
-body.dark .modal-content,
-body.dark .calendar-day,
-body.dark .dashboard-grid {
-    background-color: #161b22;
-    color: #e6edf3;
-    border-color: #30363d;
+body.dark h1 {
+    color: #e0e0e0;
 }
 
-body.dark .event-status.available {
-    background-color: #238636;
+body.dark .event-slide {
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-body.dark .event-status.upcoming {
-    background-color: #1f6feb;
+body.dark .event-slide h2 {
+    color: #e0e0e0;
+}
+
+body.dark .short-description {
+    color: #a0a0a0;
+}
+
+body.dark .carousel-btn {
+    background-color: #333;
+}
+
+body.dark .carousel-btn:hover {
+    background-color: var(--accent-color);
+}
+
+body.dark .carousel-btn:disabled {
+    background-color: #444;
 }
 
 body.dark .btn-primary,
 body.dark .btn-secondary {
-    background-color: #238636;
-    color: white;
-    border-color: transparent;
+    background-color: #444;
 }
 
 body.dark .btn-primary:hover,
 body.dark .btn-secondary:hover {
-    background-color: #2ea043;
+    background-color: var(--accent-color);
 }
 
-body.dark .short-description,
-body.dark .event-item p,
-body.dark .modal-content p {
-    color: #8b949e;
+body.dark .indicator {
+    background-color: #555;
 }
 
-body.dark .image-indicators .indicator {
-    background-color: #444c56;
-    border: 2px solid #0d1117;
+body.dark .indicator.active {
+    background-color: var(--accent-color);
 }
 
-body.dark .image-indicators .indicator.active {
-    background-color: #58a6ff;
+body.dark .modal-content {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
 }
 
-body.dark .nav-button {
-    background-color: rgba(255, 255, 255, 0.08);
+body.dark .close-btn {
+    color: #a0a0a0;
 }
 
-body.dark .nav-button:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+body.dark .shine-effect {
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
 }
 
-body.dark .calendar-day.today {
-    background-color: #238636;
-    color: white;
-    border: 1px solid #2ea043;
+/* Add hover indicator to show clickable slides */
+.event-slide.prev:hover,
+.event-slide.next:hover {
+    transform: scale(0.87) translateX(-90%);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-body.dark .calendar-day.event-day {
-    background-color: #1f6feb;
+.event-slide.next:hover {
+    transform: scale(0.87) translateX(90%);
 }
 
-body.dark .calendar-day.event-day:hover {
-    background-color: #238636;
-}
-
-body.dark .tooltip {
-    background-color: #21262d;
-    color: #e6edf3;
-    border-color: #30363d;
-}

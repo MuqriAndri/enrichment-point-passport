@@ -413,3 +413,16 @@ body.dark input[type="checkbox"] {
     background-color: #1e1e1e;
     border: 1px solid #444;
 }
+
+
+/* Fix dark mode checkbox label visibility */
+body.dark .form-group label {
+    color: #e6edf3; /* Light text for dark background */
+}
+
+/* Fix checkboxes being invisible in dark mode */
+body.dark input[type="checkbox"] {
+    accent-color: var(--primary-color);
+    background-color: #1e1e1e;
+    border: 1px solid #444;
+}

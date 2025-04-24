@@ -259,6 +259,32 @@ if (isset($_SESSION['user_id']) && isset($pdo)) {
                                         "event-c-2.jpg",
                                         "event-c-3.jpg"
                                     ]
+                                ],
+                                [
+                                    "name" => "Leadership Workshop",
+                                    "description" => "Develop essential leadership skills through interactive sessions and practical exercises. Perfect for students aspiring to take leadership roles in their academic and professional lives.",
+                                    "date" => "2025-06-15",
+                                    "time" => "09:00 AM",
+                                    "location" => "Politeknik Brunei Conference Hall",
+                                    "enrichment_points" => 15,
+                                    "images" => [
+                                        "event-d-1.jpg",
+                                        "event-d-2.jpg",
+                                        "event-d-3.jpg"
+                                    ]
+                                ],
+                                [
+                                    "name" => "Innovation Hackathon",
+                                    "description" => "Join our 48-hour coding marathon to develop innovative solutions for real-world problems. Great opportunity to showcase your technical skills and creativity while earning valuable enrichment points.",
+                                    "date" => "2025-08-05",
+                                    "time" => "08:00 AM",
+                                    "location" => "SICT Building, Politeknik Brunei",
+                                    "enrichment_points" => 30,
+                                    "images" => [
+                                        "event-e-1.jpg",
+                                        "event-e-2.jpg",
+                                        "event-e-3.jpg"
+                                    ]
                                 ]
                             ];
 

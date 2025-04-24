@@ -152,6 +152,13 @@ body {
     color: var(--primary-color);
 }
 
+.history-table .no-data {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-light);
+    font-style: italic;
+}
+
 .points-total {
     color: var(--success-color);
     font-weight: bold;
@@ -226,4 +233,8 @@ body.dark .details-table caption {
 
 body.dark .points-total {
     color: #3fb950;
+}
+
+body.dark .history-table .no-data {
+    color: #8b949e;
 }
