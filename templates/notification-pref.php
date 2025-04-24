@@ -49,4 +49,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_notification']))
         <form method="POST" class="password-form">
             <div class="form-group">
                 <label>
-                    <
+                    <input type="checkbox" name="email_notification" value="1">
+                    Enable Email Notifications
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="sms_notification" value="1">
+                    Enable SMS Notifications
+                </label>
+            </div>
+
+            <button type="submit" name="save_notification" class="btn-submit">Save Preferences</button>
+        </form>
+    </div>
+</body>
+</html>
