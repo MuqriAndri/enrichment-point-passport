@@ -787,18 +787,16 @@ body.dark {
 /* Header & Info Panels */
 body.dark .profile-info,
 body.dark .profile-section,
-body.dark .section-header,
-body.dark .form-group input,
-body.dark .form-group textarea {
-    background-color: #1e1e1e;
-    color: #f1f1f1;
-    border-color: #333;
+body.dark .section-header {
+    background-color: #1e1e1e !important;
+    color: #f1f1f1 !important;
+    border-color: #333 !important;
 }
 
 /* Section Header and Subsection Titles */
 body.dark .section-header h2,
 body.dark .subsection-title {
-    color: #58a6ff;
+    color: #58a6ff !important;
 }
 
 body.dark .section-header {
@@ -862,5 +860,7 @@ body.dark .form-section {
 
 body.dark .form-group input,
 body.dark .form-group textarea {
-    border-color: #444;
+    background-color: #2a2a2a !important;
+    color: #e2e8f0 !important;
+    border-color: #444 !important;
 }
