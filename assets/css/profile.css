@@ -776,3 +776,55 @@
     background: white;
     border-color: var(--text-light);
 }
+
+body.dark {
+    background-color: #121212;
+    color: #f1f1f1;
+}
+
+body.dark .profile-info,
+body.dark .profile-section,
+body.dark .section-header,
+body.dark .form-group input,
+body.dark .form-group textarea,
+body.dark .cancel-btn {
+    background-color: #1e1e1e;
+    color: #f1f1f1;
+    border-color: #333;
+}
+
+body.dark .form-group label,
+body.dark .info-label,
+body.dark .student-id,
+body.dark .stat-label {
+    color: #a0aec0;
+}
+
+body.dark .profile-info-main h1,
+body.dark .info-value,
+body.dark .stat-value {
+    color: #e2e8f0;
+}
+
+body.dark .stat-icon {
+    background-color: #2d4a7c;
+}
+
+body.dark .profile-cover::after {
+    background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%);
+}
+
+body.dark .section-header {
+    background: linear-gradient(to right, #2d2d2d, #1e1e1e);
+}
+
+body.dark .edit-profile-btn,
+body.dark .save-changes-btn {
+    background-color: #2d4a7c;
+    color: #fff;
+}
+
+body.dark .edit-profile-btn:hover,
+body.dark .save-changes-btn:hover {
+    background-color: #3b5b99;
+}

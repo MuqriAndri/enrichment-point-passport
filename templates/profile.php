@@ -18,7 +18,7 @@ if (!isset($_SESSION['user_id'])) {
 
 </head>
 
-<body>
+<body class="<?php echo isset($_SESSION['dark_mode']) && $_SESSION['dark_mode'] ? 'dark' : ''; ?>">
     <div class="dashboard-container">
         <!-- Top Navigation Bar -->
         <nav class="top-nav">
