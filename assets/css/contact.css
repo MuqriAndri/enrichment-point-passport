@@ -329,3 +329,19 @@ textarea {
         gap: 2rem;
     }
 } 
+
+body.dark .contact-form input,
+body.dark .contact-form textarea {
+    background-color: #1f1f1f;
+    color: #f1f1f1;
+    border: 1px solid #444;
+}
+
+body.dark .contact-section h3,
+body.dark .intro-text {
+    color: #e6edf3;
+}
+
+body.dark .contact-link {
+    color: #58a6ff;
+}
