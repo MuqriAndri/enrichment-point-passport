@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_notification']))
     <title>Notification Preferences</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/settings.css">
 </head>
-<body>
+<body class="<?php echo isset($_SESSION['dark_mode']) && $_SESSION['dark_mode'] ? 'dark' : ''; ?>">
     <div class="form-wrapper">
         <a class="back" href="<?php echo BASE_URL; ?>/settings">&#8592; Back to Settings</a>
         <h1>Notification Preferences</h1>
@@ -49,20 +49,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_notification']))
         <form method="POST" class="password-form">
             <div class="form-group">
                 <label>
-                    <input type="checkbox" name="email_notification" value="1">
-                    Enable Email Notifications
-                </label>
-            </div>
-
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" name="sms_notification" value="1">
-                    Enable SMS Notifications
-                </label>
-            </div>
-
-            <button type="submit" name="save_notification" class="btn-submit">Save Preferences</button>
-        </form>
-    </div>
-</body>
-</html>
+                    <
