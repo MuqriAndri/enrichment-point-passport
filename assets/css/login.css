@@ -458,3 +458,75 @@ html, body {
         box-sizing: border-box;
     }
 }
+
+/* 🌙 Dark Mode Styling */
+body.dark {
+    background: #0d1117;
+    color: #e6edf3;
+}
+
+/* Dark Left Side */
+body.dark .left-content {
+    color: #e6edf3;
+}
+
+body.dark .title {
+    color: #e6edf3;
+}
+
+body.dark .subtitle {
+    color: #94a3b8;
+}
+
+/* Dark Login Box */
+body.dark .login-box {
+    background-color: #161b22;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+}
+
+/* Dark Inputs */
+body.dark .login-box input {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #f1f5f9;
+}
+
+body.dark .login-box input::placeholder {
+    color: #94a3b8;
+}
+
+/* Labels */
+body.dark .login-box label {
+    color: #cbd5e1;
+}
+
+/* Forgot Link */
+body.dark .forgot-link {
+    color: #58a6ff;
+}
+
+body.dark .forgot-link:hover {
+    color: var(--accent-color);
+}
+
+/* Dark Login Button */
+body.dark .login-btn {
+    background-color: #2d4a7c;
+    color: #ffffff;
+}
+
+body.dark .login-btn:hover {
+    background-color: #1a365d;
+}
+
+/* Footer */
+body.dark .footer {
+    background-color: #1e293b;
+    color: #94a3b8;
+    border-top: 1px solid #334155;
+}
+
+body.dark .footer .icon-container {
+    color: #e2e8f0;
+}
