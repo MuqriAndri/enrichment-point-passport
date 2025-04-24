@@ -198,7 +198,6 @@ $_SESSION['dark_mode'] = true;
                             <h3><i class="icon">📘</i> Guide</h3>
                             <ul>
                                 <li><a href="<?php echo BASE_URL; ?>/templates/help.php">Help</a></li>
-                                <li><a href="<?php echo BASE_URL; ?>/templates/faqs.php">FAQs</a></li>
                             </ul>
                         </div>
 
