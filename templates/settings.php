@@ -15,7 +15,7 @@ include '../config.php'; // Adjust if needed for BASE_URL
 
 </head>
 
-<body>
+<body class="<?php echo isset($_SESSION['dark_mode']) && $_SESSION['dark_mode'] ? 'dark' : ''; ?>">
     <div class="dashboard-container">
         <!-- Top Navigation Bar -->
         <nav class="top-nav">
