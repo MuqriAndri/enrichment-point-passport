@@ -655,6 +655,8 @@ body {
         border-left: none;
         border-top: 1px solid rgba(255, 255, 255, 0.2);
         padding-top: var(--spacing-lg);
+        min-width: unset; /* Remove min-width constraint for smaller screens */
+        width: 100%; /* Ensure it takes full width */
     }
 }
 
@@ -671,22 +673,140 @@ body {
         padding: var(--spacing-sm);
     }
 
+    .main-content {
+        padding: var(--spacing-sm);
+        margin-top: 4.5rem; /* Increased to prevent content from hiding under the fixed nav */
+    }
+
     .welcome-content h1 {
         font-size: 1.5rem;
     }
 
     .welcome-content p {
         font-size: 1rem;
+        margin-bottom: var(--spacing-md); /* Reduced margin */
     }
 
     .tab-navigation {
         overflow-x: auto;
         padding-bottom: var(--spacing-xs);
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        scrollbar-width: none; /* Hide scrollbar on Firefox */
+    }
+
+    .tab-navigation::-webkit-scrollbar {
+        display: none; /* Hide scrollbar on Chrome/Safari */
     }
 
     .tab-item {
         padding: var(--spacing-xs) var(--spacing-sm);
         white-space: nowrap;
+        font-size: 0.9rem; /* Slightly smaller font on mobile */
+    }
+    
+    .circular-progress {
+        width: 100px; /* Smaller progress circle on mobile */
+        height: 100px;
+    }
+    
+    .percentage .points {
+        font-size: 1.5rem; /* Smaller text */
+    }
+    
+    .percentage .total {
+        font-size: 0.9rem; /* Smaller text */
+    }
+    
+    .card {
+        padding: var(--spacing-sm); /* Reduce card padding */
+    }
+    
+    .card-header h3 {
+        font-size: 1.1rem; /* Slightly smaller headers */
+    }
+
+    .nav-logo {
+        height: 32px; /* Slightly smaller logo */
+    }
+
+    .nav-left h2 {
+        font-size: 1rem; /* Smaller header text */
+        max-width: 150px; /* Limit width */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .welcome-card {
+        flex-direction: column;
+        padding: var(--spacing-md);
+    }
+
+    .welcome-content {
+        width: 100%;
+        text-align: center;
+        padding: 0;
+    }
+
+    .points-overview {
+        width: 100%;
+        justify-content: center;
+        padding: var(--spacing-md) 0 0;
+        margin-top: var(--spacing-sm);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        border-left: none;
+    }
+
+    .ep-table {
+        font-size: 0.85rem;
+    }
+
+    /* Better table handling on mobile */
+    .ep-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Adjust tab navigation for mobile */
+    .tab-navigation {
+        position: sticky;
+        top: 60px; /* Adjust based on your navbar height */
+        z-index: 90;
+        margin: 0 0 var(--spacing-md);
+        padding: var(--spacing-xs);
+        overflow-x: auto;
+        white-space: nowrap;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .tab-navigation::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
+
+    .tab-item {
+        flex: 0 0 auto; /* Don't stretch tabs */
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    /* Better mobile card layout */
+    .card {
+        padding: var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
+    }
+
+    /* Student info */
+    .student-info {
+        padding: var(--spacing-sm);
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .student-details {
+        text-align: center;
     }
 }
 
@@ -694,6 +814,143 @@ body {
     .stats-container,
     .quick-stats {
         grid-template-columns: 1fr;
+    }
+    
+    .welcome-card {
+        padding: var(--spacing-md); /* Reduced padding */
+    }
+    
+    .welcome-content h1 {
+        font-size: 1.3rem; /* Even smaller on small screens */
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .welcome-content p {
+        font-size: 0.9rem;
+    }
+    
+    .points-info h3 {
+        font-size: 1rem;
+    }
+    
+    .points-info p {
+        font-size: 0.9rem;
+    }
+    
+    .primary-btn {
+        width: 100%; /* Full-width buttons on very small screens */
+        justify-content: center;
+        padding: 0.75rem var(--spacing-md);
+    }
+    
+    .nav-left h2 {
+        font-size: 0.9rem; /* Smaller title */
+    }
+    
+    .ep-table {
+        display: block;
+        overflow-x: auto; /* Horizontal scrolling for tables */
+    }
+    
+    .stat-card {
+        padding: var(--spacing-sm); /* Less padding */
+    }
+    
+    .stat-value {
+        font-size: 1.3rem; /* Smaller stat numbers */
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    .main-content {
+        padding: var(--spacing-xs) var(--spacing-xs);
+    }
+
+    .main-wrapper {
+        padding: var(--spacing-xs);
+    }
+
+    .welcome-card {
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+
+    .welcome-content h1 {
+        font-size: 1.3rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .welcome-content p {
+        font-size: 0.9rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .primary-btn {
+        padding: 0.6rem var(--spacing-sm);
+        width: 100%;
+        justify-content: center;
+        font-size: 0.9rem;
+    }
+
+    .circular-progress {
+        width: 90px;
+        height: 90px;
+    }
+
+    /* Collapse the points overview to better fit in small screens */
+    .points-overview {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+
+    .points-info {
+        text-align: center;
+    }
+
+    /* Make card headers more compact */
+    .card-header h3 {
+        font-size: 1rem;
+    }
+    
+    /* Fix long text in tables */
+    .ep-table th, 
+    .ep-table td {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .activity-badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.7rem;
+    }
+}
+
+/* Add a very small screen breakpoint */
+@media screen and (max-width: 360px) {
+    .nav-logo {
+        height: 30px; /* Smaller logo */
+    }
+    
+    .circular-progress {
+        width: 80px; /* Even smaller progress circle */
+        height: 80px;
+    }
+    
+    .percentage .points {
+        font-size: 1.2rem;
+    }
+    
+    .percentage .total {
+        font-size: 0.8rem;
+    }
+    
+    .main-content {
+        padding: var(--spacing-xs); /* Minimal padding */
+    }
+    
+    .main-wrapper {
+        padding: var(--spacing-xs);
     }
 }
 

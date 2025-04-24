@@ -478,11 +478,40 @@ try {
         </footer>
     </div>
 
-    <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/search.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/burger.js"></script>
-
+    
+    <!-- Mobile Optimization Script -->
+    <script>
+        // Handle table responsiveness
+        document.addEventListener('DOMContentLoaded', function() {
+            // Make tables horizontally scrollable on small screens
+            const tables = document.querySelectorAll('.ep-table');
+            
+            tables.forEach(table => {
+                const wrapper = document.createElement('div');
+                wrapper.style.overflowX = 'auto';
+                wrapper.style.width = '100%';
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            });
+            
+            // Fix tab navigation scroll position
+            const activeTab = document.querySelector('.tab-item.active');
+            const tabNav = document.querySelector('.tab-navigation');
+            
+            if (activeTab && tabNav && window.innerWidth < 768) {
+                setTimeout(() => {
+                    const tabWidth = activeTab.offsetWidth;
+                    const tabLeft = activeTab.offsetLeft;
+                    const containerWidth = tabNav.offsetWidth;
+                    
+                    // Center the active tab
+                    tabNav.scrollLeft = tabLeft - (containerWidth / 2) + (tabWidth / 2);
+                }, 100);
+            }
+        });
+    </script>
 </body>
-
 </html>
