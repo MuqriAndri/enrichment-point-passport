@@ -100,9 +100,8 @@ h1 {
     position: relative;
     display: flex;
     justify-content: center;
-    padding: var(--spacing-xl) 0;
     margin: var(--spacing-xl) 0;
-    min-height: 400px;
+    min-height: 560px;
     overflow: visible;
     width: 100%;
 }
@@ -122,6 +121,7 @@ h1 {
     transform-style: preserve-3d;
     backface-visibility: hidden;
     transform: scale(0.8) translateX(0);
+    text-align: center !important;
 }
 
 /* Slide positioning classes - with wider spacing for overflow */
@@ -246,6 +246,9 @@ h1 {
     margin-bottom: var(--spacing-sm);
     font-size: 0.9rem;
     line-height: 1.4;
+    text-align: center !important;
+    padding: 0 15px !important;
+    margin: 15px auto !important;
 }
 
 /* Image container styles */
@@ -329,7 +332,15 @@ h1 {
 
 .learn-more-btn {
     width: 100%;
-    margin-top: var(--spacing-sm);
+    margin: 10px auto 15px;
+    display: block !important;
+    text-align: center !important;
+}
+
+.btn.btn-secondary {
+    display: inline-block !important;
+    padding: 8px 16px !important;
+    text-align: center !important;
 }
 
 /* Hide the image navigation buttons */
@@ -501,3 +512,31 @@ body.dark .shine-effect {
     transform: scale(0.87) translateX(90%);
 }
 
+#carousel-nav-container {
+    display: block !important;
+    width: 100% !important;
+    position: static !important; /* Change from relative to static */
+    margin: -20px auto 60px auto !important; /* Negative top margin to pull it up */
+    text-align: center !important;
+    clear: both !important;
+    z-index: 50 !important; /* Higher z-index */
+}
+
+/* Fix the section divider to be below the navigation */
+.section-divider {
+    margin-top: 30px !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+/* Make sure the event slider doesn't have margin that pushes things down */
+.event-slider {
+    margin-bottom: 0 !important;
+}
+
+/* Ensure calendar has sufficient space from navigation */
+.calendar-container {
+    margin-top: 30px !important;
+    position: relative !important; 
+    z-index: 10 !important;
+}

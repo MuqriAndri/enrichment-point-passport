@@ -12,6 +12,8 @@ require_once 'config/database.php';
 // Load repositories
 require_once 'repositories/user-repository.php';
 require_once 'repositories/club-repository.php';
+require_once 'repositories/event-repository.php';
+require_once 'repositories/history-repository.php';
 require_once 'repositories/enrichment-point-repository.php';
 
 // Get the path from URL
@@ -290,7 +292,36 @@ switch ($page) {
         include 'templates/ep.php';
         break;
     case 'events':
+        if (isset($params[1]) && $params[1] === 'details' && isset($params[2]) && is_numeric($params[2])) {
+            // Use the correct database for events
+            $pdo = $eventsDB;
+            // Set event_id in GET for the details page
+            $_GET['id'] = $params[2];
+            include 'templates/events-details.php';
+            break;
+        }
+        // Use the correct database for events
+        $pdo = $eventsDB;
         include 'templates/events.php';
+        break;
+    case 'events-management':
+        // Check if user has admin or committee privileges
+        if (!isset($_SESSION['user_id']) || ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'committee')) {
+            $_SESSION['error'] = 'You do not have permission to access this page';
+            header("Location: " . BASE_URL . "/events");
+            exit();
+        }
+        
+        // Handle POST requests for event operations
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            require_once 'controllers/events.php';
+            handleEventOperations($eventsDB, $profilesDB);
+            exit();
+        }
+        
+        // Use the correct database for events
+        $pdo = $eventsDB;
+        include 'templates/events-management.php';
         break;
     case 'history':
         include 'templates/history.php';
@@ -308,6 +339,23 @@ switch ($page) {
         break;
     case 'settings':
         include 'templates/settings.php';
+        break;
+    case 'controllers':
+        if (isset($params[1]) && $params[1] === 'events.php') {
+            if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['operation'])) {
+                require_once 'controllers/events.php';
+                handleEventAPI($eventsDB, $profilesDB);
+                exit();
+            } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                require_once 'controllers/events.php';
+                handleEventOperations($eventsDB, $profilesDB);
+                exit();
+            }
+        }
+        
+        // If not a handled controller or operation, show 404
+        header("HTTP/1.0 404 Not Found");
+        include 'templates/404.php';
         break;
     default:
         // Check if this is a club location page

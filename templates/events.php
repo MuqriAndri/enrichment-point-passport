@@ -1,8 +1,8 @@
 <?php
 session_start();
 $isDark = false;
-if (isset($_SESSION['user_id']) && isset($pdo)) {
-    $stmt = $pdo->prepare("SELECT dark_mode FROM users WHERE user_id = ?");
+if (isset($_SESSION['user_id']) && isset($profilesDB)) {
+    $stmt = $profilesDB->prepare("SELECT dark_mode FROM users WHERE user_id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     $user = $stmt->fetch();
     $isDark = $user && $user['dark_mode'];
@@ -74,7 +74,7 @@ if (isset($_SESSION['user_id']) && isset($pdo)) {
                                 <a href="<?php echo BASE_URL; ?>/settings" class="dropdown-item" role="menuitem">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <circle cx="12" cy="12" r="3"></circle>
-                                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06-.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                                     </svg>
                                     Settings
                                 </a>
@@ -217,117 +217,124 @@ if (isset($_SESSION['user_id']) && isset($pdo)) {
                         </div>
                     <?php endif; ?>
                     <div class="container">
-                        <h1>Upcoming and Available Events</h1>
+                        <div class="events-header">
+                            <h1>Upcoming and Available Events</h1>
+                            <?php if (isset($_SESSION['role']) && ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'committee')): ?>
+                            <div class="events-actions">
+                                <a href="<?php echo BASE_URL; ?>/events-management" class="btn btn-secondary">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 20h9"></path>
+                                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                                    </svg>
+                                    Manage Events
+                                </a>
+                            </div>
+                            <?php endif; ?>
+                        </div>
                         <div class="event-slider">
                             <?php
-                            $events = [
-                                [
-                                    "name" => "SICT & SBS RAYA 2025",
-                                    "description" => "Raya event for 2025 by Politeknik Brunei for SICT and SBS students.",
-                                    "date" => "2025-04-17",
-                                    "time" => "10:00 AM",
-                                    "location" => "Ong Sum Ping",
-                                    "enrichment_points" => 20,
-                                    "images" => [
-                                        "event-a-1.jpg",
-                                        "event-a-2.jpg",
-                                        "event-a-3.jpg"
-                                    ]
-                                ],
-                                [
-                                    "name" => "Event B",
-                                    "description" => "New description for event B.",
-                                    "date" => "2025-04-29",
-                                    "time" => "10:30 AM",
-                                    "location" => "New Location B",
-                                    "enrichment_points" => 25,
-                                    "images" => [
-                                        "event-b-1.jpg",
-                                        "event-b-2.jpg",
-                                        "event-b-3.jpg"
-                                    ]
-                                ],
-                                [
-                                    "name" => "Event C",
-                                    "description" => "New description for event C.",
-                                    "date" => "2025-09-20",
-                                    "time" => "02:00 PM",
-                                    "location" => "New Location C",
-                                    "enrichment_points" => 35,
-                                    "images" => [
-                                        "event-c-1.jpg",
-                                        "event-c-2.jpg",
-                                        "event-c-3.jpg"
-                                    ]
-                                ],
-                                [
-                                    "name" => "Leadership Workshop",
-                                    "description" => "Develop essential leadership skills through interactive sessions and practical exercises. Perfect for students aspiring to take leadership roles in their academic and professional lives.",
-                                    "date" => "2025-06-15",
-                                    "time" => "09:00 AM",
-                                    "location" => "Politeknik Brunei Conference Hall",
-                                    "enrichment_points" => 15,
-                                    "images" => [
-                                        "event-a-1.jpg",
-                                        "event-b-2.jpg",
-                                        "event-c-3.jpg"
-                                    ]
-                                ],
-                                [
-                                    "name" => "Innovation Hackathon",
-                                    "description" => "Join our 48-hour coding marathon to develop innovative solutions for real-world problems. Great opportunity to showcase your technical skills and creativity while earning valuable enrichment points.",
-                                    "date" => "2025-08-05",
-                                    "time" => "08:00 AM",
-                                    "location" => "SICT Building, Politeknik Brunei",
-                                    "enrichment_points" => 30,
-                                    "images" => [
-                                        "event-c-1.jpg",
-                                        "event-a-2.jpg",
-                                        "event-b-3.jpg"
-                                    ]
-                                ]
-                            ];
-
-                            foreach ($events as $event) {
-                                // Determine the status of the event
-                                $eventDate = strtotime($event['date']);
-                                $currentDate = strtotime(date('Y-m-d'));
-                                $status = $eventDate > $currentDate ? "Upcoming" : "Available";
-
-                                echo "<div class='event-slide'>";
-                                echo "<h2>" . $event['name'] . "</h2>";
-                                echo "<span class='event-status " . strtolower($status) . "'>$status</span>"; // Add status indicator
-                                echo "<div class='image-slider'>";
-                                echo "<div class='image-box'>";
-                                echo "<div class='image-container'>";
-                                foreach ($event['images'] as $index => $image) {
-                                    $display = $index === 0 ? "block" : "none";
-                                    echo "<img src='" . BASE_URL . "/assets/images/events/$image' alt='" . $event['name'] . " Image' class='event-image' style='display: $display;'>";
+                            // Fetch events from database
+                            $events = [];
+                            try {
+                                // Modified query to get only Scheduled events for carousel
+                                $stmt = $eventsDB->prepare("SELECT * FROM events WHERE status = 'Scheduled' ORDER BY created_at DESC");
+                                $stmt->execute();
+                                $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                
+                                if (count($events) === 0) {
+                                    throw new Exception("No scheduled events found");
                                 }
-                                echo "</div>";
-                                echo "<button class='nav-button left' aria-label='Previous Image'>&lt;</button>";
-                                echo "<button class='nav-button right' aria-label='Next Image'>&gt;</button>";
-                                echo "</div>";
-                                echo "<div class='image-indicators'>";
-                                foreach ($event['images'] as $index => $image) {
-                                    $activeClass = $index === 0 ? "active" : "";
-                                    echo "<span class='indicator $activeClass' data-index='$index'></span>";
+                            } catch (Exception $e) {
+                                // Log the error but don't show to user
+                                error_log("Error fetching events: " . $e->getMessage());
+                            }
+                            
+                            // Debug: Display raw event data
+                            echo "<div style='display: none;'>";
+                            echo "<h3>Debug: Raw Events Data</h3>";
+                            echo "<pre>";
+                            var_dump($events);
+                            echo "</pre>";
+                            echo "</div>";
+                            
+                            if (count($events) > 0) {
+                                foreach ($events as $event) {
+                                    // Parse date and time from created_at timestamp
+                                    $date = new DateTime($event['created_at']);
+                                    
+                                    // Determine the status of the event based on date
+                                    $eventDate = $date->format('Y-m-d');
+                                    $currentDate = date('Y-m-d');
+                                    $status = strtotime($eventDate) > strtotime($currentDate) ? "Upcoming" : "Available";
+                                    
+                                    // Create event card
+                                    echo "<div class='event-slide'>";
+                                    echo "<h2>" . htmlspecialchars($event['event_name']) . "</h2>";
+                                    echo "<span class='event-status " . strtolower($status) . "'>$status</span>";
+                                    echo "<div class='image-slider'>";
+                                    echo "<div class='image-box'>";
+                                    echo "<div class='image-container'>";
+                                    
+                                    // Display the image from events_images field (VARCHAR)
+                                    if (!empty($event['events_images'])) {
+                                        // Show image URL for debugging
+                                        echo "<!-- Image URL: " . htmlspecialchars($event['events_images']) . " -->";
+                                        
+                                        // Make sure the URL is properly formatted
+                                        $imageUrl = trim($event['events_images']);
+                                        
+                                        echo "<img 
+                                            src='" . htmlspecialchars($imageUrl) . "' 
+                                            alt='" . htmlspecialchars($event['event_name']) . "' 
+                                            class='event-image' 
+                                            style='display: block; max-width: 100%; height: 250px; object-fit: cover;'>";
+                                    } else {
+                                        echo "<!-- No image URL found for this event -->";
+                                    }
+                                    
+                                    echo "</div>";
+                                    
+                                    // Only show navigation buttons if needed in the future
+                                    echo "<button class='nav-button left' aria-label='Previous Image'>&lt;</button>";
+                                    echo "<button class='nav-button right' aria-label='Next Image'>&gt;</button>";
+                                    
+                                    echo "</div>";
+                                    echo "<div class='image-indicators'>";
+                                    
+                                    // Since there's just one image, we only need one indicator
+                                    echo "<span class='indicator active' data-index='0'></span>";
+                                    
+                                    echo "</div>";
+                                    echo "</div>";
+                                    
+                                    // Display description and add Learn More button
+                                    $description = $event['event_description'] ?? "No description available";
+                                    echo "<p class='short-description'>" . htmlspecialchars(substr($description, 0, 100)) . (strlen($description) > 100 ? "..." : "") . "</p>";
+                                    
+                                    // Calculate enrichment points (placeholder value until actual implementation)
+                                    $enrichmentPoints = 20; // Default value
+                                    
+                                    echo "<a href='" . BASE_URL . "/events/details/" . $event['event_id'] . "' class='btn btn-secondary learn-more-btn small-btn'>
+                                        Learn More
+                                    </a>";
+                                    echo "</div>";
                                 }
-                                echo "</div>";
-                                echo "</div>";
-                                echo "<p class='short-description'>" . substr($event['description'], 0, 50) . "...</p>";
-                                echo "<button class='btn btn-secondary learn-more-btn small-btn' 
-                                    data-name='" . $event['name'] . "' 
-                                    data-description='" . $event['description'] . "' 
-                                    data-date='" . $event['date'] . "' 
-                                    data-time='" . $event['time'] . "' 
-                                    data-location='" . $event['location'] . "' 
-                                    data-points='" . $event['enrichment_points'] . "' 
-                                    data-status='" . $status . "'>Learn More</button>";
+                            } else {
+                                // No events found, display a message
+                                echo "<div class='no-events-message'>";
+                                echo "<svg width='64' height='64' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'>
+                                        <rect x='3' y='4' width='18' height='18' rx='2' ry='2'></rect>
+                                        <line x1='16' y1='2' x2='16' y2='6'></line>
+                                        <line x1='8' y1='2' x2='8' y2='6'></line>
+                                        <line x1='3' y1='10' x2='21' y2='10'></line>
+                                      </svg>";
+                                echo "<h3>No scheduled events found</h3>";
+                                echo "<p>Check back later for upcoming scheduled events</p>";
                                 echo "</div>";
                             }
                             ?>
                         </div>
+                        
                         <div id="event-modal" class="modal" style="display: none;">
                             <div class="modal-content">
                                 <span class="close-btn">&times;</span>
@@ -337,9 +344,24 @@ if (isset($_SESSION['user_id']) && isset($pdo)) {
                                 <p id="modal-event-time"></p>
                                 <p id="modal-event-location"></p>
                                 <p id="modal-event-points"></p>
-                                <button id="modal-register-btn" class="btn btn-primary">Register</button>
+                                <div class="modal-actions">
+                                    <button id="modal-register-btn" class="btn btn-primary">Register</button>
+                                    <?php if (isset($_SESSION['role']) && ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'committee')): ?>
+                                    <a id="modal-edit-btn" href="#" class="btn btn-secondary">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M12 20h9"></path>
+                                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                                        </svg>
+                                        Edit Event
+                                    </a>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </div>
+                        
+                        <!-- Add a divider here -->
+                        <div class="section-divider" style="height: 2px; background-color: #e2e8f0; margin: 30px 0;"></div>
+                        
                         <div class="calendar-container">
                             <h2>Event Calendar</h2>
                             <section class="calendar-section" aria-labelledby="calendar-heading">
@@ -405,19 +427,20 @@ if (isset($_SESSION['user_id']) && isset($pdo)) {
                                 
                                 phpEvents.forEach(event => {
                                     // Determine if event is upcoming or available
-                                    const eventDate = new Date(event.date);
+                                    const eventDate = new Date(event.created_at);
                                     const today = new Date();
                                     today.setHours(0, 0, 0, 0);
                                     
                                     const status = eventDate > today ? "Upcoming" : "Available";
                                     
-                                    formattedEvents[event.date] = {
-                                        title: event.name,
-                                        time: event.time,
-                                        location: event.location,
+                                    formattedEvents[event.created_at.split(' ')[0]] = {
+                                        title: event.event_name,
+                                        time: new Date(event.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                                        location: event.event_location,
                                         status: status,
-                                        description: event.description,
-                                        enrichment_points: event.enrichment_points
+                                        description: event.event_description,
+                                        enrichment_points: 20,
+                                        id: event.event_id
                                     };
                                 });
                                 
@@ -508,37 +531,9 @@ if (isset($_SESSION['user_id']) && isset($pdo)) {
                             }
                             
                             function showEventDetails(event) {
-                                // Open the event modal with detailed information
-                                const modal = document.getElementById('event-modal');
-                                const modalName = document.getElementById('modal-event-name');
-                                const modalDescription = document.getElementById('modal-event-description');
-                                const modalDate = document.getElementById('modal-event-date');
-                                const modalTime = document.getElementById('modal-event-time');
-                                const modalLocation = document.getElementById('modal-event-location');
-                                const modalPoints = document.getElementById('modal-event-points');
-                                const modalRegisterBtn = document.getElementById('modal-register-btn');
-                                
-                                if (modal && modalName) {
-                                    modalName.textContent = event.title;
-                                    modalDescription.textContent = "Description: " + event.description;
-                                    modalDate.textContent = "Date: " + dateString;
-                                    modalTime.textContent = "Time: " + event.time;
-                                    modalLocation.textContent = "Location: " + event.location;
-                                    modalPoints.textContent = "Enrichment Points: " + event.enrichment_points;
-                                    
-                                    // Update register button based on event status
-                                    if (event.status === "Upcoming") {
-                                        modalRegisterBtn.textContent = "Not Available Yet";
-                                        modalRegisterBtn.disabled = true;
-                                        modalRegisterBtn.classList.add('disabled');
-                                    } else {
-                                        modalRegisterBtn.textContent = "Register";
-                                        modalRegisterBtn.disabled = false;
-                                        modalRegisterBtn.classList.remove('disabled');
-                                    }
-                                    
-                                    // Show the modal
-                                    modal.style.display = 'flex';
+                                // Redirect to event details page
+                                if (event && event.id) {
+                                    window.location.href = "<?php echo BASE_URL; ?>/events/details/" + event.id;
                                 }
                             }
 
@@ -566,6 +561,67 @@ if (isset($_SESSION['user_id']) && isset($pdo)) {
                                     }
                                 });
                             }
+
+                            // Learn more button functionality
+                            document.querySelectorAll('.learn-more-btn').forEach(button => {
+                                button.addEventListener('click', () => {
+                                    const modal = document.getElementById('event-modal');
+                                    const modalName = document.getElementById('modal-event-name');
+                                    const modalDescription = document.getElementById('modal-event-description');
+                                    const modalDate = document.getElementById('modal-event-date');
+                                    const modalTime = document.getElementById('modal-event-time');
+                                    const modalLocation = document.getElementById('modal-event-location');
+                                    const modalPoints = document.getElementById('modal-event-points');
+                                    const modalRegisterBtn = document.getElementById('modal-register-btn');
+                                    const modalEditBtn = document.getElementById('modal-edit-btn');
+
+                                    // Populate modal with event details from data attributes
+                                    modalName.textContent = button.getAttribute('data-name');
+                                    modalDescription.textContent = "Description: " + button.getAttribute('data-description');
+                                    modalDate.textContent = "Date: " + button.getAttribute('data-date');
+                                    modalTime.textContent = "Time: " + button.getAttribute('data-time');
+                                    modalLocation.textContent = "Location: " + button.getAttribute('data-location');
+                                    modalPoints.textContent = "Enrichment Points: " + button.getAttribute('data-points');
+
+                                    // Update edit button URL if it exists
+                                    if (modalEditBtn) {
+                                        const eventId = button.getAttribute('data-id');
+                                        if (eventId) {
+                                            modalEditBtn.href = "<?php echo BASE_URL; ?>/events/edit?event_id=" + eventId;
+                                        } else {
+                                            modalEditBtn.style.display = 'none';
+                                        }
+                                    }
+
+                                    // Check event status and update register button behavior
+                                    const status = button.getAttribute('data-status');
+                                    if (status === "Upcoming") {
+                                        modalRegisterBtn.textContent = "Not Available Yet";
+                                        modalRegisterBtn.disabled = true;
+                                        modalRegisterBtn.classList.add('disabled');
+                                    } else {
+                                        modalRegisterBtn.textContent = "Register";
+                                        modalRegisterBtn.disabled = false;
+                                        modalRegisterBtn.classList.remove('disabled');
+                                    }
+
+                                    // Show the modal
+                                    modal.style.display = 'flex';
+                                });
+                            });
+
+                            // Close modal logic
+                            document.querySelector('.close-btn').addEventListener('click', () => {
+                                document.getElementById('event-modal').style.display = 'none';
+                            });
+
+                            // Close modal when clicking outside the modal content
+                            window.addEventListener('click', (e) => {
+                                const modal = document.getElementById('event-modal');
+                                if (e.target === modal) {
+                                    modal.style.display = 'none';
+                                }
+                            });
                         </script>
                         <style>
                             /* Calendar styles from dashboard.css */
@@ -577,6 +633,96 @@ if (isset($_SESSION['user_id']) && isset($pdo)) {
                                 height: 100%;
                                 display: flex;
                                 flex-direction: column;
+                            }
+
+                            /* Additional Event Slider Styles */
+                            .event-slider {
+                                position: relative;
+                                margin-bottom: 10px;
+                            }
+                            
+                            /* Carousel Navigation Positioning */
+                            .carousel-nav {
+                                position: relative;
+                                display: flex;
+                                justify-content: center;
+                                gap: 20px;
+                                margin: 0 auto 40px;
+                                padding-top: 10px;
+                                z-index: 20;
+                            }
+                            
+                            .carousel-btn {
+                                width: 50px;
+                                height: 50px;
+                                border-radius: 50%;
+                                background-color: #1a365d;
+                                color: white;
+                                border: none;
+                                cursor: pointer;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-size: 1.5rem;
+                                transition: all 0.3s ease;
+                                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                            }
+                            
+                            .carousel-btn:hover {
+                                background-color: #efbf04;
+                                transform: scale(1.1);
+                            }
+                            
+                            /* Calendar Container Positioning */
+                            .calendar-container {
+                                margin-top: 20px;
+                                clear: both;
+                            }
+                            
+                            .event-slide {
+                                border-radius: 8px;
+                                overflow: hidden;
+                                background-color: white;
+                                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                                margin-bottom: 20px;
+                            }
+                            
+                            .event-slide:hover {
+                                transform: translateY(-5px);
+                                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                            }
+                            
+                            .image-container {
+                                height: 250px;
+                                overflow: hidden;
+                                border-radius: 8px 8px 0 0;
+                                position: relative;
+                                background-color: #f5f5f5;
+                            }
+                            
+                            .event-image {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                object-position: center;
+                                transition: transform 0.3s ease;
+                            }
+                            
+                            .image-container:hover .event-image {
+                                transform: scale(1.05);
+                            }
+                            
+                            .short-description {
+                                padding: 0 15px;
+                                margin: 15px 0;
+                                color: #555;
+                                line-height: 1.5;
+                            }
+                            
+                            .learn-more-btn {
+                                margin: 10px 15px 15px;
+                                display: inline-block;
                             }
 
                             .calendar-section h3 {
@@ -733,6 +879,105 @@ if (isset($_SESSION['user_id']) && isset($pdo)) {
                                 cursor: not-allowed;
                             }
                             
+                            .modal-actions {
+                                display: flex;
+                                justify-content: space-between;
+                                gap: 10px;
+                                margin-top: 20px;
+                            }
+                            
+                            .modal-actions .btn {
+                                flex: 1;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                gap: 8px;
+                            }
+                            
+                            /* Other events section */
+                            .other-events-section {
+                                margin-top: 3rem;
+                            }
+                            
+                            .other-events-section h2 {
+                                margin-bottom: 1.5rem;
+                                color: var(--text-dark);
+                            }
+                            
+                            .events-grid {
+                                display: grid;
+                                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                                gap: 1.5rem;
+                            }
+                            
+                            .event-card {
+                                background-color: white;
+                                border-radius: 8px;
+                                padding: 1.25rem;
+                                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                                transition: transform 0.2s, box-shadow 0.2s;
+                            }
+                            
+                            .event-card:hover {
+                                transform: translateY(-5px);
+                                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+                            }
+                            
+                            .event-card-header {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: flex-start;
+                                margin-bottom: 0.75rem;
+                            }
+                            
+                            .event-card h3 {
+                                font-size: 1.1rem;
+                                margin: 0;
+                                color: var(--text-dark);
+                            }
+                            
+                            .event-date, .event-location {
+                                font-size: 0.9rem;
+                                color: var(--text-light);
+                                margin: 0.5rem 0;
+                            }
+                            
+                            .event-description {
+                                margin: 1rem 0;
+                                color: var(--text-dark);
+                                font-size: 0.95rem;
+                                line-height: 1.4;
+                            }
+                            
+                            .event-card .learn-more-btn {
+                                width: 100%;
+                                margin-top: 1rem;
+                            }
+                            
+                            .event-status.ongoing {
+                                background-color: var(--success-color);
+                            }
+                            
+                            .event-status.completed {
+                                background-color: var(--text-light);
+                            }
+                            
+                            .event-status.cancelled {
+                                background-color: var(--danger-color);
+                            }
+                            
+                            body.dark .event-card {
+                                background-color: #1e1e1e;
+                            }
+                            
+                            body.dark .event-card h3 {
+                                color: #e0e0e0;
+                            }
+                            
+                            body.dark .event-description {
+                                color: #d0d0d0;
+                            }
+                            
                             /* Responsive styles */
                             @media screen and (max-width: 768px) {
                                 .calendar-day {
@@ -743,6 +988,10 @@ if (isset($_SESSION['user_id']) && isset($pdo)) {
                                 .event-tooltip {
                                     width: 160px;
                                     font-size: 0.7rem;
+                                }
+                                
+                                .modal-actions {
+                                    flex-direction: column;
                                 }
                             }
                         </style>

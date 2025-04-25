@@ -95,35 +95,47 @@ function initGlideStyleCarousel() {
     slider.classList.add('glide-carousel');
     
     const slides = slider.querySelectorAll('.event-slide');
-    if (slides.length < 3) return;
+    if (slides.length < 2) return; // Allow for 2 or more slides
+    
+    // Remove any existing carousel navigation
+    document.querySelectorAll('.carousel-nav, #carousel-nav-container').forEach(el => {
+        el.remove();
+    });
     
     // Configure carousel controls
     const carouselNav = document.createElement('div');
     carouselNav.className = 'carousel-nav';
+    carouselNav.style.cssText = 'display: flex; justify-content: center; gap: 20px; margin: 0 auto; position: relative; z-index: 20;';
     
     const prevBtn = document.createElement('button');
     prevBtn.className = 'carousel-btn prev-btn';
     prevBtn.innerHTML = '&larr;';
     prevBtn.setAttribute('aria-label', 'Previous event');
+    prevBtn.style.cssText = 'width: 50px; height: 50px; border-radius: 50%; background-color: #1a365d; color: white; border: none; cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center;';
     
     const nextBtn = document.createElement('button');
     nextBtn.className = 'carousel-btn next-btn';
     nextBtn.innerHTML = '&rarr;';
     nextBtn.setAttribute('aria-label', 'Next event');
+    nextBtn.style.cssText = 'width: 50px; height: 50px; border-radius: 50%; background-color: #1a365d; color: white; border: none; cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center;';
     
     carouselNav.appendChild(prevBtn);
     carouselNav.appendChild(nextBtn);
     
-    // Insert after the slider but before the calendar
+    // Create a dedicated container for the navigation
+    const navContainer = document.createElement('div');
+    navContainer.id = 'carousel-nav-container';
+    navContainer.style.cssText = 'width: 100%; text-align: center; margin: 20px auto 40px; clear: both; position: relative;';
+    navContainer.appendChild(carouselNav);
+    
+    // Find the calendar container
     const calendarContainer = document.querySelector('.calendar-container');
-    if (calendarContainer) {
-        container.insertBefore(carouselNav, calendarContainer);
-    } else {
-        container.appendChild(carouselNav);
-    }
+    
+    // Always insert after the slider directly
+    slider.insertAdjacentElement('afterend', navContainer);
     
     // Setup variables
-    let currentIndex = Math.floor(slides.length / 2);
+    let currentIndex = Math.min(1, slides.length - 1); // Start with the first or second slide
     
     // Position all slides initially
     updateCarousel();
@@ -348,7 +360,12 @@ window.addEventListener('click', (e) => {
 
 // Calendar functionality  
 function generateCalendar(events) {
-    const calendar = document.getElementById('calendar');
+    const calendar = document.querySelector('.calendar-grid');
+    if (!calendar) {
+        console.error('Calendar grid element not found');
+        return;
+    }
+    
     const today = new Date();
     const currentMonth = today.getMonth();
     const currentYear = today.getFullYear();
@@ -363,7 +380,8 @@ function generateCalendar(events) {
     // Add empty days for the first week
     for (let i = 0; i < firstDay; i++) {
         const emptyDay = document.createElement('div');
-        emptyDay.classList.add('calendar-day');
+        emptyDay.classList.add('calendar-day', 'inactive');
+        emptyDay.setAttribute('aria-hidden', 'true');
         calendar.appendChild(emptyDay);
     }
 
@@ -372,41 +390,67 @@ function generateCalendar(events) {
         const day = document.createElement('div');
         day.classList.add('calendar-day');
         day.textContent = date;
+        day.setAttribute('role', 'gridcell');
+        day.setAttribute('tabindex', '0');
 
         // Highlight today's date
         if (date === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
             day.classList.add('today');
+            day.setAttribute('aria-label', `Today, ${date}`);
         }
 
         // Highlight event dates
-        const event = events.find(event => {
-            const eventDate = new Date(event.date);
-            return (
-                eventDate.getDate() === date &&
-                eventDate.getMonth() === currentMonth &&
-                eventDate.getFullYear() === currentYear
-            );
-        });
+        if (events && Array.isArray(events)) {
+            const event = events.find(event => {
+                if (!event || !event.date) return false;
+                const eventDate = new Date(event.date);
+                return (
+                    eventDate.getDate() === date &&
+                    eventDate.getMonth() === currentMonth &&
+                    eventDate.getFullYear() === currentYear
+                );
+            });
 
-        if (event) {
-            day.classList.add('event-day');
-            day.setAttribute('data-event', event.name); // Add event name as a data attribute
+            if (event) {
+                day.classList.add('has-event');
+                day.setAttribute('data-event', event.name); // Add event name as a data attribute
+            }
         }
 
         calendar.appendChild(day);
     }
 }
 
-// Example event data
-const events = [
-    { date: '2025-04-17', name: 'SICT & SBS RAYA 2025' },
-    { date: '2025-08-15', name: 'Event B' },
-    { date: '2025-09-20', name: 'Event C' },
-    { date: '2025-06-15', name: 'Leadership Workshop' },
-    { date: '2025-08-05', name: 'Innovation Hackathon' }
-];
+function fixNavigationPlacement() {
+    const slider = document.querySelector('.event-slider');
+    const divider = document.querySelector('.section-divider');
+    const calendarContainer = document.querySelector('.calendar-container');
+    const navContainer = document.getElementById('carousel-nav-container');
+    
+    if (!slider || !navContainer) return;
+    
+    // Remove the navigation container from its current position
+    navContainer.remove();
+    
+    // Insert it between the slider and divider
+    if (divider) {
+        // Insert before the divider
+        divider.parentNode.insertBefore(navContainer, divider);
+    } else if (calendarContainer) {
+        // If no divider, insert before calendar
+        calendarContainer.parentNode.insertBefore(navContainer, calendarContainer);
+    } else {
+        // Fallback - insert after slider
+        slider.parentNode.insertBefore(navContainer, slider.nextSibling);
+    }
+}
+
+// Call this after the carousel is initialized
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait a short moment for other scripts to complete
+    setTimeout(fixNavigationPlacement, 100);
+});
 
 // Initialize calendar when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    generateCalendar(events);
 });
