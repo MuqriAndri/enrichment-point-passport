@@ -144,18 +144,28 @@ h1 {
 /* Responsive tweaks */
 @media (max-width: 768px) {
     .container {
-        flex-direction: column;
-        align-items: center;
         width: 100%;
-        padding: 0 var(--spacing-sm);
-        gap: var(--spacing-md);
+        max-width: 100%;
+        padding: 0;
+        gap: var(--spacing-sm);
+        margin-top: 0;
     }
 
     .box {
         width: 100%;
-        max-width: 450px;
-        margin-bottom: var(--spacing-md);
+        margin: 0 auto;
+        border-radius: 0;
+        box-shadow: none;
+        border-left: 4px solid var(--primary-color);
+        border-right: 4px solid var(--primary-color);
     }
+
+    .box ul {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* or center */
+      }
 
     .back.fixed-left {
         position: static;
@@ -163,9 +173,18 @@ h1 {
     }
 
     .settings-header {
-        padding-top: var(--spacing-md);
-        width: 100%;
-        margin-bottom: var(--spacing-md);
+        margin-bottom: var(--spacing-sm);
+        padding: 1rem 0;
+    }
+
+    .settings-header::after {
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+    }
+
+    .settings-header h1 {
+        font-size: 1.5rem;
+        margin: 0;
     }
     
     /* Improve form layout on mobile */
@@ -201,6 +220,12 @@ h1 {
         margin: var(--spacing-sm) 0;
         border-bottom: 1px solid var(--border-color);
         padding-bottom: var(--spacing-sm);
+        width: 100%;
+        text-align: left;
+    }
+
+    .box li a {
+        font-size: 1rem;
     }
 
     .box li:last-child {
@@ -216,8 +241,8 @@ h1 {
 
     /* Adjust settings page layout */
     .settings-page {
-        padding: var(--spacing-md) var(--spacing-sm);
-        min-height: 70vh;
+        padding: var(--spacing-sm);
+        align-items: stretch;
     }
 
     /* Adjust icon size for better visibility */
