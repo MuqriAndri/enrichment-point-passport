@@ -310,9 +310,10 @@
     padding: var(--spacing-lg);
     text-align: center;
     color: var(--text-light);
+    font-style: italic;
     background-color: var(--background-light);
     border-radius: var(--radius-md);
-    font-style: italic;
+    border: 1px dashed var(--border-color);
 }
 
 .upload-actions {
@@ -1327,4 +1328,235 @@ input[type="datetime-local"] {
 
 [data-theme="dark"] #location-map {
     filter: brightness(0.9);
+}
+
+/* Applications Panel Styles */
+.applications-list {
+    margin-top: var(--spacing-md);
+}
+
+.application-item {
+    background-color: white;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md);
+    transition: all 0.2s ease;
+}
+
+.application-item:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-color-light);
+}
+
+.application-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.applicant-name {
+    font-size: 1.1rem;
+    margin: 0;
+    color: var(--primary-color);
+}
+
+.application-date {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.application-details {
+    margin-bottom: var(--spacing-md);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-sm);
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 0.3rem;
+}
+
+.detail-label {
+    font-weight: 600;
+    min-width: 85px;
+    color: var(--text-dark);
+}
+
+.detail-value {
+    color: var(--text-medium);
+    word-break: break-word;
+}
+
+.application-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.application-action-form {
+    margin: 0;
+}
+
+.approve-btn, .reject-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.approve-btn {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.approve-btn:hover {
+    background-color: var(--success-color-dark);
+}
+
+.reject-btn {
+    background-color: var(--error-color);
+    color: white;
+}
+
+.reject-btn:hover {
+    background-color: var(--error-color-dark);
+}
+
+.no-items-message {
+    padding: var(--spacing-lg);
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+    background-color: var(--background-light);
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--border-color);
+}
+
+/* Members Panel Styles */
+.members-section, 
+.pending-applications-section {
+    margin-bottom: 2rem;
+    background-color: white;
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.members-section h3, 
+.pending-applications-section h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.members-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.members-table th {
+    text-align: left;
+    padding: 0.75rem;
+    background-color: var(--background-light);
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.members-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-medium);
+}
+
+.member-row:hover {
+    background-color: rgba(var(--primary-rgb), 0.05);
+}
+
+.member-name {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    background-color: var(--background-light);
+    color: var(--text-medium);
+}
+
+.role-president {
+    background-color: rgba(234, 88, 12, 0.15);
+    color: rgb(194, 65, 12);
+}
+
+.role-vice {
+    background-color: rgba(217, 119, 6, 0.15);
+    color: rgb(180, 83, 9);
+}
+
+.role-secretary {
+    background-color: rgba(2, 132, 199, 0.15);
+    color: rgb(3, 105, 161);
+}
+
+.role-treasurer {
+    background-color: rgba(5, 150, 105, 0.15);
+    color: rgb(4, 120, 87);
+}
+
+.role-member {
+    background-color: rgba(100, 116, 139, 0.15);
+    color: rgb(71, 85, 105);
+}
+
+.member-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-medium);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.member-action-btn:hover {
+    background-color: var(--background-light);
+}
+
+.remove-btn {
+    color: var(--error-color);
+    border-color: var(--error-color-light);
+}
+
+.remove-btn:hover {
+    background-color: rgba(var(--error-rgb), 0.1);
+}
+
+.remove-btn svg {
+    color: var(--error-color);
 }

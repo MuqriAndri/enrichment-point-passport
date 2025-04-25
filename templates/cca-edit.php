@@ -230,6 +230,7 @@ $locations = $pageData['locations'] ?? [];
                     <button class="edit-tab" data-tab="gallery">Gallery</button>
                     <button class="edit-tab" data-tab="activities">Activities</button>
                     <button class="edit-tab" data-tab="locations">Locations</button>
+                    <button class="edit-tab" data-tab="members">Members</button>
                 </div>
 
                 <!-- Tab Panels -->
@@ -700,6 +701,149 @@ $locations = $pageData['locations'] ?? [];
                             </div>
                         </div>
                     <?php endif; ?>
+                </div>
+                <!-- Members Panel -->
+                <div id="members-panel" class="edit-panel">
+                    <div class="edit-form">
+                        <h2>Club Members</h2>
+
+                        <!-- Current Members Section -->
+                        <div class="members-section">
+                            <h3>Current Members</h3>
+
+                            <?php
+                            // Get club members
+                            $clubMembers = $pageData['members'] ?? [];
+                            ?>
+
+                            <?php if (empty($clubMembers)): ?>
+                                <div class="no-items-message">There are no active members in this club.</div>
+                            <?php else: ?>
+                                <div class="members-list">
+                                    <table class="members-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Student ID</th>
+                                                <th>Role</th>
+                                                <th>Join Date</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($clubMembers as $member): ?>
+                                                <tr class="member-row">
+                                                    <td class="member-name"><?php echo htmlspecialchars($member['full_name'] ?? 'Unknown'); ?></td>
+                                                    <td><?php echo htmlspecialchars($member['student_id'] ?? ''); ?></td>
+                                                    <td class="member-role">
+                                                        <span class="role-badge role-<?php echo strtolower($member['role_name'] ?? 'member'); ?>">
+                                                            <?php echo htmlspecialchars($member['role_name'] ?? 'Member'); ?>
+                                                        </span>
+                                                    </td>
+                                                    <td><?php echo date('M d, Y', strtotime($member['join_date'])); ?></td>
+                                                    <td class="member-actions">
+                                                        <?php if ($member['role_id'] != 1): // Don't show remove action for presidents 
+                                                        ?>
+                                                            <form method="POST" action="<?php echo BASE_URL; ?>/cca">
+                                                                <input type="hidden" name="action" value="cca_manage">
+                                                                <input type="hidden" name="club_id" value="<?php echo $clubDetails['club_id']; ?>">
+                                                                <input type="hidden" name="operation" value="remove_member">
+                                                                <input type="hidden" name="member_id" value="<?php echo $member['member_id']; ?>">
+                                                                <input type="hidden" name="redirect_to_details" value="1">
+                                                                <button type="submit" class="member-action-btn remove-btn" title="Remove member" onclick="return confirm('Are you sure you want to remove this member?')">
+                                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                                    </svg>
+                                                                    Remove
+                                                                </button>
+                                                            </form>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Pending Applications Section -->
+                        <div class="pending-applications-section">
+                            <h3>Pending Applications</h3>
+
+                            <?php
+                            // Get pending applications
+                            $pendingApplications = $pageData['applications'] ?? [];
+                            ?>
+
+                            <?php if (empty($pendingApplications)): ?>
+                                <div class="no-items-message">There are no pending applications at this time.</div>
+                            <?php else: ?>
+                                <div class="applications-list">
+                                    <?php foreach ($pendingApplications as $application): ?>
+                                        <div class="application-item">
+                                            <div class="application-header">
+                                                <h4 class="applicant-name"><?php echo htmlspecialchars($application['full_name'] ?? 'Student'); ?></h4>
+                                                <span class="application-date">Applied: <?php echo date('M d, Y', strtotime($application['created_at'])); ?></span>
+                                            </div>
+                                            <div class="application-details">
+                                                <div class="detail-row">
+                                                    <div class="detail-label">Student ID:</div>
+                                                    <div class="detail-value"><?php echo htmlspecialchars($application['student_id'] ?? ''); ?></div>
+                                                </div>
+                                                <div class="detail-row">
+                                                    <div class="detail-label">Email:</div>
+                                                    <div class="detail-value"><?php echo htmlspecialchars($application['student_email'] ?? ''); ?></div>
+                                                </div>
+                                                <div class="detail-row">
+                                                    <div class="detail-label">School:</div>
+                                                    <div class="detail-value"><?php echo htmlspecialchars($application['school'] ?? ''); ?></div>
+                                                </div>
+                                                <div class="detail-row">
+                                                    <div class="detail-label">Course:</div>
+                                                    <div class="detail-value"><?php echo htmlspecialchars($application['course'] ?? ''); ?></div>
+                                                </div>
+                                            </div>
+                                            <div class="application-actions">
+                                                <form method="POST" action="<?php echo BASE_URL; ?>/cca" class="application-action-form approve">
+                                                    <input type="hidden" name="action" value="cca_manage">
+                                                    <input type="hidden" name="club_id" value="<?php echo $clubDetails['club_id']; ?>">
+                                                    <input type="hidden" name="operation" value="update_application">
+                                                    <input type="hidden" name="member_id" value="<?php echo $application['member_id']; ?>">
+                                                    <input type="hidden" name="status" value="Active">
+                                                    <input type="hidden" name="redirect_to_details" value="1">
+                                                    <button type="submit" class="approve-btn" onclick="return confirm('Are you sure you want to approve this application?')">
+                                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                        </svg>
+                                                        Approve
+                                                    </button>
+                                                </form>
+                                                <form method="POST" action="<?php echo BASE_URL; ?>/cca" class="application-action-form reject">
+                                                    <input type="hidden" name="action" value="cca_manage">
+                                                    <input type="hidden" name="club_id" value="<?php echo $clubDetails['club_id']; ?>">
+                                                    <input type="hidden" name="operation" value="update_application">
+                                                    <input type="hidden" name="member_id" value="<?php echo $application['member_id']; ?>">
+                                                    <input type="hidden" name="status" value="Rejected">
+                                                    <input type="hidden" name="redirect_to_details" value="1">
+                                                    <button type="submit" class="reject-btn" onclick="return confirm('Are you sure you want to reject this application?')">
+                                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                            <circle cx="12" cy="12" r="10"></circle>
+                                                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                                                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                                                        </svg>
+                                                        Reject
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

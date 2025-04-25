@@ -114,6 +114,8 @@ if ($page === 'cca') {
                         $gallery = $clubRepo->getClubGallery($clubDetails['club_id']);
                         $activities = $clubRepo->getClubActivities($clubDetails['club_id']);
                         $locations = $clubRepo->getClubLocations($clubDetails['club_id']);
+                        $applications = $clubRepo->getPendingApplications($clubDetails['club_id']);
+                        $members = $clubRepo->getClubMembers($clubDetails['club_id']);
                         
                         // User has permission, show management page
                         $pageData = [
@@ -122,6 +124,8 @@ if ($page === 'cca') {
                             'gallery' => $gallery,
                             'activities' => $activities,
                             'locations' => $locations,
+                            'applications' => $applications,
+                            'members' => $members,
                             'clubMapping' => $clubMapping,
                             'clubSlug' => $clubSlug // Add the slug for back navigation
                         ];

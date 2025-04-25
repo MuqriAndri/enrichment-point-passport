@@ -1159,60 +1159,121 @@ function handleClubManagement($ccaDB, $profilesDB) {
             break;
             
         case 'delete_activity':
-            // Delete club activity
+            // Handle activity deletion
             if (isset($_POST['activity_id']) && is_numeric($_POST['activity_id'])) {
                 $activityId = (int)$_POST['activity_id'];
                 
                 try {
-                    // First check if the activity exists and belongs to this club
-                    $checkSql = "SELECT club_id FROM club_activities WHERE activity_id = :activity_id AND club_id = :club_id";
-                    $checkStmt = $ccaDB->prepare($checkSql);
-                    $checkStmt->bindParam(':activity_id', $activityId);
-                    $checkStmt->bindParam(':club_id', $clubId);
-                    $checkStmt->execute();
+                    // Verify the activity belongs to this club
+                    $sql = "SELECT activity_id FROM club_activities WHERE activity_id = :activity_id AND club_id = :club_id";
+                    $stmt = $ccaDB->prepare($sql);
+                    $stmt->bindParam(':activity_id', $activityId);
+                    $stmt->bindParam(':club_id', $clubId);
+                    $stmt->execute();
                     
-                    if ($checkStmt->rowCount() === 0) {
-                        $_SESSION['error'] = 'Activity not found or you do not have permission to delete it.';
-                        break;
-                    }
-                    
-                    // Check if there's attendance records
-                    $attendanceSql = "SELECT COUNT(*) FROM club_attendance WHERE club_id = :club_id";
-                    $attendanceStmt = $ccaDB->prepare($attendanceSql);
-                    $attendanceStmt->bindParam(':club_id', $clubId);
-                    $attendanceStmt->execute();
-                    $attendanceCount = $attendanceStmt->fetchColumn();
-                    
-                    if ($attendanceCount > 0) {
-                        // If there's attendance, just mark it as cancelled instead of deleting
-                        $updateSql = "UPDATE club_activities SET status = 'Cancelled', last_modified_at = NOW() WHERE activity_id = :activity_id AND club_id = :club_id";
-                        $updateStmt = $ccaDB->prepare($updateSql);
-                        $updateStmt->bindParam(':activity_id', $activityId);
-                        $updateStmt->bindParam(':club_id', $clubId);
-                        $updateStmt->execute();
-                        
-                        $_SESSION['success'] = 'Activity marked as cancelled due to existing attendance records.';
-                    } else {
-                        // If no attendance, delete the activity
-                        $deleteSql = "DELETE FROM club_activities WHERE activity_id = :activity_id AND club_id = :club_id";
-                        $deleteStmt = $ccaDB->prepare($deleteSql);
-                        $deleteStmt->bindParam(':activity_id', $activityId);
-                        $deleteStmt->bindParam(':club_id', $clubId);
-                        $deleteStmt->execute();
+                    if ($stmt->rowCount() > 0) {
+                        // Delete the activity
+                        $sql = "DELETE FROM club_activities WHERE activity_id = :activity_id";
+                        $stmt = $ccaDB->prepare($sql);
+                        $stmt->bindParam(':activity_id', $activityId);
+                        $stmt->execute();
                         
                         $_SESSION['success'] = 'Activity deleted successfully.';
+                    } else {
+                        $_SESSION['error'] = 'Activity not found or you do not have permission to delete it.';
                     }
                 } catch (PDOException $e) {
                     error_log("Error deleting activity: " . $e->getMessage());
-                    $_SESSION['error'] = 'Failed to delete activity: ' . $e->getMessage();
+                    $_SESSION['error'] = 'Failed to delete activity. Please try again.';
                 }
             } else {
                 $_SESSION['error'] = 'Invalid activity ID provided.';
             }
             break;
             
+        case 'update_application':
+            // Handle club application approval/rejection
+            if (isset($_POST['member_id']) && is_numeric($_POST['member_id']) && isset($_POST['status'])) {
+                $memberId = (int)$_POST['member_id'];
+                $newStatus = $_POST['status'];
+                
+                // Validate the status
+                if (!in_array($newStatus, ['Active', 'Inactive', 'Rejected'])) {
+                    $_SESSION['error'] = 'Invalid status provided.';
+                    break;
+                }
+                
+                try {
+                    // Verify the application belongs to this club
+                    $sql = "SELECT member_id FROM club_members 
+                            WHERE member_id = :member_id 
+                            AND club_id = :club_id 
+                            AND status = 'Pending'";
+                    $stmt = $ccaDB->prepare($sql);
+                    $stmt->bindParam(':member_id', $memberId);
+                    $stmt->bindParam(':club_id', $clubId);
+                    $stmt->execute();
+                    
+                    if ($stmt->rowCount() > 0) {
+                        // Update the application status
+                        $result = $clubRepo->updateApplicationStatus($memberId, $newStatus);
+                        
+                        if ($result['success']) {
+                            $_SESSION['success'] = 'Application ' . ($newStatus == 'Active' ? 'approved' : 'rejected') . ' successfully.';
+                        } else {
+                            $_SESSION['error'] = $result['message'];
+                        }
+                    } else {
+                        $_SESSION['error'] = 'Application not found or already processed.';
+                    }
+                } catch (PDOException $e) {
+                    error_log("Error updating application: " . $e->getMessage());
+                    $_SESSION['error'] = 'Failed to update application. Please try again.';
+                }
+            } else {
+                $_SESSION['error'] = 'Invalid member ID or status provided.';
+            }
+            break;
+
+        case 'remove_member':
+            // Handle removing a club member
+            if (isset($_POST['member_id']) && is_numeric($_POST['member_id'])) {
+                $memberId = (int)$_POST['member_id'];
+                
+                try {
+                    // Verify the member belongs to this club
+                    $sql = "SELECT member_id FROM club_members 
+                            WHERE member_id = :member_id 
+                            AND club_id = :club_id 
+                            AND status = 'Active'";
+                    $stmt = $ccaDB->prepare($sql);
+                    $stmt->bindParam(':member_id', $memberId);
+                    $stmt->bindParam(':club_id', $clubId);
+                    $stmt->execute();
+                    
+                    if ($stmt->rowCount() > 0) {
+                        // Remove the member (set to inactive)
+                        $result = $clubRepo->removeMember($memberId);
+                        
+                        if ($result['success']) {
+                            $_SESSION['success'] = 'Member removed successfully.';
+                        } else {
+                            $_SESSION['error'] = $result['message'];
+                        }
+                    } else {
+                        $_SESSION['error'] = 'Member not found or not part of this club.';
+                    }
+                } catch (PDOException $e) {
+                    error_log("Error removing member: " . $e->getMessage());
+                    $_SESSION['error'] = 'Failed to remove member. Please try again.';
+                }
+            } else {
+                $_SESSION['error'] = 'Invalid member ID provided.';
+            }
+            break;
+
         case 'update_location':
-            // Update club location
+            // Handle updating location details
             try {
                 if (isset($_POST['location'], $_POST['latitude'], $_POST['longitude'])) {
                     $location = $_POST['location'];

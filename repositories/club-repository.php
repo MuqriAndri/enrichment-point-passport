@@ -388,6 +388,125 @@ class clubRepository
         }
     }
 
+    public function getPendingApplications($clubId)
+    {
+        try {
+            $sql = "SELECT * FROM club_members 
+                    WHERE club_id = :club_id 
+                    AND status = 'Pending'
+                    ORDER BY created_at DESC";
+                    
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':club_id', $clubId);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error getting pending applications: " . $e->getMessage());
+            return [];
+        }
+    }
+    
+    public function getClubMembers($clubId)
+    {
+        try {
+            $sql = "SELECT m.*, r.role_name 
+                    FROM club_members m
+                    LEFT JOIN club_roles r ON m.role_id = r.role_id
+                    WHERE m.club_id = :club_id 
+                    AND m.status = 'Active'
+                    ORDER BY m.role_id ASC, m.full_name ASC";
+                    
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':club_id', $clubId);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error getting club members: " . $e->getMessage());
+            return [];
+        }
+    }
+    
+    public function updateApplicationStatus($memberId, $newStatus)
+    {
+        try {
+            $this->pdo->beginTransaction();
+            
+            $sql = "UPDATE club_members 
+                   SET status = :status
+                   WHERE member_id = :member_id";
+                   
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':status', $newStatus);
+            $stmt->bindParam(':member_id', $memberId);
+            $stmt->execute();
+            
+            $this->pdo->commit();
+            return [
+                'success' => true,
+                'message' => 'Application status updated successfully'
+            ];
+        } catch (PDOException $e) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+            error_log("Error updating application status: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to update application status: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function removeMember($memberId)
+    {
+        try {
+            $this->pdo->beginTransaction();
+            
+            // First check if this is a club president (role_id = 1)
+            $checkSql = "SELECT role_id FROM club_members WHERE member_id = :member_id";
+            $checkStmt = $this->pdo->prepare($checkSql);
+            $checkStmt->bindParam(':member_id', $memberId);
+            $checkStmt->execute();
+            
+            $memberRole = $checkStmt->fetchColumn();
+            
+            // Cannot remove a club president
+            if ($memberRole == 1) {
+                $this->pdo->rollBack();
+                return [
+                    'success' => false,
+                    'message' => 'Club presidents cannot be removed. Transfer presidency first.'
+                ];
+            }
+            
+            // Update the member status to Inactive
+            $sql = "UPDATE club_members 
+                   SET status = 'Inactive'
+                   WHERE member_id = :member_id";
+                   
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':member_id', $memberId);
+            $stmt->execute();
+            
+            $this->pdo->commit();
+            return [
+                'success' => true,
+                'message' => 'Member removed successfully'
+            ];
+        } catch (PDOException $e) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+            error_log("Error removing member: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to remove member: ' . $e->getMessage()
+            ];
+        }
+    }
+
     public function getClubGallery($clubId)
     {
         try {
