@@ -127,9 +127,32 @@ body {
 }
 
 .semester-dropdown {
-    padding: 0.5rem;
+    padding: 0.75rem 1rem;
     margin-bottom: var(--spacing-md);
     font-family: inherit;
+    width: 100%;
+    max-width: 300px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background-color: white;
+    color: var(--text-dark);
+    font-size: 1rem;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%231a365d' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    outline: none;
+}
+
+.semester-dropdown:hover {
+    border-color: var(--accent-color);
+}
+
+.semester-dropdown:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(239, 191, 4, 0.2);
 }
 
 .history-table {
@@ -237,4 +260,118 @@ body.dark .points-total {
 
 body.dark .history-table .no-data {
     color: #8b949e;
+}
+
+body.dark .semester-dropdown {
+    background-color: #1e1e1e;
+    border-color: #30363d;
+    color: #e6edf3;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%2358a6ff' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+}
+
+body.dark .semester-dropdown:hover {
+    border-color: var(--accent-color);
+}
+
+body.dark .semester-dropdown:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(239, 191, 4, 0.2);
+}
+
+body.dark .semester-dropdown option {
+    background-color: #1e1e1e;
+    color: #e6edf3;
+}
+
+/* Add styling for the semester select */
+#semesterSelect {
+    padding: 0.75rem 1rem;
+    margin-bottom: var(--spacing-md);
+    font-family: 'Montserrat', sans-serif;
+    width: 100%;
+    max-width: 300px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background-color: white;
+    color: var(--text-dark);
+    font-size: 1rem;
+    font-weight: 600;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%231a365d' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+#semesterSelect:hover {
+    border-color: var(--accent-color);
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23efbf04' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+}
+
+#semesterSelect:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(239, 191, 4, 0.2);
+}
+
+#semesterSelect option {
+    padding: 10px;
+    font-weight: 500;
+}
+
+/* Style for the header with semester selection */
+.container header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.container h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    color: var(--primary-color);
+}
+
+/* Dark mode styles */
+body.dark #semesterSelect {
+    background-color: #1e1e1e;
+    border-color: #30363d;
+    color: #e6edf3;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%2358a6ff' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+body.dark #semesterSelect:hover {
+    border-color: var(--accent-color);
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23efbf04' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+}
+
+body.dark #semesterSelect:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(239, 191, 4, 0.2);
+}
+
+body.dark #semesterSelect option {
+    background-color: #1e1e1e;
+    color: #e6edf3;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .container header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+    
+    #semesterSelect {
+        max-width: 100%;
+    }
+    
+    .container h1 {
+        font-size: 1.5rem;
+    }
 }
