@@ -749,6 +749,8 @@ if (isset($_SESSION['user_id']) && isset($pdo)) {
                         <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
                         <script src="<?php echo BASE_URL; ?>/assets/js/search.js"></script>
                         <script src="<?php echo BASE_URL; ?>/assets/js/burger.js"></script>
+                        <script src="<?php echo BASE_URL; ?>/assets/js/mobile-events.js"></script>
+
 
                     </div>
                 </div>
