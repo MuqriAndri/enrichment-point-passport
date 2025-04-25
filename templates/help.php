@@ -25,7 +25,9 @@ if (!defined('BASE_URL')) {
             <li>🔹 Need to update your account details?</li>
         </ul>
 
-        <p style="margin-top: 1.5rem;">Please check the <a href="<?php echo BASE_URL; ?>/templates/faqs.php">FAQs</a> or contact support via the <a href="<?php echo BASE_URL; ?>/templates/contact.php">Contact Us</a> page.</p>
+        <p style="margin-top: 1.5rem;">
+    Need more help? Just head over to our 
+    <a href="<?php echo BASE_URL; ?>/templates/contact.php">Contact Us</a> page — we’ll be happy to assist you.</p>
     </div>
 </body>
 </html>
