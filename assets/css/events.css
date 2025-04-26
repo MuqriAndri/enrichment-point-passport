@@ -88,11 +88,24 @@ body {
     width: 100%;
 }
 
+/* Header section with improved spacing and style */
 h1 {
     font-size: 1.75rem;
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-md);
     color: var(--primary-color);
-    padding: 0 var(--spacing-md);
+    position: relative;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+/* Section header divider - adds a professional separator between header and content */
+.section-header-divider {
+    height: 3px;
+    background: linear-gradient(to right, var(--primary-color), var(--accent-color), transparent);
+    width: 50%;
+    max-width: 300px;
+    margin: 0 0 var(--spacing-lg) 0;
+    border-radius: var(--radius-full);
 }
 
 /* New Carousel Styles - Glide-like with overflow */
@@ -100,7 +113,7 @@ h1 {
     position: relative;
     display: flex;
     justify-content: center;
-    margin: var(--spacing-xl) 0 0 0;
+    margin: var(--spacing-md) 0 0 0;
     min-height: 560px;
     overflow: visible;
     width: 100%;
@@ -122,6 +135,7 @@ h1 {
     backface-visibility: hidden;
     transform: scale(0.8) translateX(0);
     text-align: center;
+    border: 1px solid rgba(0,0,0,0.04);
 }
 
 /* Slide positioning classes - with wider spacing for overflow */
@@ -132,6 +146,7 @@ h1 {
     pointer-events: auto;
     cursor: default;
     box-shadow: var(--shadow-lg);
+    border-color: rgba(0,0,0,0.08);
 }
 
 .event-slide.prev {
@@ -164,7 +179,8 @@ h1 {
 .event-slide.prev:hover,
 .event-slide.next:hover {
     transform: scale(0.87) translateX(-90%);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    opacity: 0.9;
 }
 
 .event-slide.next:hover {
@@ -231,6 +247,20 @@ h1 {
     font-size: 1.3rem;
     margin-bottom: var(--spacing-xs);
     color: var(--primary-color);
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.event-slide h2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background-color: var(--accent-color);
+    border-radius: var(--radius-full);
 }
 
 .event-status {
@@ -255,7 +285,7 @@ h1 {
     color: var(--text-light);
     margin: 15px auto;
     font-size: 0.9rem;
-    line-height: 1.4;
+    line-height: 1.6;
     text-align: center;
     padding: 0 15px;
 }
@@ -268,6 +298,7 @@ h1 {
     overflow: hidden;
     border-radius: var(--radius-sm);
     position: relative;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.08);
 }
 
 .image-container {
@@ -320,6 +351,7 @@ h1 {
     font-size: 0.9rem;
     text-align: center;
     text-decoration: none;
+    font-weight: 500;
 }
 
 .btn-primary {
@@ -329,6 +361,8 @@ h1 {
 
 .btn-primary:hover {
     background-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .btn-secondary {
@@ -338,6 +372,8 @@ h1 {
 
 .btn-secondary:hover {
     background-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .learn-more-btn {
@@ -345,6 +381,24 @@ h1 {
     margin: 10px auto 15px;
     display: block;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.learn-more-btn:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.2);
+    transition: all 0.4s ease;
+    z-index: 1;
+}
+
+.learn-more-btn:hover:after {
+    left: 100%;
 }
 
 .btn.btn-secondary {
@@ -364,6 +418,29 @@ h1 {
     padding: 0 var(--spacing-md);
     position: relative;
     z-index: 10;
+    background-color: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: var(--spacing-md);
+}
+
+.calendar-container h2 {
+    font-size: 1.4rem;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+    position: relative;
+}
+
+.calendar-container h2:after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background-color: var(--primary-color);
 }
 
 /* Navigation container */
@@ -379,11 +456,11 @@ h1 {
 
 /* Section divider */
 .section-divider {
-    margin-top: 30px;
+    margin: 30px 0;
     position: relative;
     z-index: 10;
-    height: 2px;
-    background-color: #e2e8f0;
+    height: 1px;
+    background-color: var(--border-color);
 }
 
 /* Responsive Styles */
@@ -427,6 +504,10 @@ h1 {
         width: 160px;
         font-size: 0.7rem;
     }
+    
+    .section-header-divider {
+        margin: 0 auto var(--spacing-lg) auto;
+    }
 }
 
 /* Dark Mode Styles */
@@ -442,6 +523,7 @@ body.dark h1 {
 body.dark .event-slide {
     background-color: #1e1e1e;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255,255,255,0.05);
 }
 
 body.dark .event-slide h2 {
@@ -484,4 +566,18 @@ body.dark .indicator.active {
 
 body.dark .shine-effect {
     background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+}
+
+body.dark .calendar-container {
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .calendar-container h2 {
+    color: #e0e0e0;
+    border-bottom-color: #333;
+}
+
+body.dark .section-divider {
+    background-color: #333;
 }

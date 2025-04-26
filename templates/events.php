@@ -231,6 +231,7 @@ if (isset($_SESSION['user_id']) && isset($profilesDB)) {
                             </div>
                             <?php endif; ?>
                         </div>
+                        
                         <div class="event-slider">
                             <?php
                             // Fetch events from database
@@ -353,8 +354,8 @@ if (isset($_SESSION['user_id']) && isset($profilesDB)) {
                             ?>
                         </div>
                         
-                        <!-- Add a divider here -->
-                        <div class="section-divider" style="height: 2px; background-color: #e2e8f0; margin: 30px 0;"></div>
+                        <!-- Section divider between events and calendar -->
+                        <div class="section-divider"></div>
                         
                         <div class="calendar-container">
                             <h2>Event Calendar</h2>
