@@ -314,9 +314,51 @@ switch ($page) {
         
         // Handle POST requests for event operations
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            require_once 'controllers/events.php';
-            handleEventOperations($eventsDB, $profilesDB);
-            exit();
+            // Special handling for edit_form operation
+            if (isset($_POST['operation']) && $_POST['operation'] === 'edit_form' && isset($_POST['event_id'])) {
+                require_once 'repositories/event-repository.php';
+                $eventRepo = new EventRepository($eventsDB, $profilesDB);
+                
+                // Fetch the event
+                $eventId = $_POST['event_id'];
+                $_SESSION['edit_event'] = $eventRepo->getEventById($eventId);
+                
+                if (!$_SESSION['edit_event']) {
+                    $_SESSION['error'] = 'Event not found';
+                }
+                
+                // Redirect to the same page but with GET instead of POST to prevent form resubmission
+                header("Location: " . BASE_URL . "/events-management");
+                exit();
+            } 
+            // Special handling for view_participants operation
+            else if (isset($_POST['operation']) && $_POST['operation'] === 'view_participants' && isset($_POST['event_id'])) {
+                require_once 'repositories/event-repository.php';
+                $eventRepo = new EventRepository($eventsDB, $profilesDB);
+                
+                // Fetch the event and participants
+                $eventId = $_POST['event_id'];
+                $event = $eventRepo->getEventById($eventId);
+                
+                if ($event) {
+                    $_SESSION['view_event'] = $event;
+                    $_SESSION['participants'] = $eventRepo->getEventParticipants($eventId);
+                    
+                    // Redirect to the same page but with GET instead of POST to prevent form resubmission
+                    header("Location: " . BASE_URL . "/events-management");
+                    exit();
+                } else {
+                    $_SESSION['error'] = 'Event not found';
+                    header("Location: " . BASE_URL . "/events-management");
+                    exit();
+                }
+            }
+            else {
+                // Handle other operations
+                require_once 'controllers/events.php';
+                handleEventOperations($eventsDB, $profilesDB);
+                exit();
+            }
         }
         
         // Use the correct database for events
@@ -341,7 +383,12 @@ switch ($page) {
         include 'templates/settings.php';
         break;
     case 'controllers':
+        // Debug information
+        error_log("Controllers route triggered. params[1]=" . ($params[1] ?? 'not set'));
+        
         if (isset($params[1]) && $params[1] === 'events.php') {
+            error_log("Events controller detected. Method: " . $_SERVER['REQUEST_METHOD'] . ", operation: " . ($_GET['operation'] ?? 'not set'));
+            
             if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['operation'])) {
                 require_once 'controllers/events.php';
                 handleEventAPI($eventsDB, $profilesDB);

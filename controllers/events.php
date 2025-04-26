@@ -38,12 +38,13 @@ function uploadToS3WithSignature($sourceFile, $key) {
     }
     
     try {
+        // @phpstan-ignore-next-line
         $s3Client = new Aws\S3\S3Client([
             'version' => 'latest',
             'region'  => 'ap-southeast-1',
             'credentials' => [
-                'key'    => AWS_ACCESS_KEY_ID,
-                'secret' => AWS_SECRET_ACCESS_KEY,
+                'key'    => 'AKIA4SYAMLXWG443EJG2',
+                'secret' => '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',
             ],
         ]);
         
@@ -253,6 +254,24 @@ function handleEventOperations($eventsDB, $profilesDB) {
             } else {
                 $_SESSION['error'] = 'Failed to add event: ' . $result['message'];
             }
+            
+            // Detect if this is an AJAX request
+            $isAjax = false;
+            if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                $isAjax = true;
+            } elseif (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+                $isAjax = true;
+            }
+            
+            // If AJAX request, return JSON response
+            if ($isAjax) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => $result['success'],
+                    'message' => $result['success'] ? 'Event added successfully.' : $result['message']
+                ]);
+                exit();
+            }
             break;
             
         case 'update_event':
@@ -360,6 +379,24 @@ function handleEventOperations($eventsDB, $profilesDB) {
             } else {
                 $_SESSION['error'] = 'Failed to update event: ' . $result['message'];
             }
+            
+            // Detect if this is an AJAX request
+            $isAjax = false;
+            if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                $isAjax = true;
+            } elseif (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+                $isAjax = true;
+            }
+            
+            // If AJAX request, return JSON response
+            if ($isAjax) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => $result['success'],
+                    'message' => $result['success'] ? 'Event updated successfully.' : $result['message']
+                ]);
+                exit();
+            }
             break;
             
         case 'delete_event':
@@ -378,6 +415,24 @@ function handleEventOperations($eventsDB, $profilesDB) {
                 $_SESSION['success'] = 'Event deleted successfully.';
             } else {
                 $_SESSION['error'] = 'Failed to delete event: ' . $result['message'];
+            }
+            
+            // Detect if this is an AJAX request
+            $isAjax = false;
+            if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                $isAjax = true;
+            } elseif (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+                $isAjax = true;
+            }
+            
+            // If AJAX request, return JSON response
+            if ($isAjax) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => $result['success'],
+                    'message' => $result['success'] ? 'Event deleted successfully.' : $result['message']
+                ]);
+                exit();
             }
             break;
             
@@ -399,6 +454,26 @@ function handleEventOperations($eventsDB, $profilesDB) {
             } else {
                 $_SESSION['error'] = 'Failed to update participant status: ' . $result['message'];
             }
+            
+            // Detect if this is an AJAX request by checking for content-type header or X-Requested-With
+            $isAjax = false;
+            if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                $isAjax = true;
+            } elseif (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+                $isAjax = true;
+            }
+            
+            // If AJAX request, return JSON response
+            if ($isAjax) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => $result['success'],
+                    'message' => $result['success'] ? 'Participant status updated successfully.' : $result['message']
+                ]);
+                exit();
+            }
+            
+            // Otherwise, we'll continue and let the default redirect happen at the end
             break;
             
         case 'update_location':
@@ -530,6 +605,110 @@ function handleEventAPI($eventsDB, $profilesDB) {
                 'success' => true,
                 'participants' => $participants
             ]);
+            break;
+            
+        case 'update_participant_status':
+            // Handle updating participant status via AJAX
+            if (!isset($_POST['participant_id']) || empty($_POST['participant_id']) || !isset($_POST['status']) || empty($_POST['status'])) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Participant ID and status are required'
+                ]);
+                exit();
+            }
+            
+            $participantId = $_POST['participant_id'];
+            $status = $_POST['status'];
+            
+            // Update participant status
+            $result = $eventRepo->updateParticipantStatus($participantId, $status);
+            
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => $result['success'],
+                'message' => $result['success'] ? 'Participant status updated successfully' : $result['message']
+            ]);
+            break;
+            
+        case 'register_event':
+            // Handle event registration
+            if (!isset($_POST['event_id']) || empty($_POST['event_id'])) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Event ID is required'
+                ]);
+                exit();
+            }
+            
+            $eventId = $_POST['event_id'];
+            $userId = $_SESSION['user_id'];
+            
+            // Check if already registered
+            $stmt = $eventsDB->prepare("SELECT * FROM events_participants WHERE event_id = ? AND user_id = ?");
+            $stmt->execute([$eventId, $userId]);
+            if ($stmt->fetch()) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'You are already registered for this event'
+                ]);
+                exit();
+            }
+            
+            // Get user details
+            $stmt = $profilesDB->prepare("SELECT full_name, email, phone FROM users WHERE user_id = ?");
+            $stmt->execute([$userId]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$user) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'User not found'
+                ]);
+                exit();
+            }
+            
+            try {
+                // Begin transaction
+                $eventsDB->beginTransaction();
+                
+                // Insert into events_participants table
+                $stmt = $eventsDB->prepare("INSERT INTO events_participants 
+                    (event_id, user_id, participant_name, participant_email, participant_phone, registration_date, status) 
+                    VALUES (?, ?, ?, ?, ?, NOW(), 'Pending')");
+                $stmt->execute([
+                    $eventId,
+                    $userId,
+                    $user['full_name'],
+                    $user['email'],
+                    $user['phone'] ?? ''
+                ]);
+                
+                // Update participant count
+                $stmt = $eventsDB->prepare("UPDATE events SET event_participants = event_participants + 1 WHERE event_id = ?");
+                $stmt->execute([$eventId]);
+                
+                // Commit the transaction
+                $eventsDB->commit();
+                
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'You have successfully registered for this event'
+                ]);
+            } catch (PDOException $e) {
+                // Rollback the transaction on error
+                $eventsDB->rollBack();
+                
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Registration failed: ' . $e->getMessage()
+                ]);
+            }
             break;
             
         default:

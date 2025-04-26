@@ -7,6 +7,31 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || ($_SESSION['rol
     exit();
 }
 
+// Force-clear all modal variables on page load if they're in the URL
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // If visiting with GET request, clear modal session data 
+    // only if we don't have specific instructions to show a modal
+    $clearSessions = true;
+    
+    // If edit_event session exists, keep it to show edit modal
+    if (isset($_SESSION['edit_event']) && $_SESSION['edit_event']) {
+        $clearSessions = false;
+    }
+    
+    // If participants session exists, keep it to show participants modal
+    if (isset($_SESSION['participants']) && isset($_SESSION['view_event']) && 
+        $_SESSION['participants'] && $_SESSION['view_event']) {
+        $clearSessions = false;
+    }
+    
+    // Clear sessions if no specific modal should be shown
+    if ($clearSessions) {
+        if (isset($_SESSION['edit_event'])) unset($_SESSION['edit_event']);
+        if (isset($_SESSION['participants'])) unset($_SESSION['participants']);
+        if (isset($_SESSION['view_event'])) unset($_SESSION['view_event']);
+    }
+}
+
 // Dark mode check
 $isDark = false;
 if (isset($_SESSION['user_id'])) {
@@ -34,8 +59,36 @@ $events = $eventRepo->getAllEvents();
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/events.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/events-management.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/burger.css">
-    <!-- Include Google Maps for location functionality -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXXh-Lwbrw-UKAC9YsrBq09vyKNmG0Lzo&libraries=places" async defer></script>
+    <style>
+        .temp-alert {
+            transition: opacity 0.5s ease-in-out;
+            position: relative;
+            z-index: 100;
+        }
+    </style>
+    <!-- Include Google Maps API using callback pattern -->
+    <script>
+        // Initialize Google Maps API with callback
+        function initGoogleMapsAPI() {
+            const script = document.createElement('script');
+            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBXXh-Lwbrw-UKAC9YsrBq09vyKNmG0Lzo&libraries=places&callback=initMapsCallback";
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+        }
+        
+        // Callback function for when maps API loads
+        function initMapsCallback() {
+            console.log("Google Maps API loaded successfully");
+            // Initialize map if modal is already open
+            if (document.getElementById('event-modal').style.display === 'flex') {
+                initializeMap();
+            }
+        }
+        
+        // Load Maps API when page loads
+        window.addEventListener('DOMContentLoaded', initGoogleMapsAPI);
+    </script>
 </head>
 <body class="<?php echo $isDark ? 'dark' : ''; ?>">
     <div class="dashboard-container">
@@ -344,42 +397,42 @@ $events = $eventRepo->getAllEvents();
                 <div id="event-modal" class="modal">
                     <div class="modal-content">
                         <span class="close-btn">&times;</span>
-                        <h2 id="modal-title">Add New Event</h2>
+                        <h2 id="modal-title"><?php echo isset($_SESSION['edit_event']) ? 'Edit Event' : 'Add New Event'; ?></h2>
                         
-                        <form id="event-form" action="<?php echo BASE_URL; ?>/controllers/events.php" method="POST" enctype="multipart/form-data">
-                            <input type="hidden" name="operation" id="operation" value="add_event">
-                            <input type="hidden" name="event_id" id="event_id" value="">
+                        <form id="event-form" action="<?php echo BASE_URL; ?>/events-management" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="operation" id="operation" value="<?php echo isset($_SESSION['edit_event']) ? 'update_event' : 'add_event'; ?>">
+                            <input type="hidden" name="event_id" id="event_id" value="<?php echo isset($_SESSION['edit_event']) ? $_SESSION['edit_event']['event_id'] : ''; ?>">
                             
                             <div class="form-group">
                                 <label for="event_name">Event Name <span class="required">*</span></label>
-                                <input type="text" id="event_name" name="event_name" required>
+                                <input type="text" id="event_name" name="event_name" value="<?php echo isset($_SESSION['edit_event']) ? htmlspecialchars($_SESSION['edit_event']['event_name']) : ''; ?>" required>
                             </div>
                             
                             <div class="form-group">
                                 <label for="event_description">Description</label>
-                                <textarea id="event_description" name="event_description" rows="4"></textarea>
+                                <textarea id="event_description" name="event_description" rows="4"><?php echo isset($_SESSION['edit_event']) ? htmlspecialchars($_SESSION['edit_event']['event_description']) : ''; ?></textarea>
                             </div>
                             
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="event_date">Date <span class="required">*</span></label>
-                                    <input type="date" id="event_date" name="event_date" required>
+                                    <input type="date" id="event_date" name="event_date" value="<?php echo isset($_SESSION['edit_event']) ? htmlspecialchars(date('Y-m-d', strtotime($_SESSION['edit_event']['event_date']))) : ''; ?>" required>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="start_time">Start Time <span class="required">*</span></label>
-                                    <input type="time" id="start_time" name="start_time" required>
+                                    <input type="time" id="start_time" name="start_time" value="<?php echo isset($_SESSION['edit_event']) ? htmlspecialchars($_SESSION['edit_event']['start_time']) : ''; ?>" required>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="end_time">End Time <span class="required">*</span></label>
-                                    <input type="time" id="end_time" name="end_time" required>
+                                    <input type="time" id="end_time" name="end_time" value="<?php echo isset($_SESSION['edit_event']) ? htmlspecialchars($_SESSION['edit_event']['end_time']) : ''; ?>" required>
                                 </div>
                             </div>
                             
                             <div class="form-group">
                                 <label for="event_location">Location <span class="required">*</span></label>
-                                <input type="text" id="event_location" name="event_location" required>
+                                <input type="text" id="event_location" name="event_location" value="<?php echo isset($_SESSION['edit_event']) ? htmlspecialchars($_SESSION['edit_event']['event_location']) : ''; ?>" required>
                             </div>
                             
                             <div class="form-group location-search-box">
@@ -392,34 +445,38 @@ $events = $eventRepo->getAllEvents();
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="event_participants">Max Participants <span class="required">*</span></label>
-                                    <input type="number" id="event_participants" name="event_participants" min="1" required>
+                                    <input type="number" id="event_participants" name="event_participants" min="1" value="<?php echo isset($_SESSION['edit_event']) ? htmlspecialchars($_SESSION['edit_event']['event_participants']) : ''; ?>" required>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="enrichment_points_awarded">EP Points <span class="required">*</span></label>
-                                    <input type="number" id="enrichment_points_awarded" name="enrichment_points_awarded" min="0" required>
+                                    <input type="number" id="enrichment_points_awarded" name="enrichment_points_awarded" min="0" value="<?php echo isset($_SESSION['edit_event']) ? htmlspecialchars($_SESSION['edit_event']['enrichment_points_awarded']) : ''; ?>" required>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="status">Status <span class="required">*</span></label>
                                     <select id="status" name="status" required>
-                                        <option value="Scheduled">Scheduled</option>
-                                        <option value="Ongoing">Ongoing</option>
-                                        <option value="Completed">Completed</option>
-                                        <option value="Cancelled">Cancelled</option>
+                                        <option value="Scheduled" <?php echo isset($_SESSION['edit_event']) && $_SESSION['edit_event']['status'] === 'Scheduled' ? 'selected' : ''; ?>>Scheduled</option>
+                                        <option value="Ongoing" <?php echo isset($_SESSION['edit_event']) && $_SESSION['edit_event']['status'] === 'Ongoing' ? 'selected' : ''; ?>>Ongoing</option>
+                                        <option value="Completed" <?php echo isset($_SESSION['edit_event']) && $_SESSION['edit_event']['status'] === 'Completed' ? 'selected' : ''; ?>>Completed</option>
+                                        <option value="Cancelled" <?php echo isset($_SESSION['edit_event']) && $_SESSION['edit_event']['status'] === 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
                                     </select>
                                 </div>
                             </div>
                             
                             <div class="form-group">
                                 <label for="organizer">Organizer</label>
-                                <input type="text" id="organizer" name="organizer" value="<?php echo htmlspecialchars($_SESSION['full_name'] ?? ''); ?>">
+                                <input type="text" id="organizer" name="organizer" value="<?php echo isset($_SESSION['edit_event']) ? htmlspecialchars($_SESSION['edit_event']['organizer']) : htmlspecialchars($_SESSION['full_name'] ?? ''); ?>">
                             </div>
                             
                             <div class="form-group">
                                 <label for="event_image">Event Image</label>
                                 <input type="file" id="event_image" name="event_image" accept="image/*">
-                                <div id="image-preview" class="image-preview"></div>
+                                <div id="image-preview" class="image-preview">
+                                    <?php if (isset($_SESSION['edit_event']) && !empty($_SESSION['edit_event']['events_images'])): ?>
+                                        <img src="<?php echo htmlspecialchars($_SESSION['edit_event']['events_images']); ?>" alt="Event Image">
+                                    <?php endif; ?>
+                                </div>
                             </div>
                             
                             <div class="form-buttons">
@@ -434,7 +491,7 @@ $events = $eventRepo->getAllEvents();
                 <div id="participants-modal" class="modal">
                     <div class="modal-content">
                         <span class="close-btn">&times;</span>
-                        <h2>Event Participants</h2>
+                        <h2>Event Participants: <?php echo isset($_SESSION['view_event']) ? htmlspecialchars($_SESSION['view_event']['event_name']) : 'Event'; ?></h2>
                         
                         <div id="participants-list">
                             <table class="participants-table">
@@ -449,9 +506,48 @@ $events = $eventRepo->getAllEvents();
                                     </tr>
                                 </thead>
                                 <tbody id="participants-data">
-                                    <!-- Will be populated by JavaScript -->
+                                    <?php if (isset($_SESSION['participants'])): ?>
+                                        <?php if (empty($_SESSION['participants'])): ?>
+                                            <tr><td colspan="6">No participants have registered for this event yet.</td></tr>
+                                        <?php else: ?>
+                                            <?php foreach ($_SESSION['participants'] as $participant): ?>
+                                                <tr>
+                                                    <td><?php echo htmlspecialchars($participant['full_name']); ?></td>
+                                                    <td><?php echo htmlspecialchars($participant['email']); ?></td>
+                                                    <td><?php echo htmlspecialchars($participant['participant_phone'] ?? 'N/A'); ?></td>
+                                                    <td>
+                                                        <?php 
+                                                            $regDate = new DateTime($participant['registration_date']);
+                                                            echo $regDate->format('d M Y g:i A');
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <span class="status-badge <?php echo strtolower($participant['attendance_status']); ?>">
+                                                            <?php echo htmlspecialchars($participant['attendance_status']); ?>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <form method="POST" action="<?php echo BASE_URL; ?>/events-management" class="status-update-form">
+                                                            <input type="hidden" name="operation" value="update_participant_status">
+                                                            <input type="hidden" name="participant_id" value="<?php echo $participant['participant_id']; ?>">
+                                                            <select name="status" class="status-select" data-id="<?php echo $participant['participant_id']; ?>">
+                                                                <option value="Registered" <?php echo $participant['attendance_status'] === 'Registered' ? 'selected' : ''; ?>>Registered</option>
+                                                                <option value="Confirmed" <?php echo $participant['attendance_status'] === 'Confirmed' ? 'selected' : ''; ?>>Confirmed</option>
+                                                                <option value="Attended" <?php echo $participant['attendance_status'] === 'Attended' ? 'selected' : ''; ?>>Attended</option>
+                                                                <option value="Cancelled" <?php echo $participant['attendance_status'] === 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
+                                                            </select>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
+                        </div>
+                        <!-- Add a footer with a close button -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary close-modal">Close</button>
                         </div>
                     </div>
                 </div>
@@ -462,7 +558,7 @@ $events = $eventRepo->getAllEvents();
                         <h2>Confirm Deletion</h2>
                         <p>Are you sure you want to delete this event? This action cannot be undone.</p>
                         
-                        <form id="delete-form" action="<?php echo BASE_URL; ?>/controllers/events.php" method="POST">
+                        <form id="delete-form" action="<?php echo BASE_URL; ?>/events-management" method="POST">
                             <input type="hidden" name="operation" value="delete_event">
                             <input type="hidden" name="event_id" id="delete-event-id" value="">
                             
@@ -511,17 +607,168 @@ $events = $eventRepo->getAllEvents();
     <script src="<?php echo BASE_URL; ?>/assets/js/events-management.js"></script>
 
     <script>
+        // Define BASE_URL for JavaScript from PHP
+        const BASE_URL = "<?php echo BASE_URL; ?>";
+        
+        // Google Maps integration - initialize map function in global scope
+        let map, marker;
+        
+        function initializeMap(address = null) {
+            // Default to a central location (e.g., Politeknik Brunei)
+            const defaultLocation = { lat: 4.9431, lng: 114.9425 };
+            
+            const mapOptions = {
+                center: defaultLocation,
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            
+            const mapElement = document.getElementById('location-map');
+            if (!mapElement) {
+                console.error("Map element not found");
+                return;
+            }
+            
+            map = new google.maps.Map(mapElement, mapOptions);
+            
+            marker = new google.maps.Marker({
+                position: defaultLocation,
+                map: map,
+                draggable: true,
+                title: 'Event Location'
+            });
+            
+            // If an address is provided and not empty, try to geocode it
+            if (address && address.trim() !== '') {
+                const geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ address: address }, function(results, status) {
+                    if (status === 'OK' && results[0]) {
+                        map.setCenter(results[0].geometry.location);
+                        marker.setPosition(results[0].geometry.location);
+                    } else {
+                        console.warn("Geocoding failed for address: " + address + ", status: " + status);
+                    }
+                });
+            }
+            
+            // Add click listener to map
+            google.maps.event.addListener(map, 'click', function(event) {
+                marker.setPosition(event.latLng);
+                
+                // Reverse geocode to get address
+                const geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ 'location': event.latLng }, function(results, status) {
+                    if (status === 'OK' && results[0]) {
+                        document.getElementById('event_location').value = results[0].formatted_address;
+                    }
+                });
+            });
+            
+            // Add listener for marker drag
+            google.maps.event.addListener(marker, 'dragend', function() {
+                const geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ 'location': marker.getPosition() }, function(results, status) {
+                    if (status === 'OK' && results[0]) {
+                        document.getElementById('event_location').value = results[0].formatted_address;
+                    }
+                });
+            });
+            
+            // Setup location search autocomplete
+            const locationSearch = document.getElementById('location-search');
+            if (locationSearch) {
+                const autocomplete = new google.maps.places.Autocomplete(locationSearch);
+                autocomplete.addListener('place_changed', function() {
+                    const place = autocomplete.getPlace();
+                    
+                    if (!place.geometry || !place.geometry.location) {
+                        alert('No location details available for this search');
+                        return;
+                    }
+                    
+                    // Update map and marker
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(15);
+                    marker.setPosition(place.geometry.location);
+                    
+                    // Update location input field
+                    document.getElementById('event_location').value = place.formatted_address || place.name;
+                });
+            }
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
+            // Close any open modals first
+            document.getElementById('event-modal').style.display = 'none';
+            document.getElementById('participants-modal').style.display = 'none';
+            document.getElementById('confirm-modal').style.display = 'none';
+            
             // Variables
             const addEventBtn = document.getElementById('add-event-btn');
             const eventModal = document.getElementById('event-modal');
             const participantsModal = document.getElementById('participants-modal');
             const confirmModal = document.getElementById('confirm-modal');
             const closeButtons = document.querySelectorAll('.close-btn, .close-modal');
-            const eventForm = document.getElementById('event-form');
-            const deleteForm = document.getElementById('delete-form');
             const eventSearch = document.getElementById('event-search');
             const statusFilter = document.getElementById('status-filter');
+            
+            // Only proceed to show a modal if specifically told to by server-side code
+            <?php if (isset($_SESSION['edit_event'])): ?>
+                console.log('Showing edit modal from session data');
+                eventModal.style.display = 'flex';
+                participantsModal.style.display = 'none';
+                <?php 
+                // Clear this session variable immediately
+                unset($_SESSION['edit_event']);
+                ?>
+            <?php endif; ?>
+            
+            <?php if (isset($_SESSION['participants']) && isset($_SESSION['view_event'])): ?>
+                console.log('Showing participants modal from session data');
+                participantsModal.style.display = 'flex';
+                eventModal.style.display = 'none';
+                <?php 
+                // Clear these session variables immediately
+                unset($_SESSION['participants']);
+                unset($_SESSION['view_event']);
+                ?>
+            <?php endif; ?>
+            
+            // Add event listeners to all status-select dropdowns for AJAX updates
+            document.querySelectorAll('.status-select').forEach(select => {
+                // Remove any existing form submission behavior
+                if (select.form) {
+                    select.form.onsubmit = (e) => e.preventDefault();
+                }
+                
+                // Add change event listener to use the AJAX method
+                select.addEventListener('change', function() {
+                    // Get participant ID from data attribute
+                    const participantId = this.dataset.id;
+                    // Get selected status
+                    const status = this.value;
+                    // Call the updateParticipantStatus function
+                    updateParticipantStatus(participantId, status);
+                });
+            });
+            
+            // Add event listener for the event form submission to use AJAX
+            const eventForm = document.getElementById('event-form');
+            if (eventForm) {
+                eventForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    submitEventForm(this);
+                });
+            }
+            
+            // Add event listener for the delete form submission to use AJAX
+            const deleteForm = document.getElementById('delete-form');
+            if (deleteForm) {
+                deleteForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    submitDeleteForm(this);
+                });
+            }
             
             // Event listeners for modals
             addEventBtn.addEventListener('click', function() {
@@ -541,7 +788,9 @@ $events = $eventRepo->getAllEvents();
             
             // Close modals when clicking close button or cancel
             closeButtons.forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function(e) {
+                    console.log('Close button clicked, hiding modals');
+                    e.preventDefault();
                     eventModal.style.display = 'none';
                     participantsModal.style.display = 'none';
                     confirmModal.style.display = 'none';
@@ -550,11 +799,20 @@ $events = $eventRepo->getAllEvents();
             
             // Close modals when clicking outside
             window.addEventListener('click', function(event) {
-                if (event.target === eventModal) {
+                if (event.target === eventModal || event.target === participantsModal || event.target === confirmModal) {
+                    console.log('Clicked outside modal, hiding modals');
                     eventModal.style.display = 'none';
-                } else if (event.target === participantsModal) {
                     participantsModal.style.display = 'none';
-                } else if (event.target === confirmModal) {
+                    confirmModal.style.display = 'none';
+                }
+            });
+            
+            // Close modals with ESC key
+            window.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' || event.keyCode === 27) {
+                    console.log('ESC key pressed, hiding modals');
+                    eventModal.style.display = 'none';
+                    participantsModal.style.display = 'none';
                     confirmModal.style.display = 'none';
                 }
             });
@@ -563,7 +821,32 @@ $events = $eventRepo->getAllEvents();
             document.querySelectorAll('.edit-event-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const eventId = this.dataset.id;
-                    editEvent(eventId);
+                    console.log("Edit button clicked for event ID:", eventId);
+                    
+                    // Create a form to fetch event data by POST instead of AJAX
+                    // Note: The server has been modified to redirect to GET after processing
+                    // This prevents form resubmission issues on page refresh
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `${BASE_URL}/events-management`;
+                    form.style.display = 'none';
+                    
+                    const operationInput = document.createElement('input');
+                    operationInput.type = 'hidden';
+                    operationInput.name = 'operation';
+                    operationInput.value = 'edit_form';
+                    
+                    const eventIdInput = document.createElement('input');
+                    eventIdInput.type = 'hidden';
+                    eventIdInput.name = 'event_id';
+                    eventIdInput.value = eventId;
+                    
+                    form.appendChild(operationInput);
+                    form.appendChild(eventIdInput);
+                    document.body.appendChild(form);
+                    
+                    // Use direct form submission
+                    form.submit();
                 });
             });
             
@@ -580,7 +863,32 @@ $events = $eventRepo->getAllEvents();
             document.querySelectorAll('.view-participants-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const eventId = this.dataset.id;
-                    viewParticipants(eventId);
+                    console.log("View participants button clicked for event ID:", eventId);
+                    
+                    // Create a form to fetch participants data by POST instead of AJAX
+                    // Note: The server has been modified to redirect to GET after processing
+                    // This prevents form resubmission issues on page refresh
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `${BASE_URL}/events-management`;
+                    form.style.display = 'none';
+                    
+                    const operationInput = document.createElement('input');
+                    operationInput.type = 'hidden';
+                    operationInput.name = 'operation';
+                    operationInput.value = 'view_participants';
+                    
+                    const eventIdInput = document.createElement('input');
+                    eventIdInput.type = 'hidden';
+                    eventIdInput.name = 'event_id';
+                    eventIdInput.value = eventId;
+                    
+                    form.appendChild(operationInput);
+                    form.appendChild(eventIdInput);
+                    document.body.appendChild(form);
+                    
+                    // Use the direct form submission approach
+                    form.submit();
                 });
             });
             
@@ -625,14 +933,38 @@ $events = $eventRepo->getAllEvents();
             // Show modal helper
             function showModal(modal) {
                 modal.style.display = 'flex';
+                
+                // If this is the event modal, initialize the map after modal is displayed
+                if (modal === eventModal && typeof google !== 'undefined') {
+                    // Slight delay to ensure modal is fully visible
+                    setTimeout(() => {
+                        // Trigger resize event to make sure map renders correctly within modal
+                        window.dispatchEvent(new Event('resize'));
+                        // Initialize map with current address if editing
+                        const currentAddress = document.getElementById('event_location').value;
+                        initializeMap(currentAddress);
+                    }, 100);
+                }
             }
             
             // Edit event function
             function editEvent(eventId) {
-                // Fetch event details via AJAX
-                fetch(`${BASE_URL}/controllers/events.php?operation=get_event&event_id=${eventId}`)
-                    .then(response => response.json())
+                // Based on routing in index.php
+                // URL should be /controllers/events.php for API endpoints
+                const url = `${BASE_URL}/controllers/events.php?operation=get_event&event_id=${eventId}`;
+                console.log("Fetching event from URL:", url);
+                
+                // Try to access the API endpoint
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
                     .then(data => {
+                        console.log("Received data:", data);
+                        
                         if (data.success) {
                             const event = data.event;
                             
@@ -672,17 +1004,27 @@ $events = $eventRepo->getAllEvents();
                         }
                     })
                     .catch(error => {
-                        console.error('Error fetching event details:', error);
-                        alert('An error occurred while fetching event details.');
+                        console.error("Fetch error:", error.message);
+                        alert('Error fetching event details: ' + error.message);
                     });
             }
             
             // View participants function
             function viewParticipants(eventId) {
-                // Fetch participants via AJAX
-                fetch(`${BASE_URL}/controllers/events.php?operation=get_participants&event_id=${eventId}`)
-                    .then(response => response.json())
+                // Based on routing in index.php
+                const url = `${BASE_URL}/controllers/events.php?operation=get_participants&event_id=${eventId}`;
+                console.log("Fetching participants from URL:", url);
+                
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
                     .then(data => {
+                        console.log("Received participants data:", data);
+                        
                         if (data.success) {
                             const participantsTable = document.getElementById('participants-data');
                             participantsTable.innerHTML = '';
@@ -708,12 +1050,16 @@ $events = $eventRepo->getAllEvents();
                                             </span>
                                         </td>
                                         <td>
-                                            <select class="status-select" data-id="${participant.participant_id}">
-                                                <option value="Registered" ${participant.attendance_status === 'Registered' ? 'selected' : ''}>Registered</option>
-                                                <option value="Confirmed" ${participant.attendance_status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
-                                                <option value="Attended" ${participant.attendance_status === 'Attended' ? 'selected' : ''}>Attended</option>
-                                                <option value="Cancelled" ${participant.attendance_status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
-                                            </select>
+                                            <form method="POST" action="<?php echo BASE_URL; ?>/events-management" class="status-update-form">
+                                                <input type="hidden" name="operation" value="update_participant_status">
+                                                <input type="hidden" name="participant_id" value="${participant.participant_id}">
+                                                <select name="status" class="status-select" data-id="${participant.participant_id}">
+                                                    <option value="Registered" ${participant.attendance_status === 'Registered' ? 'selected' : ''}>Registered</option>
+                                                    <option value="Confirmed" ${participant.attendance_status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+                                                    <option value="Attended" ${participant.attendance_status === 'Attended' ? 'selected' : ''}>Attended</option>
+                                                    <option value="Cancelled" ${participant.attendance_status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                                                </select>
+                                            </form>
                                         </td>
                                     `;
                                     
@@ -735,8 +1081,8 @@ $events = $eventRepo->getAllEvents();
                         }
                     })
                     .catch(error => {
-                        console.error('Error fetching participants:', error);
-                        alert('An error occurred while fetching participants.');
+                        console.error("Fetch error:", error.message);
+                        alert('Error fetching participants: ' + error.message);
                     });
             }
             
@@ -747,23 +1093,46 @@ $events = $eventRepo->getAllEvents();
                 formData.append('participant_id', participantId);
                 formData.append('status', status);
                 
-                fetch(`${BASE_URL}/controllers/events.php`, {
+                // Use events-management URL instead of direct controller
+                const url = `${BASE_URL}/events-management`;
+                console.log("Updating participant status at URL:", url, { participantId, status });
+                
+                fetch(url, {
                     method: 'POST',
                     body: formData
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Update the UI to reflect the change
-                        const row = document.querySelector(`.status-select[data-id="${participantId}"]`).closest('tr');
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    
+                    // Update the UI regardless of response type
+                    const select = document.querySelector(`.status-select[data-id="${participantId}"]`);
+                    if (select) {
+                        const row = select.closest('tr');
                         const statusBadge = row.querySelector('.status-badge');
                         
                         // Update badge class and text
                         statusBadge.className = `status-badge ${status.toLowerCase()}`;
                         statusBadge.textContent = status;
-                    } else {
-                        alert('Failed to update participant status: ' + data.message);
+                        
+                        // Show success message
+                        const alertContainer = document.createElement('div');
+                        alertContainer.className = 'alert alert-success temp-alert';
+                        alertContainer.textContent = 'Participant status updated successfully.';
+                        
+                        // Add to page
+                        const mainWrapper = document.querySelector('.main-wrapper');
+                        mainWrapper.insertBefore(alertContainer, mainWrapper.firstChild);
+                        
+                        // Remove after 3 seconds
+                        setTimeout(() => {
+                            alertContainer.style.opacity = '0';
+                            setTimeout(() => alertContainer.remove(), 500);
+                        }, 3000);
                     }
+                    
+                    return { success: true };
                 })
                 .catch(error => {
                     console.error('Error updating participant status:', error);
@@ -777,83 +1146,82 @@ $events = $eventRepo->getAllEvents();
                 return date.toISOString().split('T')[0];
             }
             
-            // Google Maps integration
-            let map, marker;
-            
-            function initializeMap(address) {
-                // Default to a central location (e.g., Politeknik Brunei)
-                const defaultLocation = { lat: 4.9431, lng: 114.9425 };
+            // Function to submit event form via AJAX
+            function submitEventForm(form) {
+                const formData = new FormData(form);
                 
-                const mapOptions = {
-                    center: defaultLocation,
-                    zoom: 15,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-                
-                map = new google.maps.Map(document.getElementById('location-map'), mapOptions);
-                
-                marker = new google.maps.Marker({
-                    position: defaultLocation,
-                    map: map,
-                    draggable: true,
-                    title: 'Event Location'
-                });
-                
-                // If an address is provided, try to geocode it
-                if (address) {
-                    const geocoder = new google.maps.Geocoder();
-                    geocoder.geocode({ address: address }, function(results, status) {
-                        if (status === 'OK' && results[0]) {
-                            map.setCenter(results[0].geometry.location);
-                            marker.setPosition(results[0].geometry.location);
-                        }
-                    });
-                }
-                
-                // Add click listener to map
-                google.maps.event.addListener(map, 'click', function(event) {
-                    marker.setPosition(event.latLng);
+                // Use form's actual action URL
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
                     
-                    // Reverse geocode to get address
-                    const geocoder = new google.maps.Geocoder();
-                    geocoder.geocode({ 'location': event.latLng }, function(results, status) {
-                        if (status === 'OK' && results[0]) {
-                            document.getElementById('event_location').value = results[0].formatted_address;
-                        }
-                    });
+                    // Close the modal
+                    eventModal.style.display = 'none';
+                    
+                    // Show success message
+                    const alertContainer = document.createElement('div');
+                    alertContainer.className = 'alert alert-success temp-alert';
+                    alertContainer.textContent = 'Event saved successfully.';
+                    
+                    // Add to page
+                    const mainWrapper = document.querySelector('.main-wrapper');
+                    mainWrapper.insertBefore(alertContainer, mainWrapper.firstChild);
+                    
+                    // Reload the page to show updated event list
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                    
+                    return true;
+                })
+                .catch(error => {
+                    console.error('Error submitting form:', error);
+                    alert('An error occurred while submitting the form: ' + error.message);
                 });
+            }
+            
+            // Function to submit delete form via AJAX
+            function submitDeleteForm(form) {
+                const formData = new FormData(form);
                 
-                // Add listener for marker drag
-                google.maps.event.addListener(marker, 'dragend', function() {
-                    const geocoder = new google.maps.Geocoder();
-                    geocoder.geocode({ 'location': marker.getPosition() }, function(results, status) {
-                        if (status === 'OK' && results[0]) {
-                            document.getElementById('event_location').value = results[0].formatted_address;
-                        }
-                    });
+                // Use form's actual action URL
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    
+                    // Close the modal
+                    confirmModal.style.display = 'none';
+                    
+                    // Show success message
+                    const alertContainer = document.createElement('div');
+                    alertContainer.className = 'alert alert-success temp-alert';
+                    alertContainer.textContent = 'Event deleted successfully.';
+                    
+                    // Add to page
+                    const mainWrapper = document.querySelector('.main-wrapper');
+                    mainWrapper.insertBefore(alertContainer, mainWrapper.firstChild);
+                    
+                    // Reload the page to show updated event list
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                    
+                    return true;
+                })
+                .catch(error => {
+                    console.error('Error deleting event:', error);
+                    alert('An error occurred while deleting the event: ' + error.message);
                 });
-                
-                // Setup location search autocomplete
-                const locationSearch = document.getElementById('location-search');
-                if (locationSearch) {
-                    const autocomplete = new google.maps.places.Autocomplete(locationSearch);
-                    autocomplete.addListener('place_changed', function() {
-                        const place = autocomplete.getPlace();
-                        
-                        if (!place.geometry || !place.geometry.location) {
-                            alert('No location details available for this search');
-                            return;
-                        }
-                        
-                        // Update map and marker
-                        map.setCenter(place.geometry.location);
-                        map.setZoom(15);
-                        marker.setPosition(place.geometry.location);
-                        
-                        // Update location input field
-                        document.getElementById('event_location').value = place.formatted_address || place.name;
-                    });
-                }
             }
         });
     </script>

@@ -444,6 +444,7 @@ function getBadgeClass($type)
     <script src="<?php echo BASE_URL; ?>/assets/js/dashboard.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/profile-dropdown.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/search.js"></script>
+    <script src="<?php echo BASE_URL; ?>/assets/js/burger.js"></script>
 </body>
 
 </html>
