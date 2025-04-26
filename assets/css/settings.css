@@ -1,9 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
 :root {
-    /* Color Variables */
     --primary-color: #1a365d;
-    --primary-gradient: #2d4a7c; /* Adding a lighter primary color for gradients and buttons */
+    --primary-gradient: #2d4a7c;
     --accent-color: #efbf04;
     --text-dark: #2d3748;
     --text-light: #718096;
@@ -13,25 +12,17 @@
     --info-color: #4299E1;
     --background-light: #f7fafc;
     --border-color: #e2e8f0;
-
-    /* Spacing Variables */
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
     --spacing-md: 1.5rem;
     --spacing-lg: 2rem;
     --spacing-xl: 2.5rem;
-
-    /* Border Radius */
     --radius-sm: 6px;
     --radius-md: 8px;
     --radius-lg: 12px;
     --radius-full: 9999px;
-
-    /* Transitions */
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s ease;
-
-    /* Shadows */
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
@@ -59,7 +50,7 @@ h1 {
     color: var(--text-dark);
 }
 
-/* Settings page layout */
+/* Main layout */
 .settings-page {
     display: flex;
     flex-direction: column;
@@ -69,14 +60,12 @@ h1 {
     padding: var(--spacing-lg) var(--spacing-sm);
 }
 
-/* Settings header with fixed back button */
 .settings-header {
     text-align: center;
     margin-bottom: var(--spacing-lg);
     position: relative;
 }
 
-/* Settings container (card layout) */
 .container {
     display: flex;
     flex-direction: column;
@@ -85,6 +74,7 @@ h1 {
     gap: var(--spacing-lg);
     max-width: 1000px;
     width: 100%;
+    padding: 0 var(--spacing-sm);
 }
 
 .box {
@@ -136,143 +126,11 @@ h1 {
     text-decoration: underline;
 }
 
-/* Icon size */
 .icon {
     font-size: 1.25rem;
 }
 
-/* Responsive tweaks */
-@media (max-width: 768px) {
-    .container {
-        width: 100%;
-        max-width: 100%;
-        padding: 0;
-        gap: var(--spacing-sm);
-        margin-top: 0;
-    }
-
-    .box {
-        width: 100%;
-        margin: 0 auto;
-        border-radius: 0;
-        box-shadow: none;
-        border-left: 4px solid var(--primary-color);
-        border-right: 4px solid var(--primary-color);
-    }
-
-    .box ul {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start; /* or center */
-      }
-
-    .back.fixed-left {
-        position: static;
-        margin-bottom: var(--spacing-sm);
-    }
-
-    .settings-header {
-        margin-bottom: var(--spacing-sm);
-        padding: 1rem 0;
-    }
-
-    .settings-header::after {
-        font-size: 0.9rem;
-        margin-top: 0.25rem;
-    }
-
-    .settings-header h1 {
-        font-size: 1.5rem;
-        margin: 0;
-    }
-    
-    /* Improve form layout on mobile */
-    .form-wrapper {
-        width: 95%;
-        padding: var(--spacing-md);
-        margin: 2rem auto;
-        max-width: 450px;
-    }
-    
-    /* More readable typography on mobile */
-    h1 {
-        font-size: 1.8rem;
-    }
-    
-    .box h3 {
-        font-size: 1.1rem;
-    }
-    
-    /* Better touch targets for mobile */
-    .box a, 
-    .back,
-    .btn-submit {
-        padding: var(--spacing-sm) 0;
-        min-height: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        width: 100%;
-    }
-
-    .box li {
-        margin: var(--spacing-sm) 0;
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: var(--spacing-sm);
-        width: 100%;
-        text-align: left;
-    }
-
-    .box li a {
-        font-size: 1rem;
-    }
-
-    .box li:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-    
-    /* Improve form elements spacing */
-    .password-form input,
-    .btn-submit {
-        padding: 0.85rem;
-    }
-
-    /* Adjust settings page layout */
-    .settings-page {
-        padding: var(--spacing-sm);
-        align-items: stretch;
-    }
-
-    /* Adjust icon size for better visibility */
-    .icon {
-        font-size: 1.5rem;
-        margin-right: var(--spacing-sm);
-    }
-    
-    /* Add smaller screen optimization */
-    @media (max-width: 480px) {
-        .settings-page {
-            padding: var(--spacing-sm) var(--spacing-xs);
-        }
-        
-        .form-wrapper {
-            padding: var(--spacing-md) var(--spacing-sm);
-            width: 100%;
-        }
-
-        .box {
-            padding: var(--spacing-sm);
-        }
-
-        h1 {
-            font-size: 1.5rem;
-        }
-    }
-}
-
-/* Form wrapper for standalone settings pages */
+/* Form wrapper for settings pages */
 .form-wrapper {
     max-width: 500px;
     margin: 5rem auto;
@@ -283,7 +141,6 @@ h1 {
     border: 1px solid var(--border-color);
 }
 
-/* Page heading for forms */
 .form-wrapper h1 {
     text-align: center;
     margin-bottom: var(--spacing-lg);
@@ -292,7 +149,6 @@ h1 {
     color: var(--text-dark);
 }
 
-/* Back button styling */
 .back {
     display: inline-block;
     margin-bottom: var(--spacing-md);
@@ -308,7 +164,6 @@ h1 {
     text-decoration: underline;
 }
 
-/* Message for error or success */
 .form-message {
     text-align: center;
     margin-bottom: var(--spacing-sm);
@@ -316,7 +171,6 @@ h1 {
     color: var(--danger-color);
 }
 
-/* Form layout */
 .password-form .form-group {
     margin-bottom: var(--spacing-md);
 }
@@ -363,7 +217,142 @@ h1 {
     box-shadow: var(--shadow-md);
 }
 
-/* Dark Mode Styling*/
+/* Responsive mobile fix */
+@media (max-width: 768px) {
+    .settings-page {
+        padding: var(--spacing-lg) var(--spacing-sm);
+        align-items: center;
+    }
+
+    .settings-page .container {
+        align-items: stretch !important;
+        padding: 0 1rem !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+      }
+
+    .container {
+        width: 100%;
+        max-width: 100%;
+        padding: 0 var(--spacing-sm);
+        gap: var(--spacing-sm);
+        align-items: stretch !important;
+    }
+
+    .box {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        padding: var(--spacing-md);
+        margin: 0 auto 1rem auto;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .settings-page .container .box {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-sizing: border-box;
+      }
+
+    .box ul {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .settings-header {
+        margin-bottom: var(--spacing-sm);
+        padding: 1rem 0;
+    }
+
+    .settings-header h1 {
+        font-size: 1.5rem;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .box h3 {
+        font-size: 1.1rem;
+    }
+
+    .box li {
+        margin: var(--spacing-sm) 0;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: var(--spacing-sm);
+        width: 100%;
+        text-align: left;
+    }
+
+    .box li:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .form-wrapper {
+        width: 95%;
+        padding: var(--spacing-md);
+        margin: 2rem auto;
+        max-width: 450px;
+    }
+
+    .dashboard-container,
+  .main-content,
+  .main-wrapper,
+  .settings-page,
+  .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 1rem !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+
+  .settings-page .container .box {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 1rem !important;
+    margin-bottom: 1rem !important;
+    box-sizing: border-box !important;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+@media (max-width: 400px) {
+    .box {
+        width: 95%;
+        padding: var(--spacing-sm);
+    }
+
+    .box h3 {
+        font-size: 1rem;
+    }
+
+    .box a {
+        font-size: 0.95rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .form-wrapper {
+        padding: var(--spacing-md) var(--spacing-sm);
+        width: 100%;
+    }
+}
+
+/* Dark Mode */
 body.dark {
     background-color: #0d1117;
     color: #e6edf3;
@@ -412,7 +401,7 @@ body.dark .box a:hover {
     color: var(--accent-color);
 }
 
-/* Checkbox appearance improvements */
+/* Checkbox fixes */
 input[type="checkbox"] {
     width: 18px;
     height: 18px;
@@ -427,25 +416,10 @@ input[type="checkbox"] {
     font-weight: 500;
 }
 
-/* Fix dark mode checkbox label visibility */
 body.dark .form-group label {
-    color: #e6edf3; /* Light text for dark background */
+    color: #e6edf3;
 }
 
-/* Fix checkboxes being invisible in dark mode */
-body.dark input[type="checkbox"] {
-    accent-color: var(--primary-color);
-    background-color: #1e1e1e;
-    border: 1px solid #444;
-}
-
-
-/* Fix dark mode checkbox label visibility */
-body.dark .form-group label {
-    color: #e6edf3; /* Light text for dark background */
-}
-
-/* Fix checkboxes being invisible in dark mode */
 body.dark input[type="checkbox"] {
     accent-color: var(--primary-color);
     background-color: #1e1e1e;
