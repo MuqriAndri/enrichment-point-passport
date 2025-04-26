@@ -621,8 +621,14 @@ function handleEventAPI($eventsDB, $profilesDB) {
             $participantId = $_POST['participant_id'];
             $status = $_POST['status'];
             
+            // Log the request
+            error_log("API: Update participant status request - ID: $participantId, Status: $status");
+            
             // Update participant status
             $result = $eventRepo->updateParticipantStatus($participantId, $status);
+            
+            // Log the result
+            error_log("API: Update result - Success: " . ($result['success'] ? 'true' : 'false') . ", Message: " . $result['message']);
             
             header('Content-Type: application/json');
             echo json_encode([

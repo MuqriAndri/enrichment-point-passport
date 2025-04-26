@@ -241,7 +241,11 @@ class EventRepository {
      */
     public function getEventParticipants($eventId) {
         try {
-            $sql = "SELECT ep.*, u.full_name, u.email 
+            $sql = "SELECT ep.participant_id, ep.event_id, ep.user_id, 
+                           ep.participant_name, ep.participant_email,
+                           ep.participant_phone, ep.registration_date, 
+                           ep.attendance_status, ep.status,
+                           u.full_name, u.user_email, u.student_id
                     FROM events_participants ep
                     JOIN profiles.users u ON ep.user_id = u.user_id
                     WHERE ep.event_id = ?
@@ -274,6 +278,9 @@ class EventRepository {
                 ];
             }
             
+            // Log the update attempt
+            error_log("Updating participant ID $participantId to status $status");
+            
             $stmt = $this->eventsDB->prepare("UPDATE events_participants SET attendance_status = ? WHERE participant_id = ?");
             $stmt->execute([$status, $participantId]);
             
@@ -283,10 +290,23 @@ class EventRepository {
                     'message' => 'Participant status updated successfully'
                 ];
             } else {
-                return [
-                    'success' => false,
-                    'message' => 'Participant not found or status unchanged'
-                ];
+                // Check if the participant exists
+                $stmt = $this->eventsDB->prepare("SELECT COUNT(*) FROM events_participants WHERE participant_id = ?");
+                $stmt->execute([$participantId]);
+                $exists = (int)$stmt->fetchColumn() > 0;
+                
+                if (!$exists) {
+                    return [
+                        'success' => false,
+                        'message' => 'Participant not found'
+                    ];
+                } else {
+                    // Participant exists but status was already set to the requested value
+                    return [
+                        'success' => true,
+                        'message' => 'Status already set to ' . $status
+                    ];
+                }
             }
         } catch (PDOException $e) {
             error_log("Error updating participant status: " . $e->getMessage());

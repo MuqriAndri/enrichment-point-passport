@@ -67,7 +67,7 @@ body {
     flex: 1;
     padding: var(--spacing-lg);
     margin-top: 4rem;
-    overflow-x: visible; /* Allow horizontal overflow */
+    overflow-x: visible;
 }
 
 .main-wrapper {
@@ -75,16 +75,16 @@ body {
     margin: 0 auto;
     width: 100%;
     padding: var(--spacing-lg);
-    overflow: visible; /* Allow content overflow */
+    overflow: visible;
 }
 
 /* Container & Headings */
 .container {
     position: relative;
-    max-width: 100vw; /* Full viewport width */
+    max-width: 100vw;
     margin: 0 auto;
     padding: 0;
-    overflow: visible; /* Allow overflow */
+    overflow: visible;
     width: 100%;
 }
 
@@ -100,7 +100,7 @@ h1 {
     position: relative;
     display: flex;
     justify-content: center;
-    margin: var(--spacing-xl) 0;
+    margin: var(--spacing-xl) 0 0 0;
     min-height: 560px;
     overflow: visible;
     width: 100%;
@@ -121,7 +121,7 @@ h1 {
     transform-style: preserve-3d;
     backface-visibility: hidden;
     transform: scale(0.8) translateX(0);
-    text-align: center !important;
+    text-align: center;
 }
 
 /* Slide positioning classes - with wider spacing for overflow */
@@ -160,6 +160,17 @@ h1 {
     z-index: 1;
 }
 
+/* Hover effects for slides */
+.event-slide.prev:hover,
+.event-slide.next:hover {
+    transform: scale(0.87) translateX(-90%);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.event-slide.next:hover {
+    transform: scale(0.87) translateX(90%);
+}
+
 /* Shine effect */
 .shine-effect {
     position: absolute;
@@ -174,7 +185,7 @@ h1 {
     transition: opacity 0.3s ease;
 }
 
-/* Carousel Navigation - improved for looping */
+/* Carousel Navigation */
 .carousel-nav {
     position: relative;
     display: flex;
@@ -208,7 +219,6 @@ h1 {
     transform: scale(1.1);
 }
 
-/* Remove disabled states for continuous loop */
 .carousel-btn:disabled {
     background-color: var(--primary-color);
     cursor: pointer;
@@ -243,12 +253,11 @@ h1 {
 
 .short-description {
     color: var(--text-light);
-    margin-bottom: var(--spacing-sm);
+    margin: 15px auto;
     font-size: 0.9rem;
     line-height: 1.4;
-    text-align: center !important;
-    padding: 0 15px !important;
-    margin: 15px auto !important;
+    text-align: center;
+    padding: 0 15px;
 }
 
 /* Image container styles */
@@ -310,6 +319,7 @@ h1 {
     transition: all 0.3s ease;
     font-size: 0.9rem;
     text-align: center;
+    text-decoration: none;
 }
 
 .btn-primary {
@@ -333,14 +343,14 @@ h1 {
 .learn-more-btn {
     width: 100%;
     margin: 10px auto 15px;
-    display: block !important;
-    text-align: center !important;
+    display: block;
+    text-align: center;
 }
 
 .btn.btn-secondary {
-    display: inline-block !important;
-    padding: 8px 16px !important;
-    text-align: center !important;
+    display: inline-block;
+    padding: 8px 16px;
+    text-align: center;
 }
 
 /* Hide the image navigation buttons */
@@ -348,53 +358,32 @@ h1 {
     display: none;
 }
 
-/* Modal Styles */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background: white;
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
-    max-width: 500px;
-    width: 90%;
-    position: relative;
-}
-
-.modal-content p {
-    margin-bottom: var(--spacing-md);
-}
-
-.close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--text-light);
-}
-
-#modal-register-btn {
-    width: 100%;
-    padding: var(--spacing-sm);
-    margin-top: var(--spacing-md);
-}
-
-/* Calendar Styles (simplified) */
+/* Calendar Styles */
 .calendar-container {
-    margin-top: var(--spacing-xl);
+    margin-top: 30px;
     padding: 0 var(--spacing-md);
+    position: relative;
+    z-index: 10;
+}
+
+/* Navigation container */
+#carousel-nav-container {
+    display: block;
+    width: 100%;
+    position: static;
+    margin: -20px auto 60px auto;
+    text-align: center;
+    clear: both;
+    z-index: 50;
+}
+
+/* Section divider */
+.section-divider {
+    margin-top: 30px;
+    position: relative;
+    z-index: 10;
+    height: 2px;
+    background-color: #e2e8f0;
 }
 
 /* Responsive Styles */
@@ -432,6 +421,11 @@ h1 {
     h1 {
         font-size: 1.5rem;
         text-align: center;
+    }
+    
+    .event-tooltip {
+        width: 160px;
+        font-size: 0.7rem;
     }
 }
 
@@ -488,55 +482,6 @@ body.dark .indicator.active {
     background-color: var(--accent-color);
 }
 
-body.dark .modal-content {
-    background-color: #1e1e1e;
-    color: #e0e0e0;
-}
-
-body.dark .close-btn {
-    color: #a0a0a0;
-}
-
 body.dark .shine-effect {
     background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
-}
-
-/* Add hover indicator to show clickable slides */
-.event-slide.prev:hover,
-.event-slide.next:hover {
-    transform: scale(0.87) translateX(-90%);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-.event-slide.next:hover {
-    transform: scale(0.87) translateX(90%);
-}
-
-#carousel-nav-container {
-    display: block !important;
-    width: 100% !important;
-    position: static !important; /* Change from relative to static */
-    margin: -20px auto 60px auto !important; /* Negative top margin to pull it up */
-    text-align: center !important;
-    clear: both !important;
-    z-index: 50 !important; /* Higher z-index */
-}
-
-/* Fix the section divider to be below the navigation */
-.section-divider {
-    margin-top: 30px !important;
-    position: relative !important;
-    z-index: 10 !important;
-}
-
-/* Make sure the event slider doesn't have margin that pushes things down */
-.event-slider {
-    margin-bottom: 0 !important;
-}
-
-/* Ensure calendar has sufficient space from navigation */
-.calendar-container {
-    margin-top: 30px !important;
-    position: relative !important; 
-    z-index: 10 !important;
 }

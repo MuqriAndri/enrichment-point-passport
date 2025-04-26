@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
     
     // Redirect to avoid form resubmission
-    header("Location: " . BASE_URL . "/events-details?id=" . $eventId);
+    header("Location: " . BASE_URL . "/events/details/" . $eventId);
     exit();
 }
 

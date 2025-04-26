@@ -311,10 +311,28 @@ if (isset($_SESSION['user_id']) && isset($profilesDB)) {
                                     $description = $event['event_description'] ?? "No description available";
                                     echo "<p class='short-description'>" . htmlspecialchars(substr($description, 0, 100)) . (strlen($description) > 100 ? "..." : "") . "</p>";
                                     
-                                    // Calculate enrichment points (placeholder value until actual implementation)
-                                    $enrichmentPoints = 20; // Default value
+                                    // Format date and time for data attributes
+                                    $eventDate = new DateTime($event['event_date'] ?? $event['created_at']);
+                                    $formattedDate = $eventDate->format('F j, Y');
                                     
-                                    echo "<a href='" . BASE_URL . "/events/details/" . $event['event_id'] . "' class='btn btn-secondary learn-more-btn small-btn'>
+                                    $startTime = new DateTime($event['start_time'] ?? '09:00:00');
+                                    $endTime = new DateTime($event['end_time'] ?? '17:00:00');
+                                    $formattedTime = $startTime->format('h:i A') . ' - ' . $endTime->format('h:i A');
+                                    
+                                    // Get enrichment points from the event data
+                                    $enrichmentPoints = $event['enrichment_points_awarded'] ?? 20;
+                                    
+                                    echo "<a href='" . BASE_URL . "/events/details/" . $event['event_id'] . "' 
+                                        class='btn btn-secondary learn-more-btn small-btn'
+                                        data-id='" . $event['event_id'] . "'
+                                        data-name='" . htmlspecialchars($event['event_name']) . "'
+                                        data-description='" . htmlspecialchars($description) . "'
+                                        data-date='" . $formattedDate . "'
+                                        data-time='" . $formattedTime . "'
+                                        data-location='" . htmlspecialchars($event['event_location'] ?? 'TBD') . "'
+                                        data-points='" . $enrichmentPoints . "'
+                                        data-status='" . $status . "'
+                                    >
                                         Learn More
                                     </a>";
                                     echo "</div>";
@@ -333,30 +351,6 @@ if (isset($_SESSION['user_id']) && isset($profilesDB)) {
                                 echo "</div>";
                             }
                             ?>
-                        </div>
-                        
-                        <div id="event-modal" class="modal" style="display: none;">
-                            <div class="modal-content">
-                                <span class="close-btn">&times;</span>
-                                <h2 id="modal-event-name"></h2>
-                                <p id="modal-event-description"></p>
-                                <p id="modal-event-date"></p>
-                                <p id="modal-event-time"></p>
-                                <p id="modal-event-location"></p>
-                                <p id="modal-event-points"></p>
-                                <div class="modal-actions">
-                                    <button id="modal-register-btn" class="btn btn-primary">Register</button>
-                                    <?php if (isset($_SESSION['role']) && ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'committee')): ?>
-                                    <a id="modal-edit-btn" href="#" class="btn btn-secondary">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M12 20h9"></path>
-                                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                                        </svg>
-                                        Edit Event
-                                    </a>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
                         </div>
                         
                         <!-- Add a divider here -->
@@ -561,67 +555,6 @@ if (isset($_SESSION['user_id']) && isset($profilesDB)) {
                                     }
                                 });
                             }
-
-                            // Learn more button functionality
-                            document.querySelectorAll('.learn-more-btn').forEach(button => {
-                                button.addEventListener('click', () => {
-                                    const modal = document.getElementById('event-modal');
-                                    const modalName = document.getElementById('modal-event-name');
-                                    const modalDescription = document.getElementById('modal-event-description');
-                                    const modalDate = document.getElementById('modal-event-date');
-                                    const modalTime = document.getElementById('modal-event-time');
-                                    const modalLocation = document.getElementById('modal-event-location');
-                                    const modalPoints = document.getElementById('modal-event-points');
-                                    const modalRegisterBtn = document.getElementById('modal-register-btn');
-                                    const modalEditBtn = document.getElementById('modal-edit-btn');
-
-                                    // Populate modal with event details from data attributes
-                                    modalName.textContent = button.getAttribute('data-name');
-                                    modalDescription.textContent = "Description: " + button.getAttribute('data-description');
-                                    modalDate.textContent = "Date: " + button.getAttribute('data-date');
-                                    modalTime.textContent = "Time: " + button.getAttribute('data-time');
-                                    modalLocation.textContent = "Location: " + button.getAttribute('data-location');
-                                    modalPoints.textContent = "Enrichment Points: " + button.getAttribute('data-points');
-
-                                    // Update edit button URL if it exists
-                                    if (modalEditBtn) {
-                                        const eventId = button.getAttribute('data-id');
-                                        if (eventId) {
-                                            modalEditBtn.href = "<?php echo BASE_URL; ?>/events/edit?event_id=" + eventId;
-                                        } else {
-                                            modalEditBtn.style.display = 'none';
-                                        }
-                                    }
-
-                                    // Check event status and update register button behavior
-                                    const status = button.getAttribute('data-status');
-                                    if (status === "Upcoming") {
-                                        modalRegisterBtn.textContent = "Not Available Yet";
-                                        modalRegisterBtn.disabled = true;
-                                        modalRegisterBtn.classList.add('disabled');
-                                    } else {
-                                        modalRegisterBtn.textContent = "Register";
-                                        modalRegisterBtn.disabled = false;
-                                        modalRegisterBtn.classList.remove('disabled');
-                                    }
-
-                                    // Show the modal
-                                    modal.style.display = 'flex';
-                                });
-                            });
-
-                            // Close modal logic
-                            document.querySelector('.close-btn').addEventListener('click', () => {
-                                document.getElementById('event-modal').style.display = 'none';
-                            });
-
-                            // Close modal when clicking outside the modal content
-                            window.addEventListener('click', (e) => {
-                                const modal = document.getElementById('event-modal');
-                                if (e.target === modal) {
-                                    modal.style.display = 'none';
-                                }
-                            });
                         </script>
                         <style>
                             /* Calendar styles from dashboard.css */
@@ -851,49 +784,6 @@ if (isset($_SESSION['user_id']) && isset($profilesDB)) {
                                 color: #52c41a;
                             }
                             
-                            /* Modal improvements */
-                            .modal {
-                                background-color: rgba(0, 0, 0, 0.5);
-                                backdrop-filter: blur(2px);
-                            }
-                            
-                            .modal-content {
-                                max-width: 500px;
-                                width: 90%;
-                                border-radius: 8px;
-                                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-                            }
-                            
-                            .close-btn {
-                                font-size: 1.5rem;
-                                color: #555;
-                                transition: color 0.2s;
-                            }
-                            
-                            .close-btn:hover {
-                                color: #000;
-                            }
-                            
-                            .btn.disabled {
-                                opacity: 0.6;
-                                cursor: not-allowed;
-                            }
-                            
-                            .modal-actions {
-                                display: flex;
-                                justify-content: space-between;
-                                gap: 10px;
-                                margin-top: 20px;
-                            }
-                            
-                            .modal-actions .btn {
-                                flex: 1;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                gap: 8px;
-                            }
-                            
                             /* Other events section */
                             .other-events-section {
                                 margin-top: 3rem;
@@ -988,10 +878,6 @@ if (isset($_SESSION['user_id']) && isset($profilesDB)) {
                                 .event-tooltip {
                                     width: 160px;
                                     font-size: 0.7rem;
-                                }
-                                
-                                .modal-actions {
-                                    flex-direction: column;
                                 }
                             }
                         </style>

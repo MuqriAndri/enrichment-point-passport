@@ -340,17 +340,52 @@ switch ($page) {
                 $eventId = $_POST['event_id'];
                 $event = $eventRepo->getEventById($eventId);
                 
-                if ($event) {
-                    $_SESSION['view_event'] = $event;
-                    $_SESSION['participants'] = $eventRepo->getEventParticipants($eventId);
+                // Check if this is an AJAX request
+                $isAjax = false;
+                if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                    $isAjax = true;
+                } elseif (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+                    $isAjax = true;
+                }
+                
+                if ($isAjax) {
+                    // For AJAX requests, return JSON response
+                    header('Content-Type: application/json');
                     
-                    // Redirect to the same page but with GET instead of POST to prevent form resubmission
-                    header("Location: " . BASE_URL . "/events-management");
+                    if ($event) {
+                        $participants = $eventRepo->getEventParticipants($eventId);
+                        
+                        // Log the data for debugging
+                        error_log("AJAX Participants Response: Event ID: " . $eventId);
+                        error_log("AJAX Participants Response: Participant Count: " . count($participants));
+                        
+                        // Return the data as JSON
+                        echo json_encode([
+                            'success' => true,
+                            'event' => $event,
+                            'participants' => $participants
+                        ]);
+                    } else {
+                        echo json_encode([
+                            'success' => false,
+                            'message' => 'Event not found'
+                        ]);
+                    }
                     exit();
                 } else {
-                    $_SESSION['error'] = 'Event not found';
-                    header("Location: " . BASE_URL . "/events-management");
-                    exit();
+                    // For regular form submissions, use the session-based approach
+                    if ($event) {
+                        $_SESSION['view_event'] = $event;
+                        $_SESSION['participants'] = $eventRepo->getEventParticipants($eventId);
+                        
+                        // Redirect to the same page but with GET instead of POST to prevent form resubmission
+                        header("Location: " . BASE_URL . "/events-management");
+                        exit();
+                    } else {
+                        $_SESSION['error'] = 'Event not found';
+                        header("Location: " . BASE_URL . "/events-management");
+                        exit();
+                    }
                 }
             }
             else {
