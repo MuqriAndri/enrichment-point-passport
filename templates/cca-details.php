@@ -51,6 +51,8 @@ $clubMapping = require 'config/club-mapping.php';
             color: #721c24;
             background-color: #f8d7da;
             border-color: #f5c6cb;
+            font-weight: bold;
+            font-size: 1.1em;
         }
 
         .alert-info {
@@ -608,6 +610,33 @@ $clubMapping = require 'config/club-mapping.php';
     <script src="<?php echo BASE_URL; ?>/assets/js/search.js"></script>
 
     <script>
+        // Check for error parameters in URL and display alerts
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('error')) {
+                const errorType = urlParams.get('error');
+                if (errorType === 'max_clubs') {
+                    // Create a prominent error alert
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-error';
+                    alertDiv.style.fontSize = '1.2em';
+                    alertDiv.style.textAlign = 'center';
+                    alertDiv.style.marginBottom = '20px';
+                    alertDiv.innerHTML = '<strong>ERROR:</strong> You cannot join more than 3 clubs!';
+                    
+                    // Insert at the top of the main content
+                    const tabNavigation = document.querySelector('.tab-navigation');
+                    if (tabNavigation) {
+                        tabNavigation.parentNode.insertBefore(alertDiv, tabNavigation.nextSibling);
+                    }
+                    
+                    // Remove the error parameter from URL to prevent showing the error again on refresh
+                    const newUrl = window.location.pathname;
+                    history.replaceState(null, '', newUrl);
+                }
+            }
+        });
+
         // Activity details modal functionality
         const activityModal = document.getElementById('activity-modal');
         const activityTitle = document.getElementById('activity-title');

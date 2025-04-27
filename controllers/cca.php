@@ -485,17 +485,27 @@ function handleClubAction($ccaDB, $profilesDB) {
                 
                 // Try to submit the club application
                 try {
-                    $joined = $clubRepo->submitClubApplication($clubId, $userId, $studentId, $studentInfo);
-                    $debugResponse['joined'] = $joined;
+                    $joinResult = $clubRepo->submitClubApplication($clubId, $userId, $studentId, $studentInfo);
+                    $debugResponse['join_result'] = $joinResult;
                     
-                    if ($joined) {
+                    if ($joinResult['success']) {
                         $_SESSION['success'] = 'Your application for ' . $clubDetails['club_name'] . ' has been submitted for approval.';
                         $debugResponse['status'] = 'success';
                         $debugResponse['message'] = 'Application submitted';
+                        
+                        // Set a flag for max clubs error
+                        if (isset($joinResult['message']) && strpos($joinResult['message'], 'cannot join more than 3 clubs') !== false) {
+                            $debugResponse['max_clubs_error'] = true;
+                        }
                     } else {
-                        $_SESSION['error'] = 'Failed to submit your application. Please try again.';
+                        $_SESSION['error'] = $joinResult['message'] ?? 'Failed to submit your application. Please try again.';
                         $debugResponse['status'] = 'error';
-                        $debugResponse['message'] = 'Failed to submit';
+                        $debugResponse['message'] = $joinResult['message'] ?? 'Failed to submit';
+                        
+                        // Set a flag for max clubs error
+                        if (isset($joinResult['message']) && strpos($joinResult['message'], 'cannot join more than 3 clubs') !== false) {
+                            $debugResponse['max_clubs_error'] = true;
+                        }
                     }
                 } catch (Exception $e) {
                     error_log("Exception in handleClubAction: " . $e->getMessage());
@@ -530,7 +540,14 @@ function handleClubAction($ccaDB, $profilesDB) {
     if (isset($clubDetails['category']) && isset($clubDetails['club_name']) && 
         isset($clubMapping[$clubDetails['category']][$clubDetails['club_name']])) {
         $clubSlug = $clubMapping[$clubDetails['category']][$clubDetails['club_name']];
-        header("Location: " . BASE_URL . "/cca/" . $clubSlug);
+        
+        // Add error parameter if max clubs error
+        $redirectUrl = BASE_URL . "/cca/" . $clubSlug;
+        if (isset($debugResponse['max_clubs_error']) && $debugResponse['max_clubs_error']) {
+            $redirectUrl .= "?error=max_clubs";
+        }
+        
+        header("Location: " . $redirectUrl);
     } else {
         // Fallback to main CCA page
         header("Location: " . BASE_URL . "/cca");

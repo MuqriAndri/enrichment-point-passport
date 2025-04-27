@@ -73,15 +73,17 @@
 
 <!-- Pass session data to JavaScript -->
 <script>
-    window.sessionUserData = {
-        full_name: "<?php echo isset($_SESSION['full_name']) ? htmlspecialchars($_SESSION['full_name']) : ''; ?>",
-        student_id: "<?php echo isset($_SESSION['student_id']) ? htmlspecialchars($_SESSION['student_id']) : ''; ?>",
-        user_email: "<?php echo isset($_SESSION['user_email']) ? htmlspecialchars($_SESSION['user_email']) : ''; ?>",
-        school: "<?php echo isset($_SESSION['school']) ? htmlspecialchars($_SESSION['school']) : ''; ?>",
-        programme: "<?php echo isset($_SESSION['programme']) ? htmlspecialchars($_SESSION['programme']) : ''; ?>",
-        group_code: "<?php echo isset($_SESSION['group_code']) ? htmlspecialchars($_SESSION['group_code']) : ''; ?>",
-        intake: "<?php echo isset($_SESSION['intake']) ? htmlspecialchars($_SESSION['intake']) : ''; ?>"
-    };
+    window.sessionUserData = <?php 
+        echo json_encode([
+            'full_name' => isset($_SESSION['full_name']) ? $_SESSION['full_name'] : '',
+            'student_id' => isset($_SESSION['student_id']) ? $_SESSION['student_id'] : '',
+            'user_email' => isset($_SESSION['user_email']) ? $_SESSION['user_email'] : '',
+            'school' => isset($_SESSION['school']) ? $_SESSION['school'] : '',
+            'programme' => isset($_SESSION['programme']) ? $_SESSION['programme'] : '',
+            'group_code' => isset($_SESSION['group_code']) ? $_SESSION['group_code'] : '',
+            'intake' => isset($_SESSION['intake']) ? $_SESSION['intake'] : ''
+        ]);
+    ?>;
 </script>
 
 <script src="<?php echo BASE_URL; ?>/assets/js/join-club.js"></script>

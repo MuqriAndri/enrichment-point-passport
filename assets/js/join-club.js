@@ -143,6 +143,14 @@ function showApplicationModal(clubId, clubName) {
         modalTitle.textContent = `Application for ${clubName}`;
     }
     
+    // Check if there's an error message in the URL (from previous submission)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('error') && urlParams.get('error') === 'max_clubs') {
+        // Show error message
+        alert('Error: You cannot join more than 3 clubs!');
+        return; // Don't show the modal
+    }
+    
     // Pre-fill form from session data if available
     const form = modal.querySelector('#clubApplicationForm');
     if (form) {
