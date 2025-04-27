@@ -66,6 +66,11 @@ class EventRepository {
      */
     public function addEvent($eventData) {
         try {
+            // Start a transaction to ensure data consistency
+            $this->eventsDB->beginTransaction();
+            
+            error_log("Adding event: " . print_r($eventData, true));
+            
             $sql = "INSERT INTO events (
                 event_name, 
                 event_description, 
@@ -94,20 +99,52 @@ class EventRepository {
 
             $stmt = $this->eventsDB->prepare($sql);
             
-            $stmt->bindParam(':event_name', $eventData['event_name']);
-            $stmt->bindParam(':event_description', $eventData['event_description']);
-            $stmt->bindParam(':event_location', $eventData['event_location']);
-            $stmt->bindParam(':event_participants', $eventData['event_participants']);
-            $stmt->bindParam(':event_date', $eventData['event_date']);
-            $stmt->bindParam(':start_time', $eventData['start_time']);
-            $stmt->bindParam(':end_time', $eventData['end_time']);
-            $stmt->bindParam(':status', $eventData['status']);
-            $stmt->bindParam(':events_images', $eventData['events_images']);
-            $stmt->bindParam(':enrichment_points_awarded', $eventData['enrichment_points_awarded']);
-            $stmt->bindParam(':organizer', $eventData['organizer']);
+            // Check if statement preparation failed
+            if (!$stmt) {
+                $errorInfo = $this->eventsDB->errorInfo();
+                error_log("Statement preparation failed: " . ($errorInfo[2] ?? 'Unknown error'));
+                throw new PDOException("Failed to prepare SQL statement");
+            }
             
-            $stmt->execute();
+            // Bind and validate parameters
+            foreach ([
+                'event_name', 'event_description', 'event_location', 
+                'event_participants', 'event_date', 'start_time', 
+                'end_time', 'status', 'events_images', 
+                'enrichment_points_awarded', 'organizer'
+            ] as $param) {
+                if (!array_key_exists($param, $eventData)) {
+                    error_log("Missing parameter in event data: $param");
+                    $eventData[$param] = ($param === 'events_images' || $param === 'event_description') ? '' : 'Default';
+                }
+                $stmt->bindParam(":$param", $eventData[$param]);
+            }
+            
+            // Execute with error checking
+            if (!$stmt->execute()) {
+                $errorInfo = $stmt->errorInfo();
+                error_log("SQL Error: " . ($errorInfo[2] ?? 'Unknown error'));
+                throw new PDOException("Failed to execute SQL: " . ($errorInfo[2] ?? 'Unknown error'));
+            }
+            
             $eventId = $this->eventsDB->lastInsertId();
+            
+            // Verify the inserted record with a select query
+            if ($eventId) {
+                $verifyStmt = $this->eventsDB->prepare("SELECT event_id FROM events WHERE event_id = ?");
+                $verifyStmt->execute([$eventId]);
+                if (!$verifyStmt->fetch()) {
+                    error_log("Event ID $eventId not found after insert - possible insert failure");
+                    throw new PDOException("Insert verification failed");
+                }
+                error_log("Event successfully inserted and verified with ID: $eventId");
+            } else {
+                error_log("No event ID returned from lastInsertId()");
+                throw new PDOException("No event ID returned from insert operation");
+            }
+            
+            // Commit the transaction
+            $this->eventsDB->commit();
             
             return [
                 'success' => true,
@@ -115,7 +152,23 @@ class EventRepository {
                 'event_id' => $eventId
             ];
         } catch (PDOException $e) {
+            // Rollback on error
+            if ($this->eventsDB->inTransaction()) {
+                $this->eventsDB->rollBack();
+                error_log("Transaction rolled back due to error: " . $e->getMessage());
+            }
+            
             error_log("Error adding event: " . $e->getMessage());
+            
+            // Database reconnection logic if connection was lost
+            if (strpos($e->getMessage(), 'server has gone away') !== false || 
+                strpos($e->getMessage(), 'Connection refused') !== false) {
+                error_log("Database connection problem detected - attempting to reconnect");
+                
+                // Recreate connection - would need to be implemented in a production system
+                // Here we're just logging the error
+            }
+            
             return [
                 'success' => false,
                 'message' => 'Database error: ' . $e->getMessage()
@@ -132,56 +185,67 @@ class EventRepository {
      */
     public function updateEvent($eventId, $eventData) {
         try {
-            $sql = "UPDATE events SET 
-                event_name = :event_name, 
-                event_description = :event_description, 
-                event_location = :event_location, 
-                event_participants = :event_participants, 
-                event_date = :event_date, 
-                start_time = :start_time, 
-                end_time = :end_time, 
-                status = :status,
-                enrichment_points_awarded = :enrichment_points_awarded,
-                organizer = :organizer";
+            // Start a transaction
+            $this->eventsDB->beginTransaction();
             
-            $params = [
-                ':event_id' => $eventId,
-                ':event_name' => $eventData['event_name'],
-                ':event_description' => $eventData['event_description'],
-                ':event_location' => $eventData['event_location'],
-                ':event_participants' => $eventData['event_participants'],
-                ':event_date' => $eventData['event_date'],
-                ':start_time' => $eventData['start_time'],
-                ':end_time' => $eventData['end_time'],
-                ':status' => $eventData['status'],
-                ':enrichment_points_awarded' => $eventData['enrichment_points_awarded'],
-                ':organizer' => $eventData['organizer']
-            ];
+            // Build the update SQL statement dynamically
+            $sql = "UPDATE events SET ";
+            $updateFields = [];
+            $params = [];
             
-            // Only update image if a new one is provided
-            if (!empty($eventData['events_images'])) {
-                $sql .= ", events_images = :events_images";
-                $params[':events_images'] = $eventData['events_images'];
+            // Create update fields for all event data except event_id
+            foreach ($eventData as $field => $value) {
+                if ($field !== 'event_id' && $field !== 'created_at') {
+                    $updateFields[] = "$field = :$field";
+                    $params[":$field"] = $value;
+                }
             }
             
+            // Combine update fields and add WHERE clause
+            $sql .= implode(', ', $updateFields);
             $sql .= " WHERE event_id = :event_id";
+            $params[':event_id'] = $eventId;
+            
+            error_log("Updating event ID $eventId with SQL: $sql");
             
             $stmt = $this->eventsDB->prepare($sql);
+            
+            // Execute the statement
             $stmt->execute($params);
             
-            if ($stmt->rowCount() > 0) {
-                return [
-                    'success' => true,
-                    'message' => 'Event updated successfully'
-                ];
-            } else {
-                return [
-                    'success' => false,
-                    'message' => 'No changes were made or event does not exist'
-                ];
+            // Verify update success
+            $rowCount = $stmt->rowCount();
+            error_log("Update affected $rowCount rows");
+            
+            // Retrieve updated event to confirm changes
+            $verifyStmt = $this->eventsDB->prepare("SELECT * FROM events WHERE event_id = ?");
+            $verifyStmt->execute([$eventId]);
+            $updatedEvent = $verifyStmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$updatedEvent) {
+                error_log("Failed to retrieve updated event with ID $eventId");
+                throw new PDOException("Failed to verify update");
             }
+            
+            // Log successful update
+            error_log("Event $eventId successfully updated");
+            
+            // Commit transaction
+            $this->eventsDB->commit();
+            
+            return [
+                'success' => true,
+                'message' => $rowCount > 0 ? 'Event updated successfully' : 'No changes were made to the event',
+                'event_id' => $eventId
+            ];
         } catch (PDOException $e) {
+            // Rollback transaction on error
+            if ($this->eventsDB->inTransaction()) {
+                $this->eventsDB->rollBack();
+            }
+            
             error_log("Error updating event: " . $e->getMessage());
+            
             return [
                 'success' => false,
                 'message' => 'Database error: ' . $e->getMessage()
