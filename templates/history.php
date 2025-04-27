@@ -14,23 +14,8 @@ if (isset($_SESSION['user_id'])) {
     $isDark = $user && $user['dark_mode'];
 }
 
-// Load the controller
-require_once 'controllers/history-handler.php';
-
-// Get history data with error handling
-try {
-    // Default to first semester if not specified
-    $selectedSemester = isset($_GET['semester']) ? $_GET['semester'] : '1';
-    $historyData = getHistoryData($ccaDB, $profilesDB, $_SESSION['student_id'], $selectedSemester);
-    
-    // Extract all variables for easier access in the template
-    extract($historyData);
-} catch (Exception $e) {
-    error_log("History Template: Error getting history data: " . $e->getMessage());
-    $overallPoints = 0;
-    $clubHistory = [];
-    $selectedSemester = '1';
-}
+// Get selected semester from URL or default to 1
+$selectedSemester = isset($_GET['semester']) ? $_GET['semester'] : '1';
 ?>
 
 <!DOCTYPE html>
@@ -116,9 +101,9 @@ try {
             </div>
         </nav>
 
-        
 
-<div class="mobile-menu-overlay">
+
+        <div class="mobile-menu-overlay">
             <div class="mobile-menu-content">
                 <div class="mobile-menu-header">
                     <div class="user-info">
@@ -226,7 +211,7 @@ try {
 
                 <div class="container">
                     <header>
-                        <h1>HISTORY OVERVIEW</h1>
+                        <h1>History Overview</h1>
                         <select id="semesterSelect">
                             <option value="1" <?php echo $selectedSemester == '1' ? 'selected' : ''; ?>>SEMESTER 1</option>
                             <option value="2" <?php echo $selectedSemester == '2' ? 'selected' : ''; ?>>SEMESTER 2</option>
@@ -237,9 +222,8 @@ try {
                         </select>
                     </header>
 
-                    <!-- Table for History Overview -->
-                    <table class="history-table">
-                        <caption>History Overview</caption>
+                    <!-- Table for History Overview (Semester 1) -->
+                    <table class="history-table" id="semester-1-table" <?php echo $selectedSemester != '1' ? 'style="display: none;"' : ''; ?>>
                         <thead>
                             <tr>
                                 <th>Club Name</th>
@@ -249,42 +233,213 @@ try {
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if (empty($clubHistory)): ?>
-                                <tr>
-                                    <td colspan="4" class="no-data">No club history available for this semester</td>
-                                </tr>
-                            <?php else: ?>
-                                <?php 
-                                // Display up to 3 rows from the club history
-                                $count = 0;
-                                foreach ($clubHistory as $club): 
-                                    if ($count >= 3) break;
-                                ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($club['club_name'] ?? 'N/A'); ?></td>
-                                    <td><?php echo htmlspecialchars($club['ep_earned'] ?? '0'); ?></td>
-                                    <td><?php echo htmlspecialchars($club['status'] ?? 'Inactive'); ?></td>
-                                    <td><?php echo htmlspecialchars($club['role'] ?? 'Member'); ?></td>
-                                </tr>
-                                <?php 
-                                    $count++;
-                                endforeach; 
-                                
-                                // Add empty rows if less than 3 clubs
-                                for ($i = $count; $i < 3; $i++): 
-                                ?>
-                                <tr>
-                                    <td>-</td>
-                                    <td>0</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                </tr>
-                                <?php endfor; ?>
-                            <?php endif; ?>
+                            <tr>
+                                <td>COPS Club</td>
+                                <td>15</td>
+                                <td>Completed</td>
+                                <td>Member</td>
+                            </tr>
+                            <tr>
+                                <td>Badminton Club</td>
+                                <td>10</td>
+                                <td>Completed</td>
+                                <td>Member</td>
+                            </tr>
+                            <tr>
+                                <td>Music Club</td>
+                                <td>8</td>
+                                <td>Completed</td>
+                                <td>Member</td>
+                            </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="4" style="text-align: center; font-weight: bold;">Overall Points: <?php echo htmlspecialchars($overallPoints); ?></td>
+                                <td colspan="4" style="text-align: center; font-weight: bold;">Overall Points: 33</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <!-- Table for History Overview (Semester 2) -->
+                    <table class="history-table" id="semester-2-table" <?php echo $selectedSemester != '2' ? 'style="display: none;"' : ''; ?>>
+                        <thead>
+                            <tr>
+                                <th>Club Name</th>
+                                <th>EP Earned</th>
+                                <th>Status</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>COPS Club</td>
+                                <td>15</td>
+                                <td>Completed</td>
+                                <td>Treasurer</td>
+                            </tr>
+                            <tr>
+                                <td>Esports Club</td>
+                                <td>7</td>
+                                <td>Completed</td>
+                                <td>Member</td>
+                            </tr>
+                            <tr>
+                                <td>-</td>
+                                <td>0</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" style="text-align: center; font-weight: bold;">Overall Points: 22</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <!-- Table for History Overview (Semester 3) -->
+                    <table class="history-table" id="semester-3-table" <?php echo $selectedSemester != '3' ? 'style="display: none;"' : ''; ?>>
+                        <thead>
+                            <tr>
+                                <th>Club Name</th>
+                                <th>EP Earned</th>
+                                <th>Status</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>First Aid</td>
+                                <td>10</td>
+                                <td>Completed</td>
+                                <td>Member</td>
+                            </tr>
+                            <tr>
+                                <td>COPS Club</td>
+                                <td>15</td>
+                                <td>Completed</td>
+                                <td>Secretary</td>
+                            </tr>
+                            <tr>
+                                <td>-</td>
+                                <td>0</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" style="text-align: center; font-weight: bold;">Overall Points: 25</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <!-- Table for History Overview (Semester 4) -->
+                    <table class="history-table" id="semester-4-table" <?php echo $selectedSemester != '4' ? 'style="display: none;"' : ''; ?>>
+                        <thead>
+                            <tr>
+                                <th>Club Name</th>
+                                <th>EP Earned</th>
+                                <th>Status</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>COPS Club</td>
+                                <td>18</td>
+                                <td>Completed</td>
+                                <td>Vice President</td>
+                            </tr>
+                            <tr>
+                                <td>Korean Culture Club</td>
+                                <td>8</td>
+                                <td>Completed</td>
+                                <td>Member</td>
+                            </tr>
+                            <tr>
+                                <td>-</td>
+                                <td>0</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" style="text-align: center; font-weight: bold;">Overall Points: 26</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <!-- Table for History Overview (Semester 5) -->
+                    <table class="history-table" id="semester-5-table" <?php echo $selectedSemester != '5' ? 'style="display: none;"' : ''; ?>>
+                        <thead>
+                            <tr>
+                                <th>Club Name</th>
+                                <th>EP Earned</th>
+                                <th>Status</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Chess Club</td>
+                                <td>6</td>
+                                <td>Completed</td>
+                                <td>Member</td>
+                            </tr>
+                            <tr>
+                                <td>COPS Club</td>
+                                <td>20</td>
+                                <td>Completed</td>
+                                <td>President</td>
+                            </tr>
+                            <tr>
+                                <td>-</td>
+                                <td>0</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" style="text-align: center; font-weight: bold;">Overall Points: 26</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <!-- Table for History Overview (Semester 6) -->
+                    <table class="history-table" id="semester-6-table" <?php echo $selectedSemester != '6' ? 'style="display: none;"' : ''; ?>>
+                        <thead>
+                            <tr>
+                                <th>Club Name</th>
+                                <th>EP Earned</th>
+                                <th>Status</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>COPS Club</td>
+                                <td>20</td>
+                                <td>Active</td>
+                                <td>President</td>
+                            </tr>
+                            <tr>
+                                <td>Art Club</td>
+                                <td>7</td>
+                                <td>Active</td>
+                                <td>Member</td>
+                            </tr>
+                            <tr>
+                                <td>Frisbee Club</td>
+                                <td>5</td>
+                                <td>Active</td>
+                                <td>Member</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" style="text-align: center; font-weight: bold;">Overall Points: 32</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -328,7 +483,19 @@ try {
         // Handle semester change event
         document.getElementById('semesterSelect').addEventListener('change', function() {
             const semester = this.value;
-            window.location.href = '<?php echo BASE_URL; ?>/history?semester=' + semester;
+
+            // Hide all tables
+            document.querySelectorAll('.history-table').forEach(table => {
+                table.style.display = 'none';
+            });
+
+            // Show selected semester table
+            document.getElementById('semester-' + semester + '-table').style.display = '';
+
+            // Update URL without reloading the page
+            const url = new URL(window.location.href);
+            url.searchParams.set('semester', semester);
+            window.history.pushState({}, '', url);
         });
     </script>
 </body>
