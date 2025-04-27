@@ -1157,7 +1157,6 @@ body {
 
 /* Mobile (576px and below) */
 @media screen and (max-width: 576px) {
-
     .stats-container,
     .quick-stats {
         grid-template-columns: 1fr;
@@ -1185,6 +1184,174 @@ body {
     .dropdown-menu {
         width: calc(100vw - var(--spacing-lg));
         right: calc(var(--spacing-sm) * -1);
+    }
+}
+
+/* Very small screens */
+@media screen and (max-width: 375px) {
+    .main-wrapper {
+        padding: 0.5rem;
+    }
+    
+    .welcome-content h1 {
+        font-size: 1.3rem;
+    }
+    
+    .welcome-content p {
+        font-size: 0.85rem;
+    }
+    
+    .circular-progress {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .percentage {
+        font-size: 0.85rem;
+    }
+    
+    .percentage .points {
+        font-size: 1.2rem;
+    }
+    
+    .points-info h3 {
+        font-size: 1rem;
+    }
+    
+    .points-info p {
+        font-size: 0.85rem;
+    }
+    
+    .primary-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .stat-card {
+        padding: 0.75rem;
+    }
+    
+    .stat-card .stat-title {
+        font-size: 0.85rem;
+    }
+    
+    .stat-card .stat-value {
+        font-size: 1.25rem;
+    }
+    
+    .stat-card .stat-description {
+        font-size: 0.8rem;
+    }
+    
+    .category-card {
+        padding: 0.75rem;
+    }
+    
+    .category-card h4 {
+        font-size: 1rem;
+    }
+    
+    .category-card p {
+        font-size: 0.8rem;
+    }
+    
+    .section-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .activity-item {
+        padding: 0.75rem;
+    }
+    
+    .activity-details h4 {
+        font-size: 0.9rem;
+    }
+    
+    .activity-details p {
+        font-size: 0.8rem;
+    }
+    
+    .activity-icon {
+        width: 38px;
+        height: 38px;
+    }
+    
+    .calendar-day {
+        width: 35px;
+        height: 35px;
+        font-size: 0.8rem;
+    }
+    
+    .event-item {
+        padding: 0.75rem;
+    }
+    
+    .event-date {
+        min-width: 40px;
+    }
+    
+    .event-date .day {
+        font-size: 1.1rem;
+    }
+    
+    .event-date .month {
+        font-size: 0.7rem;
+    }
+    
+    .event-details h4 {
+        font-size: 0.9rem;
+    }
+    
+    .event-details p {
+        font-size: 0.8rem;
+    }
+    
+    .register-btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+    
+    .club-item {
+        padding: 0.75rem;
+    }
+    
+    .club-details h4 {
+        font-size: 0.9rem;
+    }
+    
+    .club-details p {
+        font-size: 0.8rem;
+    }
+    
+    .view-club-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .dropdown-menu {
+        width: 220px;
+        padding: 0.75rem;
+    }
+    
+    .dropdown-item {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+    
+    .footer {
+        padding: 1rem 0;
+    }
+    
+    .icon-container span {
+        font-size: 0.8rem;
+    }
+    
+    .footer-content p {
+        font-size: 0.75rem;
+    }
+    
+    .mobile-menu-content {
+        width: 250px;
     }
 }
 

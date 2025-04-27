@@ -596,21 +596,20 @@ body.modal-open {
 
 @media (max-width: 400px) {
     .box {
-        padding: var(--spacing-sm);
+        width: 100%;
     }
     
     .box h3 {
-        font-size: 1.1rem;
-        gap: 0.75rem;
+        font-size: 1.2rem;
+        line-height: 1.4;
     }
     
     .box a {
-        font-size: 0.9rem;
-        padding: var(--spacing-xs) var(--spacing-sm);
+        padding: 0.8rem;
     }
     
     .box a:hover {
-        padding-right: calc(var(--spacing-sm) + 20px);
+        padding-left: 1rem;
     }
     
     h1 {
@@ -618,36 +617,125 @@ body.modal-open {
     }
     
     .form-wrapper {
-        padding: var(--spacing-sm);
+        padding: 1.5rem;
     }
     
     .icon {
-        width: 24px;
-        height: 24px;
-        padding: 8px;
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
     }
     
     .modal-header {
-        padding: var(--spacing-md);
+        padding: 0.8rem 1rem;
     }
     
     .modal-header h2 {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
     }
     
     .modal-form {
-        padding: var(--spacing-md);
+        padding: 1rem;
     }
     
     .modal-actions {
         flex-direction: column;
-        margin-top: var(--spacing-lg);
     }
     
     .btn-cancel, .modal-form .btn-submit {
         width: 100%;
-        min-width: auto;
-        padding: 0.875rem;
+        margin-top: 0.5rem;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 375px) {
+    .settings-page {
+        padding: 1rem 0.5rem;
+    }
+    
+    .container {
+        padding: 0.75rem;
+    }
+    
+    .settings-header {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    
+    .settings-header h1 {
+        font-size: 1.3rem;
+    }
+    
+    .box {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .box h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.6rem;
+    }
+    
+    .box ul {
+        margin-top: 0.6rem;
+    }
+    
+    .box li {
+        margin-bottom: 0.25rem;
+    }
+    
+    .box a {
+        padding: 0.7rem;
+        font-size: 0.85rem;
+    }
+    
+    .icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+        margin-right: 0.5rem;
+    }
+    
+    .form-wrapper h1 {
+        font-size: 1.3rem;
+    }
+    
+    .back {
+        font-size: 0.85rem;
+        padding: 0.6rem 1rem;
+    }
+    
+    .password-form label {
+        font-size: 0.9rem;
+    }
+    
+    .password-form input {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
+    
+    .btn-submit {
+        padding: 0.7rem 1.25rem;
+        font-size: 0.9rem;
+    }
+    
+    .modal-content {
+        max-width: 95%;
+    }
+    
+    .help-section h3 {
+        font-size: 1.2rem;
+    }
+    
+    .faq-item h4 {
+        font-size: 1rem;
+    }
+    
+    .help-contact-btn,
+    .help-manual-btn {
+        padding: 0.7rem 1rem;
+        font-size: 0.85rem;
     }
 }
 

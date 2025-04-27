@@ -7,7 +7,7 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, height=device-height">
-    <title>Politeknik Brunei Enrichment Point Passport</title>
+    <title>Enrichment Point Passport</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/login.css">
     <link rel="icon" href="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/logo/politeknik-brunei-logo-2.png" type="image/png">
 </head>
@@ -22,7 +22,7 @@ session_start();
     <div class="container">
         <div class="left-content">
             <img src="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/logo/politeknik-brunei-logo.png" alt="Politeknik Brunei Logo" class="logo">
-            <h1 class="title">POLITEKNIK<br>ENRICHMENT POINT<br>PASSPORT</h1>
+            <h1 class="title">POLITEKNIK BRUNEI<br>ENRICHMENT POINT<br>PASSPORT</h1>
             <p class="subtitle">Enriching experiences, evaluating your success.</p>
         </div>
 
@@ -30,13 +30,13 @@ session_start();
             <form action="<?php echo BASE_URL; ?>/index.php" method="POST">
                 <?php if (isset($_SESSION['error'])): ?>
                     <div class="error-message">
-                        <?php 
-                            echo $_SESSION['error'];
-                            unset($_SESSION['error']);
+                        <?php
+                        echo $_SESSION['error'];
+                        unset($_SESSION['error']);
                         ?>
                     </div>
                 <?php endif; ?>
-                
+
                 <div>
                     <label for="user_ic">IC Number</label>
                     <input type="text" id="user_ic" name="user_ic" placeholder="Enter your IC Number" required>
@@ -45,7 +45,6 @@ session_start();
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" placeholder="Enter your password" required>
                 </div>
-                <a href="<?php echo BASE_URL; ?>/forgot-password" class="forgot-link">Forgotten your password?</a>
                 <button type="submit" class="login-btn">Log In</button>
             </form>
         </div>

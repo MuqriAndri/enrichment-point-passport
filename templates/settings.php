@@ -66,7 +66,7 @@ $preferences = $stmt->fetch(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enrichment Point Passport - Settings</title>
+    <title>Settings - Politeknik Brunei</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/settings.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/burger.css">

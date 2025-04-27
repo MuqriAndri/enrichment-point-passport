@@ -5,6 +5,15 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Check for dark mode
+$isDark = false;
+if (isset($_SESSION['user_id'])) {
+    $stmt = $pdo->prepare("SELECT dark_mode FROM users WHERE user_id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $user = $stmt->fetch();
+    $isDark = $user && $user['dark_mode'];
+}
+
 // Get club location data from query parameters
 $clubId = $_GET['club_id'] ?? '';
 $locationName = $_GET['location'] ?? 'Unknown Location';
@@ -23,15 +32,52 @@ if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enrichment Point Passport - Attendance Check-in</title>
+    <title>Attendance Check-in - Politeknik Brunei</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/cca-details.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/cca-location.css">
+    <link rel="icon" href="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/logo/politeknik-brunei-logo-2.png" type="image/png">
     <!-- Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXXh-Lwbrw-UKAC9YsrBq09vyKNmG0Lzo&libraries=places,geometry" async defer></script>
     
     <!-- Custom styles to ensure button text stays white -->
     <style>
+        /* Dark mode styles for notification modal */
+        body.dark .notification-content {
+            background-color: #1e293b;
+            color: #e6edf3;
+        }
+        
+        body.dark #notification-message {
+            color: #a3adc2;
+        }
+        
+        body.dark .notification-close {
+            color: #a3adc2;
+        }
+        
+        body.dark .notification-close:hover {
+            color: #e6edf3;
+        }
+        
+        body.dark .alert-success {
+            color: #a7f3d0;
+            background-color: #064e3b;
+            border-color: #10b981;
+        }
+        
+        body.dark .alert-error {
+            color: #fecdd3;
+            background-color: #7f1d1d;
+            border-color: #f43f5e;
+        }
+        
+        body.dark .alert-info {
+            color: #a5f3fc;
+            background-color: #0e7490;
+            border-color: #06b6d4;
+        }
+        
         .white-text-button,
         .white-text-button:hover,
         .white-text-button:active,
@@ -191,7 +237,7 @@ if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI
     </style>
 </head>
 
-<body>
+<body class="<?php echo $isDark ? 'dark' : ''; ?>">
     <div class="dashboard-container">
         <!-- Top Navigation Bar -->
         <nav class="top-nav">
@@ -1447,6 +1493,28 @@ if (preg_match('/^([a-z0-9-]+)-location$/', trim(parse_url($_SERVER['REQUEST_URI
                 showNotification('info', 'Information', '<?php echo addslashes($_SESSION['info']); ?>');
                 <?php unset($_SESSION['info']); ?>
             <?php endif; ?>
+        });
+    </script>
+
+    <!-- Add this right before the closing body tag -->
+    <script>
+        // Check if dark mode was set in sessionStorage by other pages
+        document.addEventListener('DOMContentLoaded', function() {
+            const body = document.body;
+            if (sessionStorage.getItem('darkMode') === 'true' && !body.classList.contains('dark')) {
+                body.classList.add('dark');
+            }
+            
+            // Listen for dark mode changes from other pages
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'darkMode') {
+                    if (e.newValue === 'true') {
+                        body.classList.add('dark');
+                    } else {
+                        body.classList.remove('dark');
+                    }
+                }
+            });
         });
     </script>
 </body>

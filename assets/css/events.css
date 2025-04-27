@@ -535,6 +535,67 @@ h1 {
     }
 }
 
+/* Very small screens */
+@media (max-width: 375px) {
+    .main-wrapper {
+        padding: var(--spacing-xs);
+    }
+    
+    .event-slide {
+        width: 240px;
+    }
+    
+    .event-slide.prev {
+        transform: scale(0.75) translateX(-70%);
+    }
+    
+    .event-slide.next {
+        transform: scale(0.75) translateX(70%);
+    }
+    
+    .image-box {
+        height: 130px;
+    }
+    
+    .carousel-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+    
+    h1 {
+        font-size: 1.3rem;
+    }
+    
+    .event-slide h2 {
+        font-size: 1.1rem;
+    }
+    
+    .short-description {
+        font-size: 0.8rem;
+        line-height: 1.4;
+        margin: 10px auto;
+    }
+    
+    .event-status {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .btn {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.8rem;
+    }
+    
+    .calendar-container h2 {
+        font-size: 1.2rem;
+    }
+    
+    .event-slider {
+        min-height: 500px;
+    }
+}
+
 /* Dark Mode Styles */
 body.dark {
     background-color: #121212;

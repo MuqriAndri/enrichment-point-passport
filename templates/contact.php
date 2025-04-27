@@ -1,5 +1,6 @@
 <?php
 session_start();
+$isDark = isset($_SESSION['dark_mode']) && $_SESSION['dark_mode'];
 
 if (!defined('BASE_URL')) {
     define('BASE_URL', '/enrichment-point-passport');
@@ -11,18 +12,24 @@ if (!defined('BASE_URL')) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Politeknik Brunei Enrichment Point Passport</title>
+    <title>Contact - Politeknik Brunei</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/settings.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/contact.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/logo/politeknik-brunei-logo-2.png" type="image/png">
 </head>
 
-<body class="<?php echo isset($_SESSION['dark_mode']) && $_SESSION['dark_mode'] ? 'dark' : ''; ?>">
+<body class="<?php echo $isDark ? 'dark' : ''; ?>">
     <nav class="nav">
         <a href="https://pb.edu.bn" target="_blank" rel="noopener noreferrer">PB Website</a>
         <a href="<?php echo BASE_URL; ?>/about">About</a>
         <a href="<?php echo BASE_URL; ?>/contact">Contact</a>
+        <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"></circle>
+                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+            </svg>
+        </button>
     </nav>
 
     <div class="main-container">
@@ -118,6 +125,26 @@ if (!defined('BASE_URL')) {
             <p>Empowering students through enrichment and achievement tracking</p>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const body = document.body;
+            
+            darkModeToggle.addEventListener('click', function() {
+                body.classList.toggle('dark');
+                const isDark = body.classList.contains('dark');
+                
+                // Save preference to sessionStorage for now
+                sessionStorage.setItem('darkMode', isDark ? 'true' : 'false');
+            });
+            
+            // Check if dark mode was previously set
+            if (sessionStorage.getItem('darkMode') === 'true') {
+                body.classList.add('dark');
+            }
+        });
+    </script>
 </body>
 
 </html>

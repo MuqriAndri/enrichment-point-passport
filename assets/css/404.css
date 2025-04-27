@@ -5,6 +5,44 @@
     --accent-color: #efbf04;
     --text-dark: #2d3748;
     --text-light: #718096;
+    --bg-light: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    --bg-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+/* Dark mode styles */
+body.dark {
+    background: var(--bg-dark);
+    color: #e6edf3;
+}
+
+body.dark .error-title,
+body.dark .error-code {
+    color: #e6edf3;
+}
+
+body.dark .error-message {
+    color: #8b949e;
+}
+
+body.dark .back-button {
+    background-color: #1e40af;
+    color: #e6edf3;
+}
+
+body.dark .back-button:hover {
+    background-color: #1e3a8a;
+}
+
+body.dark .footer {
+    background-color: rgba(15, 23, 42, 0.8);
+}
+
+body.dark .footer p {
+    color: #8b949e;
+}
+
+body.dark .dark-mode-toggle {
+    color: var(--accent-color);
 }
 
 html, body {
@@ -211,6 +249,30 @@ html, body {
     animation: fadeIn 0.8s ease-out forwards;
 }
 
+/* Dark mode toggle button */
+.dark-mode-toggle {
+    background: none;
+    border: none;
+    color: white;
+    margin-left: 1.5rem;
+    cursor: pointer;
+    padding: 0.3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
 @media screen and (max-width: 768px) {
     .error-container {
         padding: 1rem;
@@ -252,5 +314,78 @@ html, body {
     .footer-icons {
         flex-direction: column;
         gap: 2rem;
+    }
+
+    .dark-mode-toggle {
+        margin-left: 1rem;
+        padding: 0.2rem;
+    }
+    
+    .dark-mode-toggle svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Very small screens */
+@media screen and (max-width: 375px) {
+    .error-container {
+        padding: 0.75rem;
+        margin: 0.75rem auto;
+    }
+
+    .error-content {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .error-code {
+        font-size: 3.5rem;
+    }
+
+    .error-title {
+        font-size: 1.3rem;
+        margin: 0.75rem 0;
+    }
+
+    .error-message {
+        font-size: 0.9rem;
+        margin: 1.25rem 0;
+        line-height: 1.5;
+    }
+
+    .button-container {
+        margin-top: 1.25rem;
+    }
+
+    .back-button {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .logo {
+        width: 120px;
+        margin-bottom: 1rem;
+    }
+
+    .footer {
+        padding: 1.5rem 0;
+    }
+
+    .footer-content p {
+        font-size: 0.85rem;
+    }
+
+    .icon-container span {
+        font-size: 0.9rem;
+    }
+
+    .nav {
+        padding: 0.8rem 1.5rem;
+    }
+
+    .nav a {
+        margin-left: 0.75rem;
+        margin-right: 0.75rem;
+        font-size: 0.85rem;
     }
 }

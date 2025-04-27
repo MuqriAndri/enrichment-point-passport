@@ -5,6 +5,8 @@
     --accent-color: #efbf04;
     --text-dark: #2d3748;
     --text-light: #718096;
+    --bg-light: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    --bg-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 }
 
 /* Root level adjustments for better mobile experience */
@@ -13,9 +15,31 @@ html, body {
     padding: 0;
     height: 100%;
     font-family: 'Montserrat', Arial, sans-serif;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: var(--bg-light);
     display: flex;
     flex-direction: column;
+}
+
+/* Dark mode styles */
+body.dark {
+    background: var(--bg-dark);
+    color: #e6edf3;
+}
+
+body.dark .title {
+    color: #e6edf3;
+}
+
+body.dark .subtitle {
+    color: #8b949e;
+}
+
+body.dark .footer {
+    background-color: rgba(15, 23, 42, 0.8);
+}
+
+body.dark .footer p {
+    color: #8b949e;
 }
 
 .nav {
@@ -298,6 +322,16 @@ html, body {
         flex-direction: column;
         gap: 2rem;
     }
+
+    .dark-mode-toggle {
+        margin-left: 1rem;
+        padding: 0.2rem;
+    }
+    
+    .dark-mode-toggle svg {
+        width: 18px;
+        height: 18px;
+    }
 }
 
 /* Additional mobile view enhancements */
@@ -457,4 +491,32 @@ html, body {
         padding: 0 1rem;
         box-sizing: border-box;
     }
+}
+
+/* Dark mode toggle button */
+.dark-mode-toggle {
+    background: none;
+    border: none;
+    color: white;
+    margin-left: 1.5rem;
+    cursor: pointer;
+    padding: 0.3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
+body.dark .dark-mode-toggle {
+    color: var(--accent-color);
 }

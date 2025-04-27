@@ -29,7 +29,7 @@ $clubMapping = require 'config/club-mapping.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CCA Details - Politeknik Brunei Enrichment Point Passport</title>
+    <title><?php echo htmlspecialchars($clubDetails['club_name'] ?? 'Club Details'); ?> - Politeknik Brunei</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/cca-details.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/cca-application-form.css">

@@ -363,15 +363,64 @@ body.dark #semesterSelect option {
 @media (max-width: 768px) {
     .container header {
         flex-direction: column;
+        gap: 1rem;
         align-items: flex-start;
-        gap: var(--spacing-sm);
     }
     
     #semesterSelect {
-        max-width: 100%;
+        width: 100%;
     }
     
     .container h1 {
         font-size: 1.5rem;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 375px) {
+    .container {
+        padding: 1rem;
+        margin: 1rem auto;
+    }
+    
+    .container h1 {
+        font-size: 1.3rem;
+    }
+    
+    .history-table th,
+    .history-table td,
+    .details-table th,
+    .details-table td {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .history-table caption,
+    .details-table caption {
+        font-size: 1.1rem;
+    }
+    
+    #semesterSelect {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.8rem;
+    }
+    
+    .menu-tabs {
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+    
+    .menu-tabs button {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+    
+    .points-total {
+        font-size: 0.9rem;
+    }
+    
+    .history-table .no-data {
+        padding: 1.5rem;
+        font-size: 0.9rem;
     }
 }

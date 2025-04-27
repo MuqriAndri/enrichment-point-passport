@@ -5,6 +5,178 @@
     background-color: #f8f9fa;
 }
 
+/* Dark mode styles */
+body.dark .main-content {
+    background-color: #0f172a;
+    color: #e6edf3;
+}
+
+body.dark .main-wrapper {
+    color: #e6edf3;
+}
+
+body.dark .location-container {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+body.dark .back-link a {
+    color: #e6edf3;
+    background-color: rgba(30, 41, 59, 0.9);
+}
+
+body.dark .back-link a:hover {
+    color: #f8fafc;
+    background-color: #334155;
+}
+
+body.dark .back-link svg {
+    color: #64748b;
+}
+
+body.dark .location-search-input {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #e6edf3;
+}
+
+body.dark .location-search-input:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+body.dark .search-clear-btn {
+    color: #64748b;
+}
+
+body.dark .search-clear-btn:hover {
+    background-color: rgba(248, 113, 113, 0.2);
+}
+
+body.dark .map-container {
+    border-color: #334155;
+}
+
+body.dark .check-in-card {
+    background-color: #1e293b;
+    color: #e6edf3;
+}
+
+body.dark .info-card {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+body.dark .info-card:hover {
+    background-color: #334155;
+}
+
+body.dark .info-card h3 {
+    color: #f8fafc;
+}
+
+body.dark .info-card p {
+    color: #94a3b8;
+}
+
+body.dark .location-status {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+body.dark .location-status:hover {
+    background-color: #334155;
+}
+
+body.dark .coordinates {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+body.dark .coordinates:hover {
+    background-color: #334155;
+}
+
+body.dark .coordinates span {
+    color: #94a3b8;
+}
+
+body.dark .distance-info {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+body.dark .distance-info:hover {
+    background-color: #334155;
+}
+
+body.dark .distance-label {
+    color: #94a3b8;
+}
+
+body.dark .arrival-estimate {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+body.dark .arrival-estimate:hover {
+    background-color: #334155;
+}
+
+body.dark .arrival-label {
+    color: #94a3b8;
+}
+
+body.dark .secondary-btn {
+    background-color: #334155;
+    color: #e6edf3;
+    border-color: #475569;
+}
+
+body.dark .secondary-btn:hover {
+    background-color: #475569;
+}
+
+body.dark .directions-tooltip {
+    background-color: #1e293b;
+    color: #e6edf3;
+    border-color: #334155;
+}
+
+body.dark .directions-tooltip p {
+    color: #94a3b8;
+}
+
+body.dark .permission-dialog {
+    background-color: rgba(15, 23, 42, 0.8);
+}
+
+body.dark .permission-dialog-content {
+    background-color: #1e293b;
+    color: #e6edf3;
+}
+
+body.dark .permission-dialog-header h3 {
+    color: #f8fafc;
+}
+
+body.dark .permission-dialog-header p {
+    color: #94a3b8;
+}
+
+body.dark .permission-instructions {
+    background-color: #334155;
+}
+
+body.dark .permission-instructions h4 {
+    color: #f8fafc;
+}
+
+body.dark .map-info-window {
+    background-color: #1e293b;
+    color: #e6edf3;
+}
+
 .main-wrapper {
     max-width: 1280px;
     margin: 0 auto;

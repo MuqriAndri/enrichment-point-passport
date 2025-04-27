@@ -220,3 +220,62 @@
         width: 100%;
     }
 }
+
+/* Very small screens */
+@media (max-width: 375px) {
+    .modal-header {
+        padding: 12px 15px;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.2rem;
+    }
+    
+    .close-modal {
+        font-size: 24px;
+    }
+    
+    .modal-body {
+        padding: 15px;
+    }
+    
+    .modal-description {
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+    
+    .form-actions {
+        margin-top: 15px;
+    }
+    
+    .autofill-btn {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .cancel-application-btn,
+    .submit-application-btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .form-top-actions {
+        margin-bottom: 15px;
+    }
+}
