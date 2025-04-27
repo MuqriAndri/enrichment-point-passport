@@ -55,16 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST["user_ic"]) && isset($_POST["password"])) {
         require_once 'controllers/auth.php';
         handleLogin($profilesDB); // User info is in profiles database
-    } 
-    elseif (isset($_POST['action']) && $_POST['action'] === 'cca') {
+    } elseif (isset($_POST['action']) && $_POST['action'] === 'cca') {
         require_once 'controllers/cca.php';
         handleClubAction($ccaDB, $profilesDB); // Pass both database connections
-    }
-    elseif (isset($_POST['action']) && $_POST['action'] === 'cca_manage') {
+    } elseif (isset($_POST['action']) && $_POST['action'] === 'cca_manage') {
         require_once 'controllers/cca.php';
         handleClubManagement($ccaDB, $profilesDB); // Handle club management actions
-    }
-    elseif (isset($_POST['club_id']) && isset($_POST['lat']) && isset($_POST['lng'])) {
+    } elseif (isset($_POST['club_id']) && isset($_POST['lat']) && isset($_POST['lng'])) {
         require_once 'controllers/attendance.php';
         handleAttendanceCheckIn($ccaDB, $profilesDB); // Handle attendance check-in
     }
@@ -83,12 +80,12 @@ if ($page === 'cca') {
         // Check if this is a club management page request
         if (isset($params[1]) && preg_match('/^([a-z0-9-]+)-management$/', $params[1], $matches)) {
             $clubSlug = $matches[1];
-            
+
             // Find the club based on the slug
             $clubFound = false;
             $clubName = '';
             $clubCategory = '';
-            
+
             foreach ($clubMapping as $category => $clubs) {
                 foreach ($clubs as $name => $slug) {
                     if ($slug === $clubSlug) {
@@ -99,18 +96,18 @@ if ($page === 'cca') {
                     }
                 }
             }
-            
+
             if ($clubFound) {
                 // Get club details
                 $clubDetails = $clubRepo->getClubDetails($clubName);
-                
+
                 if ($clubDetails) {
                     // Check if user has permission to edit this club
                     $isOfficer = false;
                     if (isset($_SESSION['user_id'])) {
                         $isOfficer = $clubRepo->isClubOfficer($_SESSION['user_id'], $clubDetails['club_id']);
                     }
-                    
+
                     if ($isOfficer) {
                         // Fetch additional data needed for club management
                         $gallery = $clubRepo->getClubGallery($clubDetails['club_id']);
@@ -118,7 +115,7 @@ if ($page === 'cca') {
                         $locations = $clubRepo->getClubLocations($clubDetails['club_id']);
                         $applications = $clubRepo->getPendingApplications($clubDetails['club_id']);
                         $members = $clubRepo->getClubMembers($clubDetails['club_id']);
-                        
+
                         // User has permission, show management page
                         $pageData = [
                             'details' => $clubDetails,
@@ -136,13 +133,13 @@ if ($page === 'cca') {
                     }
                 }
             }
-            
+
             // No permission, club not found, or invalid slug - redirect to CCA page
             $_SESSION['error'] = 'You do not have permission to manage this club.';
             header("Location: " . BASE_URL . "/cca");
             exit();
         }
-        
+
         // Handle regular club detail pages
         if (isset($params[1])) {
             $requestedClub = $params[1];
@@ -171,30 +168,30 @@ if ($page === 'cca') {
                     if (isset($_SESSION['student_id'])) {
                         $isMember = $clubRepo->isUserMemberOfClub($_SESSION['student_id'], $clubDetails['club_id']);
                     }
-                    
+
                     // Check if user is an officer of this club
                     $isOfficer = false;
                     if (isset($_SESSION['user_id'])) {
                         $isOfficer = $clubRepo->isClubOfficer($_SESSION['user_id'], $clubDetails['club_id']);
                     }
-                    
+
                     // Fetch club gallery images
                     $gallery = $clubRepo->getClubGallery($clubDetails['club_id']);
 
                     // Fetch club activities (Planned and Ongoing)
                     $activities = [];
                     $allActivities = $clubRepo->getClubActivities($clubDetails['club_id']);
-                    
+
                     // Log for debugging
                     error_log("Club ID: " . $clubDetails['club_id']);
                     error_log("All activities count: " . count($allActivities));
                     error_log("All activities: " . print_r($allActivities, true));
-                    
+
                     // Check each activity for title field
                     foreach ($allActivities as $index => $activity) {
                         error_log("Activity $index - Title: " . ($activity['title'] ?? 'MISSING') . ", Status: " . ($activity['status'] ?? 'MISSING'));
                     }
-                    
+
                     // Filter for Planned and Ongoing activities only
                     foreach ($allActivities as $activity) {
                         if ($activity['status'] === 'Planned' || $activity['status'] === 'Ongoing') {
@@ -206,7 +203,7 @@ if ($page === 'cca') {
                             ];
                         }
                     }
-                    
+
                     // Add a manual entry for testing
                     if (empty($activities)) {
                         // Force an activity for testing
@@ -311,35 +308,35 @@ switch ($page) {
             header("Location: " . BASE_URL . "/events");
             exit();
         }
-        
+
         // Handle POST requests for event operations
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Special handling for edit_form operation
             if (isset($_POST['operation']) && $_POST['operation'] === 'edit_form' && isset($_POST['event_id'])) {
                 require_once 'repositories/event-repository.php';
                 $eventRepo = new EventRepository($eventsDB, $profilesDB);
-                
+
                 // Fetch the event
                 $eventId = $_POST['event_id'];
                 $_SESSION['edit_event'] = $eventRepo->getEventById($eventId);
-                
+
                 if (!$_SESSION['edit_event']) {
                     $_SESSION['error'] = 'Event not found';
                 }
-                
+
                 // Redirect to the same page but with GET instead of POST to prevent form resubmission
                 header("Location: " . BASE_URL . "/events-management");
                 exit();
-            } 
+            }
             // Special handling for view_participants operation
             else if (isset($_POST['operation']) && $_POST['operation'] === 'view_participants' && isset($_POST['event_id'])) {
                 require_once 'repositories/event-repository.php';
                 $eventRepo = new EventRepository($eventsDB, $profilesDB);
-                
+
                 // Fetch the event and participants
                 $eventId = $_POST['event_id'];
                 $event = $eventRepo->getEventById($eventId);
-                
+
                 // Check if this is an AJAX request
                 $isAjax = false;
                 if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
@@ -347,18 +344,18 @@ switch ($page) {
                 } elseif (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
                     $isAjax = true;
                 }
-                
+
                 if ($isAjax) {
                     // For AJAX requests, return JSON response
                     header('Content-Type: application/json');
-                    
+
                     if ($event) {
                         $participants = $eventRepo->getEventParticipants($eventId);
-                        
+
                         // Log the data for debugging
                         error_log("AJAX Participants Response: Event ID: " . $eventId);
                         error_log("AJAX Participants Response: Participant Count: " . count($participants));
-                        
+
                         // Return the data as JSON
                         echo json_encode([
                             'success' => true,
@@ -377,7 +374,7 @@ switch ($page) {
                     if ($event) {
                         $_SESSION['view_event'] = $event;
                         $_SESSION['participants'] = $eventRepo->getEventParticipants($eventId);
-                        
+
                         // Redirect to the same page but with GET instead of POST to prevent form resubmission
                         header("Location: " . BASE_URL . "/events-management");
                         exit();
@@ -387,18 +384,20 @@ switch ($page) {
                         exit();
                     }
                 }
-            }
-            else {
+            } else {
                 // Handle other operations
                 require_once 'controllers/events.php';
                 handleEventOperations($eventsDB, $profilesDB);
                 exit();
             }
         }
-        
+
         // Use the correct database for events
         $pdo = $eventsDB;
         include 'templates/events-management.php';
+        break;
+    case 'help':
+        include 'templates/help.php';
         break;
     case 'history':
         include 'templates/history.php';
@@ -420,10 +419,10 @@ switch ($page) {
     case 'controllers':
         // Debug information
         error_log("Controllers route triggered. params[1]=" . ($params[1] ?? 'not set'));
-        
+
         if (isset($params[1]) && $params[1] === 'events.php') {
             error_log("Events controller detected. Method: " . $_SERVER['REQUEST_METHOD'] . ", operation: " . ($_GET['operation'] ?? 'not set'));
-            
+
             if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['operation'])) {
                 require_once 'controllers/events.php';
                 handleEventAPI($eventsDB, $profilesDB);
@@ -434,7 +433,7 @@ switch ($page) {
                 exit();
             }
         }
-        
+
         // If not a handled controller or operation, show 404
         header("HTTP/1.0 404 Not Found");
         include 'templates/404.php';
@@ -445,7 +444,7 @@ switch ($page) {
             include 'templates/cca-location.php';
             break;
         }
-        
+
         header("HTTP/1.0 404 Not Found");
         include 'templates/404.php';
         break;

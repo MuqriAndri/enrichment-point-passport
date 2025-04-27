@@ -20,10 +20,11 @@ if (isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enrichment Point Passport - Clubs</title>
+    <title>Enrichment Point Passport - Co-Curricular Activities</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/cca.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/burger.css">
+    <link rel="icon" href="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/logo/politeknik-brunei-logo-2.png" type="image/png">
 
 </head>
 

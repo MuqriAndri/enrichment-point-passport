@@ -19,6 +19,7 @@ if (isset($_SESSION['user_id']) && isset($profilesDB)) {
         <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/events.css">
         <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
         <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/burger.css">
+        <link rel="icon" href="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/logo/politeknik-brunei-logo-2.png" type="image/png">
 
         <script src="<?php echo BASE_URL; ?>/assets/js/events.js" defer></script>
         

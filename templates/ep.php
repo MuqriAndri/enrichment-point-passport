@@ -52,11 +52,11 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enrichment Point Passport - Tracker</title>
+    <title>Enrichment Point Passport - Enrichment Point</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/dashboard.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/ep.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/burger.css">
-
+    <link rel="icon" href="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/logo/politeknik-brunei-logo-2.png" type="image/png">
 </head>
 
 <body class="<?php echo $isDark ? 'dark' : ''; ?>">
