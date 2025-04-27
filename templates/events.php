@@ -699,12 +699,6 @@ if (isset($_SESSION['user_id']) && isset($profilesDB)) {
                                 background-color: #f5f5f5;
                             }
 
-                            .calendar-day.today {
-                                background-color: #e6f7ff;
-                                font-weight: bold;
-                                border: 1px solid #1890ff;
-                            }
-
                             .calendar-day.has-event {
                                 font-weight: bold;
                             }

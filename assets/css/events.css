@@ -65,7 +65,7 @@ body {
 
 .main-content {
     flex: 1;
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
     margin-top: 4rem;
     overflow-x: visible;
 }
@@ -377,7 +377,6 @@ h1 {
 }
 
 .learn-more-btn {
-    width: 100%;
     margin: 10px auto 15px;
     display: block;
     text-align: center;

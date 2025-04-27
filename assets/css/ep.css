@@ -65,7 +65,7 @@ body {
 
 .main-content {
     flex: 1;
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
     margin-top: 4rem;
 }
 
