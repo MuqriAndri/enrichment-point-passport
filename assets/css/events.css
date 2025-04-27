@@ -114,7 +114,7 @@ h1 {
     display: flex;
     justify-content: center;
     margin: var(--spacing-md) 0 0 0;
-    min-height: 560px;
+    min-height: 600px;
     overflow: visible;
     width: 100%;
 }
@@ -173,6 +173,18 @@ h1 {
     opacity: 0.6;
     transform: scale(0.7) translateX(180%);
     z-index: 1;
+}
+
+.event-slide.very-far-prev {
+    opacity: 0.4;
+    transform: scale(0.6) translateX(-270%);
+    z-index: 0;
+}
+
+.event-slide.very-far-next {
+    opacity: 0.4;
+    transform: scale(0.6) translateX(270%);
+    z-index: 0;
 }
 
 /* Hover effects for slides */
@@ -478,10 +490,24 @@ h1 {
         opacity: 0.7;
     }
     
-    .event-slide.far-prev,
+    .event-slide.far-prev {
+        transform: scale(0.7) translateX(-160%);
+        opacity: 0.5;
+    }
+    
     .event-slide.far-next {
-        opacity: 0;
-        pointer-events: none;
+        transform: scale(0.7) translateX(160%);
+        opacity: 0.5;
+    }
+    
+    .event-slide.very-far-prev,
+    .event-slide.very-far-next {
+        opacity: 0.3;
+        transform: scale(0.6) translateX(-240%);
+    }
+    
+    .event-slide.very-far-next {
+        transform: scale(0.6) translateX(240%);
     }
     
     .image-box {

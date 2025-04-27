@@ -165,7 +165,7 @@ function initGlideStyleCarousel() {
     function updateCarousel() {
         slides.forEach((slide, index) => {
             // Reset previous transforms and states
-            slide.classList.remove('active', 'prev', 'next', 'far-prev', 'far-next');
+            slide.classList.remove('active', 'prev', 'next', 'far-prev', 'far-next', 'very-far-prev', 'very-far-next');
             slide.style.transform = '';
             slide.style.zIndex = '';
             slide.style.opacity = '';
@@ -187,10 +187,18 @@ function initGlideStyleCarousel() {
                 slide.classList.add('prev');
             } else if (position === 1 || (position === -(slides.length - 1) && currentIndex === slides.length - 1)) {
                 slide.classList.add('next'); 
-            } else if (position < -1) {
+            } else if (position === -2 || (position === slides.length - 2 && currentIndex <= 1)) {
                 slide.classList.add('far-prev');
-            } else if (position > 1) {
+            } else if (position === 2 || (position === -(slides.length - 2) && currentIndex >= slides.length - 2)) {
                 slide.classList.add('far-next');
+            } else if (position === -3 || (position === slides.length - 3 && currentIndex <= 2)) {
+                slide.classList.add('very-far-prev');
+            } else if (position === 3 || (position === -(slides.length - 3) && currentIndex >= slides.length - 3)) {
+                slide.classList.add('very-far-next');
+            } else if (position < -3) {
+                slide.classList.add('very-far-prev');
+            } else if (position > 3) {
+                slide.classList.add('very-far-next');
             }
         });
         

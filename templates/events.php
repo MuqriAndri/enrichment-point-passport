@@ -21,6 +21,24 @@ if (isset($_SESSION['user_id']) && isset($profilesDB)) {
         <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/burger.css">
 
         <script src="<?php echo BASE_URL; ?>/assets/js/events.js" defer></script>
+        
+        <!-- Add S3 connection optimizations -->
+        <link rel="preconnect" href="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com">
+        <link rel="dns-prefetch" href="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com">
+        
+        <!-- Load critical images with higher priority -->
+        <?php 
+        // Preload only the most critical images (limit to 2)
+        $preloadCount = 0;
+        if (isset($events) && is_array($events)) {
+            foreach ($events as $event) {
+                if (!empty($event['events_images']) && $preloadCount < 2) {
+                    echo '<link rel="preload" href="' . htmlspecialchars(trim($event['events_images'])) . '" as="image" fetchpriority="high">';
+                    $preloadCount++;
+                }
+            }
+        }
+        ?>
     </head>
 
     <body class="<?php echo $isDark ? 'dark' : ''; ?>">
@@ -278,17 +296,25 @@ if (isset($_SESSION['user_id']) && isset($profilesDB)) {
                                     
                                     // Display the image from events_images field (VARCHAR)
                                     if (!empty($event['events_images'])) {
-                                        // Show image URL for debugging
-                                        echo "<!-- Image URL: " . htmlspecialchars($event['events_images']) . " -->";
-                                        
-                                        // Make sure the URL is properly formatted
+                                        // Get original image URL
                                         $imageUrl = trim($event['events_images']);
                                         
+                                        // Add loading container with spinner
+                                        echo "<div class='image-loading-container'>";
+                                        echo "<div class='image-loading-indicator'></div>";
+                                        
+                                        // Add efficient S3 image loading with native lazy loading and size attributes
                                         echo "<img 
-                                            src='" . htmlspecialchars($imageUrl) . "' 
+                                            data-src='" . htmlspecialchars($imageUrl) . "' 
+                                            src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 800 250\"%3E%3C/svg%3E'
                                             alt='" . htmlspecialchars($event['event_name']) . "' 
-                                            class='event-image' 
+                                            class='event-image'
+                                            loading='lazy'
+                                            width='800'
+                                            height='250'
+                                            onload='this.classList.add(\"loaded\"); this.parentNode.classList.add(\"loaded\");'
                                             style='display: block; max-width: 100%; height: 250px; object-fit: cover;'>";
+                                        echo "</div>"; // Close image-loading-container
                                     } else {
                                         echo "<!-- No image URL found for this event -->";
                                     }
@@ -556,6 +582,85 @@ if (isset($_SESSION['user_id']) && isset($profilesDB)) {
                                     }
                                 });
                             }
+                        </script>
+                        <script>
+                            // Optimized S3 image loading
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const s3Images = document.querySelectorAll('img.event-image[data-src]');
+                                if (!s3Images.length) return;
+                                
+                                // Configure IntersectionObserver
+                                const observerOptions = {
+                                    rootMargin: '200px 0px', // Load images before they come into view
+                                    threshold: 0.01 // Start loading when 1% of the image is visible
+                                };
+                                
+                                // Function to handle S3 image loading
+                                function loadS3Image(img) {
+                                    const src = img.getAttribute('data-src');
+                                    if (!src) return;
+                                    
+                                    // Set actual image src to start loading
+                                    img.setAttribute('src', src);
+                                    
+                                    // Handle load events
+                                    img.addEventListener('load', function() {
+                                        img.classList.add('loaded');
+                                        if (img.parentNode.classList.contains('image-loading-container')) {
+                                            img.parentNode.classList.add('loaded');
+                                        }
+                                    });
+                                    
+                                    // Handle errors gracefully
+                                    img.addEventListener('error', function() {
+                                        console.error('Failed to load S3 image:', src);
+                                        
+                                        // Try to load a smaller version if available
+                                        if (src.includes('amazonaws.com') && !src.includes('-small')) {
+                                            const smallerSrc = src.replace(/(\.[^.]+)$/, '-small$1');
+                                            console.log('Attempting to load smaller version:', smallerSrc);
+                                            img.setAttribute('src', smallerSrc);
+                                        } else {
+                                            // Show error state in the UI
+                                            img.parentNode.classList.add('error');
+                                            img.parentNode.classList.add('loaded'); // Hide spinner
+                                        }
+                                    });
+                                }
+                                
+                                // Create and use IntersectionObserver if supported
+                                if ('IntersectionObserver' in window) {
+                                    const observer = new IntersectionObserver(function(entries) {
+                                        entries.forEach(entry => {
+                                            if (entry.isIntersecting) {
+                                                loadS3Image(entry.target);
+                                                observer.unobserve(entry.target);
+                                            }
+                                        });
+                                    }, observerOptions);
+                                    
+                                    // Observe all images
+                                    s3Images.forEach(img => observer.observe(img));
+                                } else {
+                                    // Fallback for browsers without IntersectionObserver
+                                    s3Images.forEach(loadS3Image);
+                                }
+                                
+                                // Immediately load visible images
+                                setTimeout(function() {
+                                    const visibleImages = Array.from(s3Images).filter(img => {
+                                        const rect = img.getBoundingClientRect();
+                                        return (
+                                            rect.top >= 0 &&
+                                            rect.left >= 0 &&
+                                            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                                            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                                        );
+                                    });
+                                    
+                                    visibleImages.forEach(loadS3Image);
+                                }, 100);
+                            });
                         </script>
                         <style>
                             /* Calendar styles from dashboard.css */
@@ -861,6 +966,81 @@ if (isset($_SESSION['user_id']) && isset($profilesDB)) {
                             
                             body.dark .event-description {
                                 color: #d0d0d0;
+                            }
+                            
+                            /* Image loading styles */
+                            .image-loading-container {
+                                position: relative;
+                                width: 100%;
+                                height: 100%;
+                                background-color: #f0f0f0;
+                                overflow: hidden;
+                            }
+                            
+                            body.dark .image-loading-container {
+                                background-color: #2a2a2a;
+                            }
+                            
+                            .image-loading-indicator {
+                                position: absolute;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                                width: 40px;
+                                height: 40px;
+                                border-radius: 50%;
+                                border: 3px solid rgba(0, 0, 0, 0.1);
+                                border-top-color: #efbf04;
+                                animation: spin 1s infinite linear;
+                                z-index: 1;
+                            }
+                            
+                            /* Error state styling */
+                            .image-loading-container.error::before {
+                                content: "⚠️";
+                                position: absolute;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                                font-size: 24px;
+                                z-index: 3;
+                            }
+                            
+                            .image-loading-container.error::after {
+                                content: "Image failed to load";
+                                position: absolute;
+                                top: calc(50% + 30px);
+                                left: 50%;
+                                transform: translateX(-50%);
+                                font-size: 14px;
+                                color: #666;
+                                z-index: 3;
+                                text-align: center;
+                                width: 80%;
+                            }
+                            
+                            body.dark .image-loading-indicator {
+                                border: 3px solid rgba(255, 255, 255, 0.1);
+                                border-top-color: #efbf04;
+                            }
+                            
+                            @keyframes spin {
+                                0% { transform: translate(-50%, -50%) rotate(0deg); }
+                                100% { transform: translate(-50%, -50%) rotate(360deg); }
+                            }
+                            
+                            .event-image {
+                                opacity: 0;
+                                transition: opacity 0.3s ease;
+                                min-height: 50px;
+                            }
+                            
+                            .event-image.loaded {
+                                opacity: 1;
+                            }
+                            
+                            .image-loading-container.loaded .image-loading-indicator {
+                                display: none;
                             }
                             
                             /* Responsive styles */
