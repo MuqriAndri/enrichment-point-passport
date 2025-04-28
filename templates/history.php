@@ -23,7 +23,7 @@ $selectedSemester = isset($_GET['semester']) ? $_GET['semester'] : '1';
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, height=device-height">
     <title>History - Politeknik Brunei</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/history.css">
@@ -72,7 +72,7 @@ $selectedSemester = isset($_GET['semester']) ? $_GET['semester'] : '1';
                             </div>
                             <span class="user-name"><?php echo explode(' ', $_SESSION['full_name'])[0]; ?></span>
                         </div>
-                        <div class="dropdown-menu" role="menu">
+                        <div class="dropdown-menu" role="menu" aria-hidden="true">
                             <a href="<?php echo BASE_URL; ?>/profile" class="dropdown-item" role="menuitem">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -481,22 +481,94 @@ $selectedSemester = isset($_GET['semester']) ? $_GET['semester'] : '1';
     <script src="<?php echo BASE_URL; ?>/assets/js/search.js"></script>
     <script src="<?php echo BASE_URL; ?>/assets/js/burger.js"></script>
     <script>
-        // Handle semester change event
-        document.getElementById('semesterSelect').addEventListener('change', function() {
-            const semester = this.value;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle semester change event
+            const semesterSelect = document.getElementById('semesterSelect');
+            if (semesterSelect) {
+                semesterSelect.addEventListener('change', function() {
+                    const semester = this.value;
 
-            // Hide all tables
-            document.querySelectorAll('.history-table').forEach(table => {
-                table.style.display = 'none';
-            });
+                    // Hide all tables
+                    document.querySelectorAll('.history-table').forEach(table => {
+                        table.style.display = 'none';
+                    });
 
-            // Show selected semester table
-            document.getElementById('semester-' + semester + '-table').style.display = '';
+                    // Show selected semester table
+                    document.getElementById('semester-' + semester + '-table').style.display = '';
 
-            // Update URL without reloading the page
-            const url = new URL(window.location.href);
-            url.searchParams.set('semester', semester);
-            window.history.pushState({}, '', url);
+                    // Update URL without reloading the page
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('semester', semester);
+                    window.history.pushState({}, '', url);
+                });
+            }
+            
+            // Mobile menu toggle
+            const burgerMenu = document.querySelector('.burger-menu');
+            const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+            
+            if (burgerMenu && mobileMenuOverlay) {
+                burgerMenu.addEventListener('click', function() {
+                    document.body.classList.toggle('mobile-menu-open');
+                    burgerMenu.setAttribute('aria-expanded', document.body.classList.contains('mobile-menu-open'));
+                });
+                
+                // Close menu when clicking outside
+                mobileMenuOverlay.addEventListener('click', function(e) {
+                    if (e.target === mobileMenuOverlay) {
+                        document.body.classList.remove('mobile-menu-open');
+                        burgerMenu.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+            
+            // Enable horizontal scrolling on tab navigation with touch
+            const tabNavigation = document.querySelector('.tab-navigation');
+            if (tabNavigation) {
+                let isDown = false;
+                let startX;
+                let scrollLeft;
+
+                tabNavigation.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    startX = e.pageX - tabNavigation.offsetLeft;
+                    scrollLeft = tabNavigation.scrollLeft;
+                });
+
+                tabNavigation.addEventListener('mouseleave', () => {
+                    isDown = false;
+                });
+
+                tabNavigation.addEventListener('mouseup', () => {
+                    isDown = false;
+                });
+
+                tabNavigation.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - tabNavigation.offsetLeft;
+                    const walk = (x - startX) * 2;
+                    tabNavigation.scrollLeft = scrollLeft - walk;
+                });
+
+                // Touch events for mobile
+                tabNavigation.addEventListener('touchstart', (e) => {
+                    isDown = true;
+                    startX = e.touches[0].pageX - tabNavigation.offsetLeft;
+                    scrollLeft = tabNavigation.scrollLeft;
+                });
+
+                tabNavigation.addEventListener('touchend', () => {
+                    isDown = false;
+                });
+
+                tabNavigation.addEventListener('touchmove', (e) => {
+                    if (!isDown) return;
+                    const x = e.touches[0].pageX - tabNavigation.offsetLeft;
+                    const walk = (x - startX) * 2;
+                    tabNavigation.scrollLeft = scrollLeft - walk;
+                });
+            }
         });
     </script>
 </body>

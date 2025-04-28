@@ -55,6 +55,7 @@ body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 /* Layout Components */
@@ -484,17 +485,19 @@ body {
 
 /* User Avatar */
 .user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius-full);
-    background: var(--background-light);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
-    color: var(--primary-color);
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
     overflow: hidden;
+    flex-shrink: 0; /* Prevents the avatar from being squished */
+    aspect-ratio: 1/1; /* Ensures the element maintains a 1:1 ratio */
 }
 
 .user-avatar img {
@@ -1976,6 +1979,12 @@ body.dark .mobile-nav-item:hover {
     .main-wrapper {
         padding: var(--spacing-sm);
     }
+    
+    /* Fix news slider overflow on mobile */
+    .news-slider-container {
+        width: 100%;
+        overflow-x: auto;
+    }
 }
 
 @media screen and (max-width: 768px) {
@@ -1988,10 +1997,23 @@ body.dark .mobile-nav-item:hover {
         display: none;
         /* Hide the header title */
     }
-
+    
     .nav-logo {
         height: 30px;
         /* Make logo smaller */
+    }
+    
+    /* Fix horizontal overflow for tables on mobile */
+    .ep-table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+    }
+    
+    /* Ensure images don't overflow containers */
+    img {
+        max-width: 100%;
+        height: auto;
     }
 }
 
@@ -2015,6 +2037,212 @@ body.dark .mobile-nav-item:hover {
 
     .footer-content p {
         font-size: 0.9rem;
+    }
+    
+    /* Fix dropdown menu overflow on small screens */
+    .dropdown-menu {
+        max-width: 90vw;
+        right: 0;
+    }
+}
+
+/* Fix horizontal overflow on mobile specifically */
+@media screen and (max-width: 768px) {
+    html, body {
+        overflow-x: hidden;
+        width: 100%;
+        position: relative;
+    }
+    
+    /* Handle table scrolling within contained area */
+    .card {
+        max-width: 100%;
+        overflow: hidden;
+    }
+    
+    /* Fix the mobile menu overlay */
+    .mobile-menu-overlay {
+        width: 100vw;
+    }
+    
+    .mobile-menu-content {
+        max-width: 280px;
+    }
+    
+    /* Ensure welcome card stays within bounds */
+    .welcome-card {
+        max-width: 100%;
+    }
+    
+    /* Ensure calendar doesn't overflow */
+    .calendar-section {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    
+    /* Improve Recent Activities section */
+    .recent-activities {
+        padding: 1rem;
+        max-width: 100%;
+    }
+    
+    .activity-item {
+        padding: 0.75rem;
+        flex-wrap: nowrap;
+        width: 100%;
+    }
+    
+    .activity-details {
+        min-width: 0; /* Allow text truncation */
+    }
+    
+    .activity-details h4 {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    /* Improve Clubs section */
+    .joined-clubs {
+        padding: 1rem;
+        max-width: 100%;
+    }
+    
+    .club-list {
+        gap: 0.75rem;
+    }
+    
+    .club-item {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .club-details {
+        flex: 1;
+        min-width: 0; /* Allow text truncation */
+    }
+    
+    .club-details h4 {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .view-club-btn {
+        margin-top: 0.5rem;
+        margin-left: auto;
+    }
+    
+    /* Enhanced News section fixes for mobile */
+    .news-section {
+        grid-column: span 1;
+        padding: 1rem;
+        max-width: 100%;
+        overflow: hidden;
+    }
+    
+    .news-slider {
+        max-width: 100%;
+        overflow: hidden;
+        margin-top: 0.5rem;
+    }
+    
+    .news-slider-container {
+        display: flex;
+        gap: 8px;
+        margin: 0;
+        padding: 4px 0;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        scroll-snap-type: x mandatory;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .news-item {
+        flex: 0 0 250px;
+        max-width: 85%;
+        min-width: 200px;
+        scroll-snap-align: start;
+        margin-right: 0.5rem;
+    }
+    
+    .news-image {
+        height: 140px;
+    }
+    
+    .news-content {
+        padding: 12px;
+    }
+    
+    .news-content h4 {
+        font-size: 0.9rem;
+        line-height: 1.4;
+        max-height: 2.8rem; /* Limit to 2 lines */
+        overflow: hidden;
+    }
+    
+    /* Smaller control buttons on mobile */
+    .slider-controls {
+        display: none; /* Hide on mobile as they can interfere with touch scrolling */
+    }
+    
+    /* Improve Calendar section */
+    .calendar-section {
+        padding: 1rem;
+    }
+    
+    .calendar-header {
+        font-size: 0.8rem;
+    }
+    
+    .calendar-grid {
+        gap: 0.25rem;
+    }
+    
+    /* Ensure consistent grid column structure */
+    .dashboard-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        max-height: none;
+    }
+}
+
+/* Additional fixes for very small screens */
+@media screen and (max-width: 375px) {
+    .news-item {
+        min-width: 90%;
+        max-width: 90%;
+        margin-right: 0.25rem;
+    }
+    
+    .news-image {
+        height: 120px;
+    }
+    
+    .news-content h4 {
+        font-size: 0.85rem;
+    }
+    
+    .news-date {
+        font-size: 0.7rem;
+    }
+    
+    .calendar-day {
+        width: 30px;
+        height: 30px;
+        font-size: 0.7rem;
+    }
+    
+    .activity-icon, .club-icon {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .points-badge {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.75rem;
     }
 }
 
@@ -2185,7 +2413,7 @@ body.dark .mobile-nav-item:hover {
     .news-section {
         grid-column: span 1;
     }
-    
+
     .news-item {
         flex: 0 0 250px;
     }
@@ -2195,7 +2423,7 @@ body.dark .mobile-nav-item:hover {
     .news-item {
         flex: 0 0 220px;
     }
-    
+
     .news-image {
         height: 140px;
     }
