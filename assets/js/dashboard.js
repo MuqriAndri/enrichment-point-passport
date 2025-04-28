@@ -369,7 +369,7 @@ function initializeEnrichmentPointProgress() {
     
     const points = parseInt(pointsElement.textContent);
     const totalPoints = 64; // Maximum points possible
-    const percentage = Math.round((points / totalPoints) * 100);
+    const percentage = Math.min(Math.round((points / totalPoints) * 100), 100);
     
     // Update circular progress bar
     const progressCircle = document.querySelector('.progress-circle');

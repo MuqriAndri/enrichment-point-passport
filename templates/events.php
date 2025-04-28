@@ -236,10 +236,11 @@ if (isset($_SESSION['user_id']) && isset($profilesDB)) {
                         </div>
                     <?php endif; ?>
                     <div class="container">
-                        <div class="events-header">
+                        <section class="events-header">
                             <h1>Upcoming and Available Events</h1>
+                            <p>Attend events and accumulate enrichment points through active engagement</p>
                             <?php if (isset($_SESSION['role']) && ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'committee')): ?>
-                            <div class="events-actions">
+                            <div class="events-actions" style="margin-top: 1rem;">
                                 <a href="<?php echo BASE_URL; ?>/events-management" class="btn btn-secondary">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M12 20h9"></path>
@@ -249,7 +250,7 @@ if (isset($_SESSION['user_id']) && isset($profilesDB)) {
                                 </a>
                             </div>
                             <?php endif; ?>
-                        </div>
+                        </section>
                         
                         <div class="event-slider">
                             <?php

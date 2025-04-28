@@ -89,6 +89,22 @@ body {
 }
 
 /* Header section with improved spacing and style */
+.events-header {
+    margin-bottom: var(--spacing-md);
+}
+
+.events-header h1 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-xs);
+}
+
+.events-header p {
+    color: var(--text-light);
+    font-size: 1.1rem;
+}
+
+/* General heading styles */
 h1 {
     font-size: 1.75rem;
     margin-bottom: var(--spacing-md);

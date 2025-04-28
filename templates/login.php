@@ -14,6 +14,7 @@ session_start();
 
 <body>
     <nav class="nav">
+        <a href="https://lms.pb.edu.bn" target="_blank" rel="noopener noreferrer">PB LMS</a>
         <a href="https://pb.edu.bn" target="_blank" rel="noopener noreferrer">PB Website</a>
         <a href="<?php echo BASE_URL; ?>/about">About</a>
         <a href="<?php echo BASE_URL; ?>/contact">Contact</a>
@@ -46,6 +47,7 @@ session_start();
                     <input type="password" id="password" name="password" placeholder="Enter your password" required>
                 </div>
                 <button type="submit" class="login-btn">Log In</button>
+                <a href="<?php echo BASE_URL; ?>/forgot-password" class="forgot-link">Forgot your password?</a>
             </form>
         </div>
     </div>
