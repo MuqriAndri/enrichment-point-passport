@@ -393,6 +393,84 @@ function getBadgeClass($type)
                         </div>
                     </section>
 
+                    <!-- News Section -->
+                    <section class="news-section" aria-labelledby="news-heading">
+                        <div class="section-header">
+                            <h3 id="news-heading">News</h3>
+                            <a href="https://pb.edu.bn" class="view-all" target="_blank">View All</a>
+                        </div>
+                        <div class="news-slider">
+                            <div class="news-slider-container">
+                                <a href="https://pb.edu.bn/2025/03/24/majlis-khatam-al-quran-dan-tahlil-bagi-pegawai-pegawai-kakitangan-dan-pelajar-pelajar-politeknik-brunei/" class="news-item" target="_blank">
+                                    <div class="news-image">
+                                        <img src="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/majlis-khatam-al-quran.jpg" alt="Majlis Khatam Al Quran">
+                                    </div>
+                                    <div class="news-content">
+                                        <div class="news-date">24/03/2025</div>
+                                        <h4>Majlis Khatam Al Quran dan Tahlil Bagi Pegawai-Pegawai, Kakitangan dan Pelajar-Pelajar Politeknik Brunei</h4>
+                                    </div>
+                                </a>
+                                <a href="https://pb.edu.bn/2025/03/04/bon-voyage-to-politeknik-bruneis-diploma-in-chemical-engineering-batch-3-students/" class="news-item" target="_blank">
+                                    <div class="news-image">
+                                        <img src="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/bon-voyage.jpg" alt="Bon Voyage">
+                                    </div>
+                                    <div class="news-content">
+                                        <div class="news-date">04/03/2025</div>
+                                        <h4>Bon voyage to Politeknik Brunei's Diploma in Chemical Engineering (Batch 3) students!</h4>
+                                    </div>
+                                </a>
+                                <a href="https://pb.edu.bn/2025/02/26/bound-for-china/" class="news-item" target="_blank">
+                                    <div class="news-image">
+                                        <img src="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/hengyi-industries.jpg" alt="Bound for China">
+                                    </div>
+                                    <div class="news-content">
+                                        <div class="news-date">26/02/2025</div>
+                                        <h4>Bound for China!</h4>
+                                    </div>
+                                </a>
+                                <a href="https://pb.edu.bn/2025/02/22/pb-students-win-runner-up-at-iptc-2025/" class="news-item" target="_blank">
+                                    <div class="news-image">
+                                        <img src="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/runner-up.jpeg" alt="PB Students Win Runner-Up">
+                                    </div>
+                                    <div class="news-content">
+                                        <div class="news-date">22/02/2025</div>
+                                        <h4>PB Students Win Runner-Up at IPTC 2025</h4>
+                                    </div>
+                                </a>
+                                <a href="https://pb.edu.bn/2025/02/20/acara-menaikkan-bendera-negara-brunei-darussalam-sempena-hari-kebangsaan-negara-brunei-darussalam-ke-41-tahun-2025/" class="news-item" target="_blank">
+                                    <div class="news-image">
+                                        <img src="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/acara-menaikkan-bendera.jpg" alt="Acara Menaikkan Bendera">
+                                    </div>
+                                    <div class="news-content">
+                                        <div class="news-date">20/02/2025</div>
+                                        <h4>Acara Menaikkan Bendera Negara Brunei Darussalam Sempena Hari Kebangsaan Negara Brunei Darussalam ke-41 tahun 2025</h4>
+                                    </div>
+                                </a>
+                                <a href="https://pb.edu.bn/2025/01/16/kemasukan-sesi-akademik-2025-2026-secara-dalam-talian-bagi-kemasukan-ke-politeknik-brunei-pb/" class="news-item" target="_blank">
+                                    <div class="news-image">
+                                        <img src="https://enrichment-point-passport-bucket.s3.ap-southeast-1.amazonaws.com/open-day.jpg" alt="Kemasukan Sesi Akademik">
+                                    </div>
+                                    <div class="news-content">
+                                        <div class="news-date">16/01/2025</div>
+                                        <h4>Kemasukan Sesi Akademik 2025/2026 secara dalam talian bagi kemasukan ke Politeknik Brunei (PB)</h4>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="slider-controls">
+                                <button class="slider-arrow prev" aria-label="Previous news">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M15 18l-6-6 6-6"></path>
+                                    </svg>
+                                </button>
+                                <button class="slider-arrow next" aria-label="Next news">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9 18l6-6-6-6"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
                     <!-- Calendar Section -->
                     <section class="calendar-section" aria-labelledby="calendar-heading">
                         <h3 id="calendar-heading">Calendar</h3>

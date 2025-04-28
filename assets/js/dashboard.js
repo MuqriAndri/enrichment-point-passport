@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeProgressCircle();
     handleEventRegistration();
     initializeMobileMenu();
+    initializeNewsSlider();
+    initializeEnrichmentPointProgress();
 });
 
 function initializeCalendar() {
@@ -299,4 +301,85 @@ function initializeMobileMenu() {
             console.log('Dashboard: Mobile menu closed by Escape key');
         }
     });
+}
+
+// News Slider functionality
+function initializeNewsSlider() {
+    const sliderContainer = document.querySelector('.news-slider-container');
+    const prevButton = document.querySelector('.slider-arrow.prev');
+    const nextButton = document.querySelector('.slider-arrow.next');
+    
+    if (!sliderContainer || !prevButton || !nextButton) return;
+    
+    const itemWidth = sliderContainer.querySelector('.news-item').offsetWidth + 16; // Include gap
+    const visibleItems = Math.floor(sliderContainer.offsetWidth / itemWidth);
+    const totalItems = sliderContainer.querySelectorAll('.news-item').length;
+    let currentIndex = 0;
+    
+    // Check if we should show arrows
+    if (totalItems <= visibleItems) {
+        prevButton.style.display = 'none';
+        nextButton.style.display = 'none';
+    } else {
+        // Hide prev button initially
+        prevButton.style.display = 'none';
+    }
+    
+    // Function to update slider position
+    function updateSliderPosition() {
+        sliderContainer.scrollTo({
+            left: currentIndex * itemWidth,
+            behavior: 'smooth'
+        });
+        
+        // Update arrow visibility
+        prevButton.style.display = currentIndex > 0 ? 'flex' : 'none';
+        nextButton.style.display = currentIndex < totalItems - visibleItems ? 'flex' : 'none';
+    }
+    
+    // Event listeners for arrow buttons
+    prevButton.addEventListener('click', () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateSliderPosition();
+        }
+    });
+    
+    nextButton.addEventListener('click', () => {
+        if (currentIndex < totalItems - visibleItems) {
+            currentIndex++;
+            updateSliderPosition();
+        }
+    });
+    
+    // Resize handling
+    window.addEventListener('resize', () => {
+        const newVisibleItems = Math.floor(sliderContainer.offsetWidth / itemWidth);
+        if (newVisibleItems !== visibleItems) {
+            visibleItems = newVisibleItems;
+            updateSliderPosition();
+        }
+    });
+}
+
+function initializeEnrichmentPointProgress() {
+    // Get the enrichment point value and update circular progress
+    const pointsElement = document.querySelector('.points');
+    if (!pointsElement) return;
+    
+    const points = parseInt(pointsElement.textContent);
+    const totalPoints = 64; // Maximum points possible
+    const percentage = Math.round((points / totalPoints) * 100);
+    
+    // Update circular progress bar
+    const progressCircle = document.querySelector('.progress-circle');
+    const percentageText = document.querySelector('.percentage-text');
+    
+    if (progressCircle) {
+        progressCircle.setAttribute('stroke-dasharray', `${percentage}, 100`);
+    }
+    
+    if (percentageText) {
+        percentageText.textContent = percentage;
+    }
 }
