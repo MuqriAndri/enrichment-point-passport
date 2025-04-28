@@ -506,6 +506,10 @@ body.dark .footer p {
     justify-content: center;
     border-radius: 50%;
     transition: background-color 0.3s ease;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .dark-mode-toggle:hover {
@@ -519,4 +523,51 @@ body.dark .footer p {
 
 body.dark .dark-mode-toggle {
     color: var(--accent-color);
+}
+
+/* Sun and Moon icons toggle */
+.dark-mode-toggle .sun {
+    display: none;
+}
+
+.dark-mode-toggle .moon {
+    display: block;
+}
+
+body.dark .dark-mode-toggle .sun {
+    display: block;
+}
+
+body.dark .dark-mode-toggle .moon {
+    display: none;
+}
+
+/* Dark mode styles for login box */
+body.dark .login-box {
+    background: linear-gradient(145deg, #1a1c2a, #2c3e50);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+body.dark .login-box input {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.15);
+    color: #e6edf3;
+}
+
+body.dark .login-box input:focus {
+    border-color: var(--accent-color);
+    background: rgba(255,255,255,0.12);
+}
+
+body.dark .forgot-link {
+    color: rgba(255,255,255,0.7);
+}
+
+body.dark .forgot-link:hover {
+    color: var(--accent-color);
+}
+
+body.dark .error-message {
+    background-color: rgba(220, 38, 38, 0.2);
+    border-color: rgba(220, 38, 38, 0.5);
 }

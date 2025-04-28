@@ -14,6 +14,22 @@ session_start();
 
 <body>
     <nav class="nav">
+        <button class="dark-mode-toggle" id="dark-mode-toggle" aria-label="Toggle dark mode">
+            <svg class="moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg class="sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+        </button>
         <a href="https://lms.pb.edu.bn" target="_blank" rel="noopener noreferrer">PB LMS</a>
         <a href="https://pb.edu.bn" target="_blank" rel="noopener noreferrer">PB Website</a>
         <a href="<?php echo BASE_URL; ?>/about">About</a>
@@ -78,6 +94,33 @@ session_start();
             <p>Empowering students through enrichment and achievement tracking</p>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const body = document.body;
+            
+            // Check for saved user preference and set initial state
+            const darkMode = localStorage.getItem('darkMode');
+            
+            // If dark mode was previously enabled, apply it
+            if (darkMode === 'enabled') {
+                body.classList.add('dark');
+            }
+            
+            darkModeToggle.addEventListener('click', function() {
+                // Toggle dark mode
+                body.classList.toggle('dark');
+                
+                // Save user preference to localStorage
+                if (body.classList.contains('dark')) {
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    localStorage.setItem('darkMode', null);
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
